@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+//
 import logo from '../images/logo.svg';
-// import user from '../images/user.svg';
 import { white, blue, black } from '../utils/colors';
 
 
 const Logo = styled.img`
-  height: 80%;
+  height: 100%;
 `
 
 const Nav = styled.div`
@@ -67,11 +68,12 @@ const UserSVG = () => {
 const NavBar = (props) => {
   return ( 
     <Nav>
-      <Logo src={logo} alt="logo"/>
+      <Link className="logo-link" to="/"><Logo src={logo} alt="logo"/></Link>
       <UserLinks>
         <p className="welcome">Reinaldooo</p>
         <UserSVG/>
         <Li>My Photos</Li>
+        <Li>Register</Li>
         <Li>Login</Li>
         <Li>Logout</Li>
       </UserLinks>

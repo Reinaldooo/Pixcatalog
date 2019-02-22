@@ -25,7 +25,7 @@ const GridContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  border-radius: 2rem;
+  border-radius: 3rem;
   overflow: hidden;
 
   img {

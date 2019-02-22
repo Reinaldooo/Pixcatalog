@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'
+//
 import { blue, white } from '../utils/colors';
 
 const Main = styled.div`
@@ -25,6 +27,7 @@ const Header = styled.h3`
 
   span {
     color: ${blue};
+    font-weight: 600;
   }
 `
 
@@ -34,35 +37,84 @@ const Categories = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+`
 
-  button {
-    width: 25%;
-    border: none;
-    color: ${white};
-    height: 5rem;
-    margin: 0 1rem;
-    margin-top: 3rem;
-    border-radius: .5rem;
-    background-color: ${blue};
+const Category = styled.li`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  width: 100%;
+  border: none;
+  color: ${white};
+  height: 5rem;
+  border-radius: .5rem;
+  background-color: ${blue};
+  cursor: pointer;
+  h3 {
+    margin: 0;
     font-size: 1.6rem;
+  }
+  p{
+    margin: 0;
+    font-size: .9rem;
   }
 `
 
+const StyledLink = styled(Link)`
+  width: 25%;
+  text-decoration: none;
+  margin: 0 1rem;
+  margin-top: 3rem;
+`
+
+
 const UserInteraction = (props) => {
-  return ( 
+  return (
     <Main>
-      <Header><span>PixCatalog</span> is a category based image upload site.</Header>
-      <p>You can choose one of the top categories, or all images.</p>
+      <Header><span>PixCatalog</span> is a category based image upload website.</Header>
+      <p>Choose one of our top categories, or create one.</p>
       <Categories>
-        <button>#category</button>
-        <button>#category</button>
-        <button>#category</button>
-        <button>#category</button>
-        <button>#category</button>
-        <button>#category</button>
+        <StyledLink to='/categories'>
+          <Category>
+            <h3>#Category</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories'>
+          <Category>
+            <h3>#Category</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories'>
+          <Category>
+            <h3>#Category</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories'>
+          <Category>
+            <h3>#Category</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories'>
+          <Category>
+            <h3>#Category</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories'>
+          <Category>
+            <h3>#all</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
       </Categories>
     </Main>
-   )
+  )
 }
- 
+
 export default UserInteraction;
