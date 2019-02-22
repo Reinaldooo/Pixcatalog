@@ -5,6 +5,8 @@ import NavBar from './stateless/NavBar';
 import UserInteraction from './stateless/UserInteraction';
 import ImagesGrid from './stateless/ImagesGrid';
 import CategoriesPage from './stateless/CategoriesPage';
+import CategoryImages from './stateless/CategoryImages';
+import ImageDetail from './stateless/ImageDetail';
 import styled from 'styled-components';
 
 const Main = styled.div`
@@ -30,8 +32,8 @@ class App extends Component {
                 </Main>
               } />
               <Route exact path='/categories' component={CategoriesPage} />
-              <Route exact path='/categories/:category' component={NavBar} />
-              <Route exact path='/images/:image' component={NavBar} />
+              <Route exact path='/categories/:category' component={CategoryImages} />
+              <Route exact path='/images/:image' component={ImageDetail} />
               {/* 404 pages */}
               {/* <Route render={() => <ErrorPage/>}/> */}
           </Switch>

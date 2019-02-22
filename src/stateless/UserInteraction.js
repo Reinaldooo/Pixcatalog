@@ -12,6 +12,7 @@ const Main = styled.div`
   justify-content: center;
   align-items: center;
   padding-right: 3rem;
+  text-align: center;
 
   p {
     color: ${white};
@@ -74,35 +75,35 @@ const UserInteraction = (props) => {
   return (
     <Main>
       <Header><span>PixCatalog</span> is a category based image upload website.</Header>
-      <p>Choose one of our top categories, or create one.</p>
+      <p>Choose from our top categories, or create one.</p>
       <Categories>
-        <StyledLink to='/categories'>
+        <StyledLink to='/categories/example'>
           <Category>
-            <h3>#Category</h3>
+            <h3>#example</h3>
             <p>5 images</p>
           </Category>
         </StyledLink>
-        <StyledLink to='/categories'>
+        <StyledLink to='/categories/example2'>
           <Category>
-            <h3>#Category</h3>
+            <h3>#example2</h3>
             <p>5 images</p>
           </Category>
         </StyledLink>
-        <StyledLink to='/categories'>
+        <StyledLink to='/categories/example'>
           <Category>
-            <h3>#Category</h3>
+            <h3>#example</h3>
             <p>5 images</p>
           </Category>
         </StyledLink>
-        <StyledLink to='/categories'>
+        <StyledLink to='/categories/example'>
           <Category>
-            <h3>#Category</h3>
+            <h3>#example</h3>
             <p>5 images</p>
           </Category>
         </StyledLink>
-        <StyledLink to='/categories'>
+        <StyledLink to='/categories/example'>
           <Category>
-            <h3>#Category</h3>
+            <h3>#example</h3>
             <p>5 images</p>
           </Category>
         </StyledLink>
