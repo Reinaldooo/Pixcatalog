@@ -11,11 +11,11 @@
 <g>
 	<rect x="73.5" y="130.5" class="st0" width="112" height="112"/>
 	<rect x="185.5" y="130.5" class="st0" width="112" height="112"/>
-	<rect x="73.5" y="242.5" class="st0" width="112" height="112"/>
+	<path class="st0" d="M185.5,354.5h-84.86c-14.99,0-27.14-12.15-27.14-27.14V242.5h112V354.5z"/>
 	<rect x="185.5" y="242.5" class="st0" width="112" height="112"/>
 	<rect x="297.5" y="130.5" class="st0" width="112" height="112"/>
 	<rect x="185.5" y="18.5" class="st0" width="112" height="112"/>
-	<rect x="297.5" y="18.5" class="st0" width="112" height="112"/>
+	<path class="st0" d="M409.5,130.5h-112v-112h86.84c13.89,0,25.16,11.26,25.16,25.16V130.5z"/>
 </g>
 <text transform="matrix(1 0 0 1 498.5156 279.9944)" class="st1 st2 st3">PixCatalog</text>
 </svg>

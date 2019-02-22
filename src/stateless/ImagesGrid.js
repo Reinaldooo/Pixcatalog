@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-// import { blue } from '../utils/colors';
+import { blue } from '../utils/colors';
 
 function importAllImages(r) {
   let images = {};
@@ -24,10 +24,11 @@ const GridContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  padding: 2rem;
+  border-radius: 2rem;
+  overflow: hidden;
 
   img {
-    width: 30%;
+    width: 33.3333%;
     &:first-of-type, &:last-of-type {
       visibility: hidden;
     }
