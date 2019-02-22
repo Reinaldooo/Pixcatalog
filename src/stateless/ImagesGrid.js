@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { blue } from '../utils/colors';
+// import { blue } from '../utils/colors';
 
 function importAllImages(r) {
   let images = {};
