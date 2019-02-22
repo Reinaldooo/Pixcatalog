@@ -17,7 +17,15 @@ const Main = styled.div`
 `
 
 class App extends Component {
+
+  fetcher = () => {
+    fetch('/JSON')
+    .then(res => res.json())
+    .then(res => { console.log(res) })
+  }
+
   render() {
+    this.fetcher()
     return (
       <Router>
         <div className="app">
