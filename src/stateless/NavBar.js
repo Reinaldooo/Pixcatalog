@@ -24,9 +24,9 @@ const UserLinks = styled.div`
   align-items: center;
   height: 100%;
 
-  h3 {
+  p {
     color: ${white};
-    font-weight: 400;
+    font-weight: 600;
   }
 
   svg {
@@ -69,7 +69,7 @@ const NavBar = (props) => {
     <Nav>
       <Logo src={logo} alt="logo"/>
       <UserLinks>
-        <h3 className="welcome">Reinaldooo</h3>
+        <p className="welcome">Reinaldooo</p>
         <UserSVG/>
         <Li>My Photos</Li>
         <Li>Login</Li>

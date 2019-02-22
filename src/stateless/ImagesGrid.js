@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { blue } from '../utils/colors';
+// import { blue } from '../utils/colors';
 
 function importAllImages(r) {
   let images = {};
@@ -16,10 +16,11 @@ const Main = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-left: 3rem;
 `
 
 const GridContainer = styled.div`
-  width: 80%;
+  width: 65%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +29,8 @@ const GridContainer = styled.div`
   overflow: hidden;
 
   img {
-    width: 33.3333%;
+    width: 31.3333%;
+    margin: 1%;
     &:first-of-type, &:last-of-type {
       visibility: hidden;
     }
@@ -38,11 +40,10 @@ const GridContainer = styled.div`
 const ImagesGrid = (props) => {
   return ( 
     <Main>
-      {console.log(images)}
       <GridContainer>
         {
           helperArray.map((i, index) => (
-            <img src={images[`${index+1}.jpg`]} alt=""/>
+            <img key={index} src={images[`${index+1}.jpg`]} alt=""/>
           ))
         }
       </GridContainer>

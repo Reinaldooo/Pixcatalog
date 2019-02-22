@@ -8,6 +8,7 @@ const Main = styled.div`
   display: flex;
   height: calc(100vh - 100px);
   width: 100%;
+  margin-top: -2%;
 `
 
 class App extends Component {
