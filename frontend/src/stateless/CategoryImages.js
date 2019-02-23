@@ -4,13 +4,8 @@ import { Link } from 'react-router-dom'
 //
 import { blue, white, black } from '../utils/colors';
 
-function importAllImages(r) {
-  let images = {};
-  r.keys().map((item) => images[item.replace('./', '')] = r(item));
-  return images;
-}
-const images = importAllImages(require.context('../images', false, /\.(jpe?g)$/));
 const helperArray = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+//TODO Transform this into a recursive function
 
 const Main = styled.div`
   width: 80%;
@@ -21,9 +16,9 @@ const Main = styled.div`
     width: 18.9%;
     margin: .5rem;
     border-radius: .2rem;
-    transition: transform .3s;
+    transition: opacity .3s;
     &:hover {
-      transform: scale(1.05)
+      opacity: .7;
     }
   }
   div {
@@ -64,18 +59,12 @@ const CategoryImages = (props) => {
       </div>
       {
         helperArray.map((i, index) => (
-          <Link
-            to={{
-              pathname: "/images/id",
-              state: { fromCategories: true }
-            }}>
-            <img src={images[`${index + 1}.jpg`]} alt="" />
-          </Link>
+          <Link key={index} to={`/images/${index + 1}`}><img src={`/get_image/${index + 1}`} alt={`category-${index + 1}`} /></Link>
         ))
       }
       {
         helperArray.map((i, index) => (
-          <Link key={index} to="/images/id"><img src={images[`${index + 1}.jpg`]} alt="" /></Link>
+          <Link key={index} to={`/images/${index + 1}`}><img src={`/get_image/${index + 1}`} alt={`category-${index + 1}`} /></Link>
         ))
       }
     </Main>

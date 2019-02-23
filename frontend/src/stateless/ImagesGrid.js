@@ -1,14 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 // import { blue } from '../utils/colors';
-
-function importAllImages(r) {
-  let images = {};
-  r.keys().map((item) => images[item.replace('./', '')] = r(item));
-  return images;
-}
-const images = importAllImages(require.context('../images', false, /\.(jpe?g)$/));
 const helperArray = [ 1,1,1,1,1,1,1,1,1 ]
+//TODO Transform this into a recursive function
 
 const Main = styled.div`
   height: 100%;
@@ -43,7 +37,7 @@ const ImagesGrid = (props) => {
       <GridContainer>
         {
           helperArray.map((i, index) => (
-            <img key={index} src={images[`${index+1}.jpg`]} alt=""/>
+            <img key={index} src={[`/get_image/${index+1}`]} alt={`main-${index+1}`}/>
           ))
         }
       </GridContainer>

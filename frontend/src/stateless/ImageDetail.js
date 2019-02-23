@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 // //
 import { white, black, blue } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
-import img from '../images/2.jpg'
 
 const Main = styled.div`
   position: relative;
@@ -17,7 +16,6 @@ const Main = styled.div`
   img {
     width: 50%;
     border-radius: .9rem;
-    transition: transform .3s;
     flex: 1;
   }
 `
@@ -59,20 +57,23 @@ const BackLink = styled(Link)`
   top: 0;
   left: 0;
   text-decoration: none;
-  background-image: linear-gradient(to right, ${blue}, transparent);
-  padding: 5px 100px 5px 10px;
+  background-color: ${blue};
+  padding: 5px 10px 10px;
   border-top-left-radius: .9rem;
+  border-bottom-right-radius: .9rem;
   color: ${white};
   font-weight: 600;
 `
 
 const ImageDetail = (props) => {
+  const imageId = props.match.params.image
+
   return (
     <Main>
       <BackLink to='/categories/example'>Back to category</BackLink>
-      <img src={img} alt=""/>
+      <img src={`/get_image/${imageId}`} alt="bigimage-1"/>
       <Details>
-        {console.log(props.location)}
+        {console.log(props)}
         <h1>Image Title</h1>
         <span className="creator"><UserSVG/> Reinaldooo</span>
         <span> #example</span>
