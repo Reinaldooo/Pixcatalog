@@ -7,6 +7,7 @@ import ImagesGrid from './stateless/ImagesGrid';
 import CategoriesPage from './stateless/CategoriesPage';
 import CategoryImages from './stateless/CategoryImages';
 import ImageDetail from './stateless/ImageDetail';
+import Login from './stateless/Login';
 import styled from 'styled-components';
 
 const Main = styled.div`
@@ -17,19 +18,23 @@ const Main = styled.div`
 `
 
 class App extends Component {
+  state = {
+    user: false
+  }
 
-  fetcher = () => {
-    fetch('/JSON')
-    .then(res => res.json())
-    .then(res => { console.log(res) })
+  logInUser = (user) => {
+    this.setState({ user })
+  }
+
+  logOutUser = () => {
+    this.setState({ user: false })
   }
 
   render() {
-    this.fetcher()
     return (
       <Router>
         <div className="app">
-          <NavBar />
+          <NavBar user={this.state.user} logInUser={this.logInUser} logOutUser={this.logOutUser}/>
           <Switch>
             <Route
               exact path='/'
@@ -40,6 +45,7 @@ class App extends Component {
                 </Main>
               } />
               <Route exact path='/categories' component={CategoriesPage} />
+              <Route exact path='/login' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
               <Route exact path='/categories/:category' component={CategoryImages} />
               <Route exact path='/images/:image' component={ImageDetail} />
               {/* 404 pages */}

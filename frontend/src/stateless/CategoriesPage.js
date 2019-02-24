@@ -5,11 +5,20 @@ import { Link } from 'react-router-dom'
 import { blue, white, black } from '../utils/colors';
 
 const Main = styled.div`
+  text-align: center;
+
+  p {
+    color: ${white};
+  }
+` 
+
+const CategoriesMain = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   align-items: center;
   padding: 5rem;
+  padding-top: 2rem;
 `
 
 const StyledLink = styled(Link)`
@@ -58,113 +67,114 @@ const Category = styled.li`
 
 const CategoriesPage = (props) => {
   return (
-    <>
-      <StyledButton to='/'>Home</StyledButton>
     <Main>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
-      <StyledLink to='/categories/example'>
-        <Category>
-          <h3>#example</h3>
-          <p>5 images</p>
-        </Category>
-      </StyledLink>
+      <StyledButton to='/'>Home</StyledButton>
+      <p>You can create a new category while uploading an image.</p>
+      <CategoriesMain>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+        <StyledLink to='/categories/example'>
+          <Category>
+            <h3>#example</h3>
+            <p>5 images</p>
+          </Category>
+        </StyledLink>
+      </CategoriesMain>
     </Main>
-    </>
   );
 }
 

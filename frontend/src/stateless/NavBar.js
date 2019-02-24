@@ -53,12 +53,17 @@ const NavBar = (props) => {
     <Nav>
       <Link className="logo-link" to="/"><Logo src={logo} alt="logo"/></Link>
       <UserLinks>
-        <p className="welcome">Reinaldooo</p>
-        <UserSVG/>
-        <Li>My Photos</Li>
+        {
+          props.user &&
+          <>
+          <p className="welcome">{props.user}</p>
+          <UserSVG/>
+          <Li>My Photos</Li>
+          </>
+        }
+        <Li onClick={() => props.logInUser('Reinaldooo')}>Login</Li>
         <Li>Register</Li>
-        <Li>Login</Li>
-        <Li>Logout</Li>
+        <Li onClick={() => props.logOutUser()}>Logout</Li>
       </UserLinks>
     </Nav>
    );

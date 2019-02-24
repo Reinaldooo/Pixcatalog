@@ -75,7 +75,7 @@ const UserInteraction = (props) => {
   return (
     <Main>
       <Header><span>PixCatalog</span> is a category based image upload website.</Header>
-      <p>Choose from our top categories, or create one.</p>
+      <p>Choose from our top categories, or login and create one.</p>
       <Categories>
         <StyledLink to='/categories/example'>
           <Category>
