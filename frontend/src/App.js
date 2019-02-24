@@ -19,7 +19,8 @@ const Main = styled.div`
 
 class App extends Component {
   state = {
-    user: false
+    user: false,
+    categories: []
   }
 
   logInUser = (user) => {
@@ -29,6 +30,7 @@ class App extends Component {
   logOutUser = () => {
     this.setState({ user: false })
   }
+
 
   render() {
     return (
@@ -41,7 +43,7 @@ class App extends Component {
               render={() =>
                 <Main>
                   <ImagesGrid />
-                  <UserInteraction />
+                  <UserInteraction categories={this.state.categories}/>
                 </Main>
               } />
               <Route exact path='/categories' component={CategoriesPage} />

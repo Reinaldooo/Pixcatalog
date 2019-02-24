@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 //
 import { blue, white, black } from '../utils/colors';
 
-const helperArray = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-//TODO Transform this into a recursive function
 
 const Main = styled.div`
   width: 80%;
@@ -47,8 +45,20 @@ const H2 = styled.h2`
   }
 `
 
-const CategoryImages = (props) => {
-  const category = props.match.params.category
+class CategoryImages extends Component{
+
+  state= { 
+    images: null
+  }
+
+  componentDidMount() {
+    fetch(`/api/get_category_images/${this.props.match.params.category}`)
+    .then(res => res.json())
+    .then(res => { this.setState({ images: res.images }) })
+  }
+  
+  render() {
+  const category = this.props.match.params.category
 
   return (
     <Main>
@@ -58,17 +68,21 @@ const CategoryImages = (props) => {
         <StyledLink to='/'>Home</StyledLink>
       </div>
       {
-        helperArray.map((i, index) => (
-          <Link key={index} to={`/images/${index + 1}`}><img src={`/get_image/${index + 1}`} alt={`category-${index + 1}`} /></Link>
-        ))
-      }
-      {
-        helperArray.map((i, index) => (
-          <Link key={index} to={`/images/${index + 1}`}><img src={`/get_image/${index + 1}`} alt={`category-${index + 1}`} /></Link>
+        this.state.images && this.state.images.map((image, index) => (
+          <Link
+          key={image.id}
+          to={{
+            pathname: `/images/${image.address}`,
+            image: image
+          }}
+          >
+          <img src={`/api/get_image/${image.address}`} alt={`category`} />
+          </Link>
         ))
       }
     </Main>
   );
+    }
 }
 
 export default CategoryImages;

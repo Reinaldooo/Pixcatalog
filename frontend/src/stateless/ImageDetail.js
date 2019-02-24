@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 // //
@@ -65,25 +65,41 @@ const BackLink = styled(Link)`
   font-weight: 600;
 `
 
-const ImageDetail = (props) => {
-  const imageId = props.match.params.image
+class ImageDetail extends Component {
 
-  return (
-    <Main>
-      <BackLink to='/categories/example'>Back to category</BackLink>
-      <img src={`/get_image/${imageId}`} alt="bigimage-1"/>
-      <Details>
-        {console.log(props)}
-        <h1>Image Title</h1>
-        <span className="creator"><UserSVG/> Reinaldooo</span>
-        <span> #example</span>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda rem quam voluptates rerum accusantium labore necessitatibus magnam delectus, atque fuga nam amet consequatur quos. Blanditiis laboriosam quam asperiores nemo iure.</p>
-        <StyledButton to='/'>Home</StyledButton>
-        <StyledButton to='/'>Edit</StyledButton>
-        <StyledButton to='/'>Delete</StyledButton>
-      </Details>
-    </Main>
-  );
+  state = {
+    image: null
+  }
+
+  componentDidMount() {
+    fetch(`/api/get_image_details/${this.props.match.params.image}`)
+      .then(res => res.json())
+      .then(res => { this.setState({ image: res.image }) })
+  }
+
+  render() {
+    const imageAddress = this.props.match.params.image
+    return (
+      <Main>
+        {
+          this.state.image &&
+          <>
+            <BackLink to={`/categories/${this.state.image.category_id}`}>Back to category</BackLink>
+            <img src={`/api/get_image/${imageAddress}`} alt="bigimage-1" />
+            <Details>
+              <h1>Image Title</h1>
+              <span className="creator"><UserSVG /> Reinaldooo</span>
+              <span> #example</span>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda rem quam voluptates rerum accusantium labore necessitatibus magnam delectus, atque fuga nam amet consequatur quos. Blanditiis laboriosam quam asperiores nemo iure.</p>
+              <StyledButton to='/'>Home</StyledButton>
+              <StyledButton to='/'>Edit</StyledButton>
+              <StyledButton to='/'>Delete</StyledButton>
+            </Details>
+          </>
+        }
+      </Main>
+    )
+  }
 }
 
 export default ImageDetail;

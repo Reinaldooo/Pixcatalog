@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 //
@@ -10,7 +10,7 @@ const Main = styled.div`
   p {
     color: ${white};
   }
-` 
+`
 
 const CategoriesMain = styled.div`
   display: flex;
@@ -65,117 +65,40 @@ const Category = styled.li`
   }
 `
 
-const CategoriesPage = (props) => {
-  return (
-    <Main>
-      <StyledButton to='/'>Home</StyledButton>
-      <p>You can create a new category while uploading an image.</p>
-      <CategoriesMain>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-      </CategoriesMain>
-    </Main>
-  );
+class CategoriesPage extends Component {
+
+  state = {
+    categories: null
+  }
+
+  componentDidMount() {
+    fetch(`/api/categories`)
+    .then(res => res.json())
+    .then(res => { this.setState({ categories: res.categories }) })
+  }
+
+  render() {
+    return (
+      <Main>
+        <StyledButton to='/'>Home</StyledButton>
+        <p>You can create a new category while uploading an image.</p>
+        <CategoriesMain>
+          {
+            this.state.categories &&
+            this.state.categories.map(cat => (
+              <StyledLink key={cat.id} to={`/categories/${cat.id}`}>
+              <Category>
+                <h3>{`#${cat.title}`}</h3>
+                <p>5 images</p>
+              </Category>
+            </StyledLink>
+            ))
+          }
+
+        </CategoriesMain>
+      </Main>
+    );
+  }
 }
 
 export default CategoriesPage;

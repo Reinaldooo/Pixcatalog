@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 //
-import { blue, white } from '../utils/colors';
+import { blue, white, black } from '../utils/colors';
 
 const Main = styled.div`
   height: 100%;
@@ -70,52 +70,61 @@ const StyledLink = styled(Link)`
   margin-top: 3rem;
 `
 
+const StyledButton = styled(Link)`
+  width: 25%;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: ${black};
+  display: inline-block;
+  font-weight: 400;
+  border-radius: 5px;
+  padding: 5px 10px;
+  background-color: ${white};
+  margin: .5rem .2rem;
+  margin-top: 3rem;
+  text-align: center;
+`
 
-const UserInteraction = (props) => {
-  return (
-    <Main>
-      <Header><span>PixCatalog</span> is a category based image upload website.</Header>
-      <p>Choose from our top categories, or login and create one.</p>
-      <Categories>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example2'>
-          <Category>
-            <h3>#example2</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories/example'>
-          <Category>
-            <h3>#example</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-        <StyledLink to='/categories'>
-          <Category>
-            <h3>#all</h3>
-            <p>5 images</p>
-          </Category>
-        </StyledLink>
-      </Categories>
-    </Main>
-  )
+
+class UserInteraction extends Component {
+
+  state = {
+    categories: []
+  }
+
+  fetcher = (address) => {
+    fetch(address)
+      .then(res => res.json())
+      .then(res => { this.setState({ categories: res.categories }) })
+  }
+
+  componentDidMount() {
+    this.fetcher('/api/categories')
+  }
+
+  render() {
+    return (
+      <Main>
+        <Header><span>PixCatalog</span> is a category based image upload website.</Header>
+        <p>Choose from our top categories, or login and create one.</p>
+        <Categories>
+          {
+            this.state.categories.length > 0 && this.state.categories.map((c, i) => (
+              <StyledLink key={c.title} to={`/categories/${c.id}`}>
+                <Category>
+                  <h3>{`#${c.title}`}</h3>
+                  <p>5 images</p>
+                </Category>
+              </StyledLink>
+            ))
+          }
+          <StyledButton key="#all" to="/categories/">
+            All categories
+          </StyledButton>
+        </Categories>
+      </Main>
+    )
+  }
 }
 
 export default UserInteraction;
