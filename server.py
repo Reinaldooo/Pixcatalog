@@ -25,7 +25,7 @@ def categories():
 
 @app.route('/api/top_categories')
 def top_categories():
-    top_categories = session.query(func.count(Image.category_id), Image.category_id).group_by(Image.category_id).all()
+    top_categories = session.query(func.count(Image.category_id).label('unidades'),Image.category.title).group_by(Image.category_id).order_by("unidades DESC").all()
     print(top_categories)
     # return jsonify(categories=[i.serialize for i in top_categories])
     return "ha"

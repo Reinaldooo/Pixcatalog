@@ -23,11 +23,12 @@ class User(Base):
             'picture': self.picture
         }
 
+
 class Category(Base):
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String(250), nullable=True)
+    title = Column(String(250), nullable=False)
 
     @property
     def serialize(self):
@@ -46,9 +47,9 @@ class Image(Base):
     description = Column(String(250), nullable=True)
     address = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    user = relationship("User")
     category_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship(Category)
+    category = relationship("Category")
 
     @property
     def serialize(self):
@@ -65,6 +66,6 @@ class Image(Base):
         }
 
 
-
-engine = create_engine('sqlite:///pixcatalog.db', connect_args={'check_same_thread': False})
+engine = create_engine('sqlite:///pixcatalog.db',
+                       connect_args={'check_same_thread': False})
 Base.metadata.create_all(engine)
