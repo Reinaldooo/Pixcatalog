@@ -68,6 +68,10 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   margin: 0 1rem;
   margin-top: 3rem;
+
+  &:hover {
+    transform: translate(1px, 2px);
+  }
 `
 
 const StyledButton = styled(Link)`
@@ -92,14 +96,10 @@ class UserInteraction extends Component {
     categories: []
   }
 
-  fetcher = (address) => {
-    fetch(address)
-      .then(res => res.json())
-      .then(res => { this.setState({ categories: res.categories }) })
-  }
-
   componentDidMount() {
-    this.fetcher('/api/categories')
+    fetch('/api/top_categories')
+      .then(res => res.json())
+      .then(({top_cat}) => { this.setState({ categories: top_cat }) })
   }
 
   render() {
@@ -109,11 +109,11 @@ class UserInteraction extends Component {
         <p>Choose from our top categories, or login and create one.</p>
         <Categories>
           {
-            this.state.categories.length > 0 && this.state.categories.map((c, i) => (
+            this.state.categories.length > 0 && this.state.categories.map((c) => (
               <StyledLink key={c.title} to={`/categories/${c.id}`}>
                 <Category>
                   <h3>{`#${c.title}`}</h3>
-                  <p>5 images</p>
+                  <p>{`${c.total} images`}</p>
                 </Category>
               </StyledLink>
             ))

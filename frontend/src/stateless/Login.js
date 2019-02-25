@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from 'react-spinkit';
 // //
-import { white, blue } from '../utils/colors';
+import { white, blue, black } from '../utils/colors';
+import { UserSVG } from '../utils/helper';
 
 const Main = styled.div`
   position: relative;
@@ -27,12 +28,12 @@ const StyledButton = styled.button`
   display: block;
   font-weight: 600;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 10px 14px;
   background-color: ${blue};
   margin: .5rem .2rem;
   text-align: center;
   border: none;
-  font-size: 1rem;
+  font-size: .9em;
 `
 
 const Input = styled.input`
@@ -44,6 +45,11 @@ const Input = styled.input`
   background-color: ${white};
   border-radius: 5px;
   padding: 15px;
+`
+
+const UserIcon = styled.div`
+  width: 40px;
+  margin-bottom: 1rem;
 `
 
 class Login extends Component {
@@ -76,6 +82,9 @@ class Login extends Component {
           <Spinner name="cube-grid" color={blue} fadeIn='0'/>
           :
           <>
+          <UserIcon>
+            <UserSVG/>
+          </UserIcon>
           <Input
           type="text"
           placeholder='Username'

@@ -14,9 +14,9 @@ const Main = styled.div`
     width: 18.9%;
     margin: .5rem;
     border-radius: .2rem;
-    transition: opacity .3s;
+    transition: opacity .3s;    
     &:hover {
-      opacity: .7;
+      transform: translate(1px, 2px);
     }
   }
   div {
@@ -60,7 +60,7 @@ class CategoryImages extends Component{
       this.setState({
         images: res.images,
         categoryTitle: res.category.title,
-        totalImages: res.images_total
+        totalImages: res.images.length
       })
       console.log(this.state)
     })

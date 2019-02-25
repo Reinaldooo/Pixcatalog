@@ -36,6 +36,7 @@ class Category(Base):
         return {
             'id': self.id,
             'title': self.title,
+            'images_total': len(self.images)
         }
 
 
@@ -49,7 +50,7 @@ class Image(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship("User")
     category_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship("Category")
+    category = relationship("Category", backref='images')
 
     @property
     def serialize(self):

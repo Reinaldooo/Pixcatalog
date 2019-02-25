@@ -59,6 +59,7 @@ const NavBar = (props) => {
           <p className="welcome">{props.user}</p>
           <UserSVG/>
           <Li>My Photos</Li>
+          <Li>Upload</Li>
           </>
         }
         <Li onClick={() => props.logInUser('Reinaldooo')}>Login</Li>

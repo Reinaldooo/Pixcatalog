@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import random
+import random, requests
 
 from database_setup import Category, Base, Image, User, engine
 
@@ -43,6 +43,8 @@ category3 = Category(title="city")
 category4 = Category(title="water")
 category5 = Category(title="mountain")
 category6 = Category(title="travel")
+category7 = Category(title="brazil")
+category8 = Category(title="europe")
 
 session.add(category1)
 session.add(category2)
@@ -50,6 +52,8 @@ session.add(category3)
 session.add(category4)
 session.add(category5)
 session.add(category6)
+session.add(category7)
+session.add(category8)
 session.commit()
 
 images = [ 
@@ -101,9 +105,23 @@ images = [
   "img45",
   "img46",
   "img47",
+  "img48",
+  "img49",
+  "img50",
+  "img51",
+  "img52",
+  "img53",
+  "img54",
+  "img55",
+  "img56",
+  "img57",
+  "img58",
+  "img59",
+  "img60"
 ]
 
 # """Get random photos"""
+# print("Downloading images, this will take a while")
 # for i, img in enumerate(images):
 #   url = "https://picsum.photos/800?random"
 #   response = requests.get(url)
@@ -117,7 +135,9 @@ categories = [
   3,
   4,
   5,
-  6
+  6,
+  7,
+  8
 ]
 
 users = [

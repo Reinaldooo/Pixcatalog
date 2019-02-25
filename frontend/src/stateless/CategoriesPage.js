@@ -74,7 +74,10 @@ class CategoriesPage extends Component {
   componentDidMount() {
     fetch(`/api/categories`)
     .then(res => res.json())
-    .then(res => { this.setState({ categories: res.categories }) })
+    .then(res => { 
+      res.categories.sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+      this.setState({ categories: res.categories })
+     })
   }
 
   render() {
@@ -89,7 +92,7 @@ class CategoriesPage extends Component {
               <StyledLink key={cat.id} to={`/categories/${cat.id}`}>
               <Category>
                 <h3>{`#${cat.title}`}</h3>
-                <p>5 images</p>
+                <p>{`#${cat.images_total} images`}</p>
               </Category>
             </StyledLink>
             ))

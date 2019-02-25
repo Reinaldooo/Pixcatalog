@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for, s
 from sqlalchemy import create_engine, asc, func
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Image, User, engine
+from operator import itemgetter
 
 app = Flask(__name__, static_folder='./frontend/build/static',
             template_folder='./frontend/build')
@@ -23,27 +24,32 @@ def categories():
     categories = session.query(Category).all()
     return jsonify(categories=[i.serialize for i in categories])
 
+
+# @app.route('/api/top_categories')
+# def top_categories():
+#     top_categories = session.query(func.count(Image.category_id).label('unidades'),Image.category_id).group_by(Image.category_id).order_by("unidades DESC").all()
+#     print(top_categories)
+#     # return jsonify(categories=[i.serialize for i in top_categories])
+#     return "ha"
+
+
+
 @app.route('/api/top_categories')
 def top_categories():
-    top_categories = session.query(func.count(Image.category_id).label('unidades'),Image.category.title).group_by(Image.category_id).order_by("unidades DESC").all()
-    print(top_categories)
-    # return jsonify(categories=[i.serialize for i in top_categories])
-    return "ha"
+    result = []
+    for category in session.query(Category).all():
+        result_item = {}
+        result_item['title'] = category.title
+        result_item['id'] = category.id
+        result_item['total'] = len(category.images)
+        result.append(result_item)
+    return jsonify(top_cat=sorted(result[:6], key=itemgetter('total'), reverse=True))
 
 
 @app.route('/api/get_category_details/<int:category_id>')
 def get_category_images(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
-    images = session.query(Image).filter_by(category_id=category_id).all()
-    return jsonify(images=[i.serialize for i in images], category=category.serialize, images_total=len(images))
-
-
-@app.route('/api/JSON')
-def JSON():
-    categories = session.query(Category).all()
-    users = session.query(User).all()
-    images = session.query(Image).all()
-    return jsonify(categories=[i.serialize for i in categories], users=[i.serialize for i in users], images=[i.serialize for i in images])
+    return jsonify(images=[i.serialize for i in category.images], category=category.serialize)
 
 
 @app.route('/api/get_image_details/<string:address>')
