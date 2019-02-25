@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import random
-import requests
 
 from database_setup import Category, Base, Image, User, engine
 
