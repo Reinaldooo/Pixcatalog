@@ -48,21 +48,29 @@ const H2 = styled.h2`
 class CategoryImages extends Component{
 
   state= { 
-    images: null
+    images: null,
+    categoryTitle: null,
+    totalImages: null
   }
 
   componentDidMount() {
-    fetch(`/api/get_category_images/${this.props.match.params.category}`)
+    fetch(`/api/get_category_details/${this.props.match.params.category}`)
     .then(res => res.json())
-    .then(res => { this.setState({ images: res.images }) })
+    .then(res => {
+      this.setState({
+        images: res.images,
+        categoryTitle: res.category.title,
+        totalImages: res.images_total
+      })
+      console.log(this.state)
+    })
   }
   
   render() {
-  const category = this.props.match.params.category
 
   return (
     <Main>
-      <H2>All <span>{`#${category}`}</span> images</H2>
+      <H2>All <span>{`#${this.state.categoryTitle}`}</span> images</H2>      
       <div>
         <StyledLink to='/categories'>Categories</StyledLink>
         <StyledLink to='/'>Home</StyledLink>

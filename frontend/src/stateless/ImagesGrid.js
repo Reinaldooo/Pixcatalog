@@ -31,13 +31,24 @@ const GridContainer = styled.div`
   }
 `
 
+let last = null;
+const randomImage = () => {
+  let actual = Math.round(Math.random() * 47);
+
+  while(actual === last) {
+    actual = Math.round(Math.random() * 47);
+  }
+  last = actual
+  return actual
+}
+
 const ImagesGrid = (props) => {
   return ( 
     <Main>
       <GridContainer>
         {
           helperArray.map((i, index) => (
-            <img key={index} src={[`/api/get_image/${index+1}`]} alt={`main-${index+1}`}/>
+            <img key={index} src={[`/api/get_image/img${randomImage()}`]} alt={`main-${index+1}`}/>
           ))
         }
       </GridContainer>

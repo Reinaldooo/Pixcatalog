@@ -74,23 +74,23 @@ class ImageDetail extends Component {
   componentDidMount() {
     fetch(`/api/get_image_details/${this.props.match.params.image}`)
       .then(res => res.json())
-      .then(res => { this.setState({ image: res.image }) })
+      .then(res => { console.log(res.image); this.setState({ image: res.image }) })
   }
 
   render() {
-    const imageAddress = this.props.match.params.image
+    const image = this.state.image
     return (
       <Main>
         {
-          this.state.image &&
+          image &&
           <>
-            <BackLink to={`/categories/${this.state.image.category_id}`}>Back to category</BackLink>
-            <img src={`/api/get_image/${imageAddress}`} alt="bigimage-1" />
+            <BackLink to={`/categories/${image.category_id}`}>Back to category</BackLink>
+            <img src={`/api/get_image/${image.address}`} alt={image.title}/>
             <Details>
-              <h1>Image Title</h1>
-              <span className="creator"><UserSVG /> Reinaldooo</span>
-              <span> #example</span>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda rem quam voluptates rerum accusantium labore necessitatibus magnam delectus, atque fuga nam amet consequatur quos. Blanditiis laboriosam quam asperiores nemo iure.</p>
+              <h1>{image.title}</h1>
+              <span className="creator"><UserSVG />{` ${image.username}`}</span>
+              <span>{`#${image.category_name}`}</span>
+              <p>{image.description}</p>
               <StyledButton to='/'>Home</StyledButton>
               <StyledButton to='/'>Edit</StyledButton>
               <StyledButton to='/'>Delete</StyledButton>

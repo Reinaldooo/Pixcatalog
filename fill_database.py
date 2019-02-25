@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import random
+import requests
 
-from database_setup import Category, Base, Image, User
+from database_setup import Category, Base, Image, User, engine
 
-engine = create_engine('sqlite:///pixcatalog.db')
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine
@@ -18,9 +19,8 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
-
 # Create dummy user
-User1 = User(name="Reinaldo Trindade", email="rewifetri@gmail.com",
+User1 = User(name="Reinaldooo", email="rewifetri@gmail.com",
              picture='https://picsum.photos/500?random')
 session.add(User1)
 session.commit()
@@ -31,6 +31,10 @@ session.commit()
 User3 = User(name="travis", email="travis@gmail.com",
              picture='https://picsum.photos/500?random')
 session.add(User3)
+session.commit()
+User4 = User(name="unsplash.com", email="example@unsplash.com",
+             picture='https://picsum.photos/500?random')
+session.add(User4)
 session.commit()
 
 # Menu for UrbanBurger
@@ -49,48 +53,103 @@ session.add(category5)
 session.add(category6)
 session.commit()
 
-image1 = Image(user_id=1, category_id="1", title="Veggie Burger",
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", address='img1')
-image2 = Image(user_id=2, category_id="1", address='img2')
-image3 = Image(user_id=2, category_id="1", title="Normal Burger", address='img3',
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
-image4 = Image(user_id=2, category_id="4",
-               title="Normal Burger", address='img4')
-image5 = Image(user_id=3, category_id="4", title="Normal Burger", address='img5',
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
-image6 = Image(user_id=3, category_id="2", address='img6')
-image7 = Image(user_id=3, category_id="2",
-               title="Normal Burger", address='img7')
-image8 = Image(user_id=3, category_id="3", address='img8')
-image9 = Image(user_id=1, category_id="3", title="Normal Burger", address='img9',
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
-image10 = Image(user_id=1, category_id="3", title="Normal Burger", address='img10',
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
-image11 = Image(user_id=3, category_id="5", address='img11')
-image12 = Image(user_id=1, category_id="6",
-               title="Normal Burger", address='img12')
-image13 = Image(user_id=1, category_id="6", title="Normal Burger", address='img13',
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
-image14 = Image(user_id=2, category_id="5", title="Normal Burger", address='img14',
-               description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
-image15 = Image(user_id=2, category_id="5",
-               title="Normal Burger", address='img15')
+images = [ 
+  "img0",
+  "img1",
+  "img2",
+  "img3",
+  "img4",
+  "img5",
+  "img6",
+  "img7",
+  "img8",
+  "img9",
+  "img10",
+  "img11",
+  "img12",
+  "img13",
+  "img14",
+  "img15",
+  "img16",
+  "img17",
+  "img18",
+  "img19",
+  "img20",
+  "img21",
+  "img22",
+  "img23",
+  "img24",
+  "img25",
+  "img26",
+  "img27",
+  "img28",
+  "img29",
+  "img30",
+  "img31",
+  "img32",
+  "img33",
+  "img34",
+  "img35",
+  "img36",
+  "img37",
+  "img38",
+  "img39",
+  "img40",
+  "img41",
+  "img42",
+  "img43",
+  "img44",
+  "img45",
+  "img46",
+  "img47",
+]
 
-session.add(image1)
-session.add(image2)
-session.add(image3)
-session.add(image4)
-session.add(image5)
-session.add(image6)
-session.add(image7)
-session.add(image8)
-session.add(image9)
-session.add(image10)
-session.add(image11)
-session.add(image12)
-session.add(image13)
-session.add(image14)
-session.add(image15)
-session.commit()
+# """Get random photos"""
+# for i, img in enumerate(images):
+#   url = "https://picsum.photos/800?random"
+#   response = requests.get(url)
+#   if response.status_code == 200:
+#     with open("./images/{}.jpeg".format(img), 'wb') as f:
+#         f.write(response.content)
 
+categories = [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+]
+
+users = [
+  1,
+  2,
+  3,
+  4
+]
+
+titles = [
+  "Beautiful photo taken at sunset",
+  "My last vacation",
+  "Look at this view",
+  "I love the sea",
+  ""
+]
+
+descriptions = [
+  "Is this real life? I can't believe i'm here",
+  "Look at that building, its amazing",
+  "Last night we watched the stars for hours, and in the morning we had this amazing view",
+  "I dare you to find the error in this picture",
+  ""
+]
+
+def populate_random():
+  for img in images:
+    image = Image(user_id=random.choice(users), category_id=random.choice(categories), title=random.choice(titles),
+               description=random.choice(descriptions), address=img)
+    session.add(image)
+    session.commit()
+
+populate_random()
 print("added menu items!")

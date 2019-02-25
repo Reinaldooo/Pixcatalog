@@ -58,13 +58,13 @@ class Image(Base):
             'title': self.title,
             'description': self.description,
             'category_id': self.category_id,
+            'category_name': self.category.title,
             'user_id': self.user_id,
+            'username': self.user.name,
             'address': self.address,
         }
 
 
 
-engine = create_engine('sqlite:///pixcatalog.db')
-
-
+engine = create_engine('sqlite:///pixcatalog.db', connect_args={'check_same_thread': False})
 Base.metadata.create_all(engine)
