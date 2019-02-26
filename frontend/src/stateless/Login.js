@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from 'react-spinkit';
+import { GoogleLogin } from 'react-google-login';
 // //
-import { white, blue, black } from '../utils/colors';
+import { white, blue } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 
 const Main = styled.div`
@@ -57,6 +58,7 @@ class Login extends Component {
   state = {
     username: '',
     password: '',
+    serverToken: null
   }
 
   handleUser = (e) => {
@@ -73,18 +75,47 @@ class Login extends Component {
       this.props.history.push("/")
     }, 2000);
   }
+  getServerToken = () => {
+    fetch('/api/get_token')
+    .then(res => res.text())
+    .then(serverToken => this.setState({ serverToken }))
+  }
+  responseGoogle = (response) => {
+    fetch(`/gconnect?serverToken=${this.state.serverToken}&code=${response.code}`, { method: 'post' })
+    .then(res => res.json())
+    .then(res => {
+      if(res.email) {
+        this.props.logInUser(res)
+        setTimeout(() => {
+          this.props.history.push("/")
+        }, 500);
+      }
+    }) 
+  }
+
+  componentDidMount() {
+    this.getServerToken()
+  }
 
   render() {
     return (
       <Main>
         {
           this.state.loading ?
-          <Spinner name="cube-grid" color={blue} fadeIn='0'/>
+          <Spinner name="cube-grid" color={blue} fadeIn='half'/>
           :
           <>
           <UserIcon>
+            {console.log(this.props)}
             <UserSVG/>
           </UserIcon>
+          <GoogleLogin
+            clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
+            buttonText="Login"
+            responseType="code"
+            onSuccess={this.responseGoogle}
+            onFailure={this.responseGoogle}
+          />
           <Input
           type="text"
           placeholder='Username'

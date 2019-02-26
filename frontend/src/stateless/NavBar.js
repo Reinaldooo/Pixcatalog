@@ -48,23 +48,37 @@ const Li = styled.li`
   cursor: pointer;
 `
 
+const StyledLink = styled(Link)`
+  color: ${black};
+  list-style: none;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 5px 10px;
+  background-color: ${white};
+  margin-left: 1rem;
+  cursor: pointer;
+`
+
 const NavBar = (props) => {
   return ( 
     <Nav>
       <Link className="logo-link" to="/"><Logo src={logo} alt="logo"/></Link>
       <UserLinks>
         {
-          props.user &&
+          props.user.username ?
           <>
-          <p className="welcome">{props.user}</p>
+          <p className="welcome">{props.user.username}</p>
           <UserSVG/>
-          <Li>My Photos</Li>
-          <Li>Upload</Li>
+          <StyledLink to="/">My Photos</StyledLink>
+          <StyledLink to="/">Upload</StyledLink>
+          <Li onClick={props.logOutUser}>Logout</Li>
+          </>
+          :
+          <>
+          <StyledLink to="/login">Login</StyledLink>
+          <StyledLink to="/">Register</StyledLink>
           </>
         }
-        <Li onClick={() => props.logInUser('Reinaldooo')}>Login</Li>
-        <Li>Register</Li>
-        <Li onClick={() => props.logOutUser()}>Logout</Li>
       </UserLinks>
     </Nav>
    );

@@ -24,13 +24,26 @@ class App extends Component {
   }
 
   logInUser = (user) => {
+    console.log(user)
     this.setState({ user })
   }
 
   logOutUser = () => {
-    this.setState({ user: false })
+    fetch('/gdisconnect')
+    // .then(res => res.json())
+    .then(res => {
+      console.log(res.status)
+      if(res.status === 200) {
+        this.setState({ user: false })
+      }
+    })
   }
 
+  componentDidMount() {
+    fetch('/check_credentials')
+    .then(res => res.json())
+    .then(res => this.setState({ user: res }))
+  }
 
   render() {
     return (
