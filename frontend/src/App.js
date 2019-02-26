@@ -61,6 +61,7 @@ class App extends Component {
               } />
               <Route exact path='/categories' component={CategoriesPage} />
               <Route exact path='/login' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
+              <Route exact path='/register' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
               <Route exact path='/categories/:category' component={CategoryImages} />
               <Route exact path='/images/:image' component={ImageDetail} />
               {/* 404 pages */}

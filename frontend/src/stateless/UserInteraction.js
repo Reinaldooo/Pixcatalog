@@ -99,7 +99,7 @@ class UserInteraction extends Component {
   componentDidMount() {
     fetch('/api/top_categories')
       .then(res => res.json())
-      .then(({top_cat}) => { this.setState({ categories: top_cat }) })
+      .then((res) => { this.setState({ categories: res }) })
   }
 
   render() {
@@ -110,10 +110,10 @@ class UserInteraction extends Component {
         <Categories>
           {
             this.state.categories.length > 0 && this.state.categories.map((c) => (
-              <StyledLink key={c.title} to={`/categories/${c.id}`}>
+              <StyledLink key={c[1]} to={`/categories/${c[2]}`}>
                 <Category>
-                  <h3>{`#${c.title}`}</h3>
-                  <p>{`${c.total} images`}</p>
+                  <h3>{`#${c[1]}`}</h3>
+                  <p>{`${c[0]} images`}</p>
                 </Category>
               </StyledLink>
             ))

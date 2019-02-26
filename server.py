@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, jsonify, url_for, send_file, json
 from flask import session as login_session
-from sqlalchemy import create_engine, asc, func
+from sqlalchemy import create_engine, asc, func, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Image, User, engine
 from operator import itemgetter
@@ -202,14 +202,12 @@ def categories():
 
 @app.route('/api/top_categories')
 def top_categories():
-    result = []
-    for category in session.query(Category).all():
-        result_item = {}
-        result_item['title'] = category.title
-        result_item['id'] = category.id
-        result_item['total'] = len(category.images)
-        result.append(result_item)
-    return jsonify(top_cat=sorted(result[:6], key=itemgetter('total'), reverse=True))
+    top_categories = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
+    .join(Category, Image.category_id == Category.id)\
+    .group_by(Image.category_id)\
+    .order_by(desc("quantidade"))\
+    .limit(6).all()
+    return jsonify(top_categories)
 
 
 @app.route('/api/get_category_details/<int:category_id>')

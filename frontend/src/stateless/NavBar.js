@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 //
 import logo from '../images/logo.svg';
-import { white, black } from '../utils/colors';
+import { white, black, red } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 
 
@@ -37,20 +37,20 @@ const UserLinks = styled.div`
   }
 `
 
-const Li = styled.li`
-  color: ${black};
+const StyledButton = styled.li`
+  color: ${props => props.danger ? white : black};
   list-style: none;
   font-weight: 600;
   border-radius: 5px;
   padding: 5px 10px;
-  background-color: ${white};
+  background-color: ${props => props.danger ? red : white};
   margin-left: 1rem;
   cursor: pointer;
 `
 
 const StyledLink = styled(Link)`
   color: ${black};
-  list-style: none;
+  text-decoration: none;
   font-weight: 600;
   border-radius: 5px;
   padding: 5px 10px;
@@ -59,29 +59,46 @@ const StyledLink = styled(Link)`
   cursor: pointer;
 `
 
-const NavBar = (props) => {
+class NavBar extends Component {
+  state = {
+    logOutText: 'Logout',
+    danger: false
+  }
+
+  handleLogOut = () => {
+    if(this.state.logOutText === 'Logout') {
+      this.setState({ logOutText: 'Confirm', danger: true })      
+    } else if (this.state.logOutText === 'Confirm') {
+      this.setState({ logOutText: 'Logout', danger: false })
+      this.props.logOutUser()
+    }
+  }
+
+  render() {
+    let { username } = this.props.user;
   return ( 
     <Nav>
       <Link className="logo-link" to="/"><Logo src={logo} alt="logo"/></Link>
       <UserLinks>
         {
-          props.user.username ?
+          username ?
           <>
-          <p className="welcome">{props.user.username}</p>
+          <p className="welcome">{username}</p>
           <UserSVG/>
           <StyledLink to="/">My Photos</StyledLink>
           <StyledLink to="/">Upload</StyledLink>
-          <Li onClick={props.logOutUser}>Logout</Li>
+          <StyledButton onClick={this.handleLogOut} danger={this.state.danger}>{this.state.logOutText}</StyledButton>
           </>
           :
           <>
-          <StyledLink to="/login">Login</StyledLink>
-          <StyledLink to="/">Register</StyledLink>
+          <StyledLink to={{pathname: "/login", state: { from: window.location.pathname }}}>Login</StyledLink>
+          <StyledLink to="/register">Register</StyledLink>
           </>
         }
       </UserLinks>
     </Nav>
    );
+  }
 }
  
 export default NavBar;
