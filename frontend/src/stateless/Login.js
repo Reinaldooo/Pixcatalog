@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from 'react-spinkit';
-import { GoogleLogin } from 'react-google-login';
+import axios from 'axios'
+import { GoogleLogin } from 'react-google-login';// Import React FilePond
 // //
 import { white, blue, black } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
@@ -17,8 +18,8 @@ const Main = styled.div`
   max-height: 600px;
   margin: 1rem auto 0;
   text-align: center;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
   align-items: center;
   justify-content: center;
 
@@ -73,7 +74,9 @@ class Login extends Component {
     username: '',
     password: '',
     passwordConfirm: '',
-    serverToken: null
+    serverToken: null,
+    files: [],
+    selectedFile: null
   }
 
   handleUser = (e) => {
@@ -112,6 +115,26 @@ class Login extends Component {
     this.getServerToken()
   }
 
+  fileChangedHandler = event => {
+    console.log(event.target.files[0])
+    this.setState({ selectedFile: event.target.files[0] })
+  }
+
+  uploadImage = (e) => {
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append(
+      'myFile',
+      this.state.selectedFile,
+      'hue'
+    )
+    axios.post('api/upload', formData, {
+      onUploadProgress: progressEvent => {
+        console.log(progressEvent.loaded / progressEvent.total)
+      }
+    })
+  }
+
   render() {
     let register = this.props.match.path === '/register'
     return (
@@ -122,10 +145,13 @@ class Login extends Component {
             :
             <>
               <UserIcon>
-                { console.log(this.props) }
                 <UserSVG />
               </UserIcon>
-              <Input
+              <form onSubmit={this.uploadImage} id="upload-form" action="/api/upload" method="POST" encType="multipart/form-data">
+                  <input id="file-picker" type="file" name="file" accept="image/*" onChange={this.fileChangedHandler}/>
+                  <input type="submit" value="Upload!" id="upload-button"/>
+              </form>
+              {/* <Input
                 type="text"
                 name="username"
                 placeholder='Username'
@@ -163,7 +189,7 @@ class Login extends Component {
                   onSuccess={this.responseGoogle}
                   onFailure={this.responseGoogle}
                 />
-              </div>
+              </div> */}
             </>
         }
       </Main>

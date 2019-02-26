@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, send_file, json
+from flask import Flask, render_template, request, redirect, jsonify, url_for, send_file, json, make_response
 from flask import session as login_session
+from PIL import Image as ImageEdit
 from sqlalchemy import create_engine, asc, func, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Image, User, engine
@@ -10,11 +11,15 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
-from flask import make_response
+import os
+from werkzeug.utils import secure_filename
 import requests
+import shortuuid
 
 app = Flask(__name__, static_folder='./frontend/build/static',
             template_folder='./frontend/build')
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 CLIENT_ID = json.loads(
     open('secret.json', 'r').read())['web']['client_id']
@@ -234,6 +239,43 @@ def get_user_images(user_id):
 def get_image(photo_address):
     filename = 'images/{}.jpeg'.format(photo_address)
     return send_file(filename, mimetype='image/jpeg')
+
+
+@app.route("/api/upload", methods=["POST"])
+def upload():
+    target = os.path.join(APP_ROOT, 'images')
+    print(target)
+    if not os.path.isdir(target):
+            os.mkdir(target)
+    upload = request.files.get('myFile', '')
+    filename = shortuuid.uuid()
+    destination = "/".join([target, '{}.jpeg'.format(filename)])
+    #convert and crop image
+    original = ImageEdit.open(upload)
+    width, height = original.size# Get dimensions
+    if width > height:
+        delta = width - height
+        left = int(delta/2)
+        upper = 0
+        right = height + left
+        lower = height
+    else:
+        delta = height - width
+        left = 0
+        upper = int(delta/2)
+        right = width
+        lower = width + upper
+    cropped_img = original.crop((left, upper, right, lower))
+    cropped_img.show()
+    new_im = cropped_img.convert('RGB')
+    new_im.save(destination)
+    image = Image(user_id=1, category_id=1, title="hauhauhahuahuha",
+               description='nshdjhfgkjsdfkjhsdkf', address=filename)
+    session.add(image)
+    session.commit()
+    # return send_from_directory("images", filename, as_attachment=True)
+    print("Okay")
+    return "Okay"
 
 
 if __name__ == '__main__':
