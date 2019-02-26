@@ -69,8 +69,11 @@ class NavBar extends Component {
     if(this.state.logOutText === 'Logout') {
       this.setState({ logOutText: 'Confirm', danger: true })      
     } else if (this.state.logOutText === 'Confirm') {
-      this.setState({ logOutText: 'Logout', danger: false })
+      this.setState({ logOutText: '...' })
       this.props.logOutUser()
+      setTimeout(() => {
+        this.setState({ logOutText: 'Logout', danger: false })
+      }, 2000);
     }
   }
 
@@ -85,7 +88,7 @@ class NavBar extends Component {
           <>
           <p className="welcome">{username}</p>
           <UserSVG/>
-          <StyledLink to="/">My Photos</StyledLink>
+          <StyledLink to="/myphotos">My Photos</StyledLink>
           <StyledLink to="/">Upload</StyledLink>
           <StyledButton onClick={this.handleLogOut} danger={this.state.danger}>{this.state.logOutText}</StyledButton>
           </>

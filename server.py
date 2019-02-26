@@ -147,7 +147,7 @@ def getUserID(email):
         return None
 
 
-@app.route('/check_credentials')
+@app.route('/api/check_credentials')
 def check():
     if 'username' in login_session:
         return jsonify(username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
@@ -180,6 +180,7 @@ def gdisconnect():
         return response
     else:
         # For whatever reason, the given token was invalid.
+        print(result)
         response = make_response(
             json.dumps('Failed to revoke token for given user.'))
         response.headers['Content-Type'] = 'application/json'
@@ -224,8 +225,9 @@ def img_details(address):
 
 @app.route('/api/get_user_images/<int:user_id>')
 def get_user_images(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
     images = session.query(Image).filter_by(user_id=user_id).all()
-    return jsonify(images=[i.serialize for i in images])
+    return jsonify(images=[i.serialize for i in images], user=user.serialize)
 
 
 @app.route('/api/get_image/<string:photo_address>')

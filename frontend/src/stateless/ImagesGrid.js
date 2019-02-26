@@ -29,6 +29,9 @@ const GridContainer = styled.div`
       visibility: hidden;
     }
   }
+  @media (max-width: 1400px) {
+    width: 85%;
+  }
 `
 
 const ImagesGrid = (props) => {

@@ -78,7 +78,8 @@ class ImageDetail extends Component {
   }
 
   render() {
-    const image = this.state.image
+    const { image } = this.state
+    const { user } = this.props
     return (
       <Main>
         {
@@ -92,8 +93,13 @@ class ImageDetail extends Component {
               <span>{`#${image.category_name}`}</span>
               <p>{image.description}</p>
               <StyledButton to='/'>Home</StyledButton>
-              <StyledButton to='/'>Edit</StyledButton>
-              <StyledButton to='/'>Delete</StyledButton>
+              {
+                user.user_id === image.user_id &&
+                <>
+                <StyledButton to='/'>Edit</StyledButton>
+                <StyledButton to='/'>Delete</StyledButton>
+                </>
+              }
             </Details>
           </>
         }

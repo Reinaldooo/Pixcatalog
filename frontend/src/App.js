@@ -6,6 +6,7 @@ import UserInteraction from './stateless/UserInteraction';
 import ImagesGrid from './stateless/ImagesGrid';
 import CategoriesPage from './stateless/CategoriesPage';
 import CategoryImages from './stateless/CategoryImages';
+import MyPhotos from './stateless/MyPhotos';
 import ImageDetail from './stateless/ImageDetail';
 import Login from './stateless/Login';
 import styled from 'styled-components';
@@ -30,17 +31,17 @@ class App extends Component {
 
   logOutUser = () => {
     fetch('/gdisconnect')
-    // .then(res => res.json())
+    .then(res => res.json())
     .then(res => {
-      console.log(res.status)
-      if(res.status === 200) {
-        this.setState({ user: false })
-      }
+      console.log(res)
+      // if(res.status === 200) {
+      //   this.setState({ user: false })
+      // }
     })
   }
 
   componentDidMount() {
-    fetch('/check_credentials')
+    fetch('/api/check_credentials')
     .then(res => res.json())
     .then(res => this.setState({ user: res }))
   }
@@ -62,8 +63,9 @@ class App extends Component {
               <Route exact path='/categories' component={CategoriesPage} />
               <Route exact path='/login' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
               <Route exact path='/register' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
-              <Route exact path='/categories/:category' component={CategoryImages} />
-              <Route exact path='/images/:image' component={ImageDetail} />
+              <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={this.state.user} />} />
+              <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={this.state.user} />} />
+              <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={this.state.user} />} />
               {/* 404 pages */}
               {/* <Route render={() => <ErrorPage/>}/> */}
           </Switch>

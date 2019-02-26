@@ -72,6 +72,9 @@ const StyledLink = styled(Link)`
   &:hover {
     transform: translate(1px, 2px);
   }
+  @media (max-width: 1400px) {
+    width: 35%;
+  }
 `
 
 const StyledButton = styled(Link)`

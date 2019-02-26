@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { blue, white, black } from '../utils/colors';
 
 
-const Main = styled.div`
+export const Main = styled.div`
   width: 80%;
   min-height: 200px;
   margin: 0 auto 10rem;
@@ -25,7 +25,7 @@ const Main = styled.div`
   }
 `
 
-const StyledLink = styled(Link)`
+export const StyledLink = styled(Link)`
   text-decoration: none;
   color: ${black};
   display: inline;
@@ -36,7 +36,7 @@ const StyledLink = styled(Link)`
   margin: .2rem .3rem;
 `
 
-const H2 = styled.h2`
+export const H2 = styled.h2`
   font-size: 2rem;
   font-weight: 400;
   color: ${white};
@@ -45,52 +45,59 @@ const H2 = styled.h2`
   }
 `
 
-class CategoryImages extends Component{
+const StyledImg = styled.img`
+  border: ${props => props.user ? `3px solid ${blue};` : 'none'};
+`
 
-  state= { 
+class CategoryImages extends Component {
+
+  state = {
     images: null,
     categoryTitle: null,
     totalImages: null
   }
 
+  isOwner = (img_owner) => (
+    img_owner === this.props.user.user_id
+  )
+
   componentDidMount() {
     fetch(`/api/get_category_details/${this.props.match.params.category}`)
-    .then(res => res.json())
-    .then(res => {
-      this.setState({
-        images: res.images,
-        categoryTitle: res.category.title,
-        totalImages: res.images.length
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          images: res.images,
+          categoryTitle: res.category.title,
+          totalImages: res.images.length
+        })
+        console.log(this.state)
       })
-      console.log(this.state)
-    })
   }
-  
-  render() {
 
-  return (
-    <Main>
-      <H2>All <span>{`#${this.state.categoryTitle}`}</span> images</H2>      
-      <div>
-        <StyledLink to='/categories'>Categories</StyledLink>
-        <StyledLink to='/'>Home</StyledLink>
-      </div>
-      {
-        this.state.images && this.state.images.map((image, index) => (
-          <Link
-          key={image.id}
-          to={{
-            pathname: `/images/${image.address}`,
-            image: image
-          }}
-          >
-          <img src={`/api/get_image/${image.address}`} alt={`category`} />
-          </Link>
-        ))
-      }
-    </Main>
-  );
-    }
+  render() {
+    return (
+      <Main>
+        <H2>All <span>{`#${this.state.categoryTitle}`}</span> images</H2>
+        <div>
+          <StyledLink to='/categories'>Categories</StyledLink>
+          <StyledLink to='/'>Home</StyledLink>
+        </div>
+        {
+          this.state.images && this.state.images.map((image, index) => (
+            <Link
+              key={image.id}
+              to={{
+                pathname: `/images/${image.address}`,
+                image: image
+              }}
+            >
+              <StyledImg user={this.isOwner(image.user_id)} src={`/api/get_image/${image.address}`} alt={`category`} />
+            </Link>
+          ))
+        }
+      </Main>
+    );
+  }
 }
 
 export default CategoryImages;
