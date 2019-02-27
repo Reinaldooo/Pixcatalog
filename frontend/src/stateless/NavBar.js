@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 //
@@ -59,49 +59,49 @@ const StyledLink = styled(Link)`
   cursor: pointer;
 `
 
-class NavBar extends Component {
-  state = {
-    logOutText: 'Logout',
-    danger: false
-  }
+const NavBar = (props) => {
 
-  handleLogOut = () => {
-    if(this.state.logOutText === 'Logout') {
-      this.setState({ logOutText: 'Confirm', danger: true })      
-    } else if (this.state.logOutText === 'Confirm') {
-      this.setState({ logOutText: '...' })
-      this.props.logOutUser()
+  const [logOutText, setLogOutText] = useState('Logout')
+  const [danger, setDanger] = useState(false)
+
+  const handleLogOut = () => {
+    if (logOutText === 'Logout') {
+      setLogOutText('Confirm')
+      setDanger(true)
+    } else if (logOutText === 'Confirm') {
+      setLogOutText('...')
+      props.logOutUser()
       setTimeout(() => {
-        this.setState({ logOutText: 'Logout', danger: false })
+        setLogOutText('Logout')
+        setDanger(false)
       }, 2000);
     }
   }
 
-  render() {
-    let { username } = this.props.user;
-  return ( 
+  let { username } = props.user;
+
+  return (
     <Nav>
-      <Link className="logo-link" to="/"><Logo src={logo} alt="logo"/></Link>
+      <Link className="logo-link" to="/"><Logo src={logo} alt="logo" /></Link>
       <UserLinks>
         {
           username ?
-          <>
-          <p className="welcome">{username}</p>
-          <UserSVG/>
-          <StyledLink to="/myphotos">My Photos</StyledLink>
-          <StyledLink to="/upload">Upload</StyledLink>
-          <StyledButton onClick={this.handleLogOut} danger={this.state.danger}>{this.state.logOutText}</StyledButton>
-          </>
-          :
-          <>
-          <StyledLink to={{pathname: "/login", state: { from: window.location.pathname }}}>Login</StyledLink>
-          <StyledLink to="/register">Register</StyledLink>
-          </>
+            <>
+              <p className="welcome">{username}</p>
+              <UserSVG />
+              <StyledLink to="/myphotos">My Photos</StyledLink>
+              <StyledLink to="/upload">Upload</StyledLink>
+              <StyledButton onClick={handleLogOut} danger={danger}>{logOutText}</StyledButton>
+            </>
+            :
+            <>
+              <StyledLink to={{ pathname: "/login", state: { from: window.location.pathname } }}>Login</StyledLink>
+              <StyledLink to="/register">Register</StyledLink>
+            </>
         }
       </UserLinks>
     </Nav>
-   );
-  }
+  );
 }
- 
+
 export default NavBar;

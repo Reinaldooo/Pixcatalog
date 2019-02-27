@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 // //
 import { white, black, blue } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
@@ -65,47 +66,45 @@ const BackLink = styled(Link)`
   font-weight: 600;
 `
 
-class ImageDetail extends Component {
+const ImageDetail = (props) => {
 
-  state = {
-    image: null
-  }
+  const [image, setImage] = useState(false)
 
-  componentDidMount() {
-    fetch(`/api/get_image_details/${this.props.match.params.image}`)
-      .then(res => res.json())
-      .then(res => { console.log(res.image); this.setState({ image: res.image }) })
-  }
+  useEffect(() => {
+    axios(`/api/get_image_details/${props.match.params.image}`)
+      .then(({ data }) => {
+        console.log(data.image);
+        setImage(data.image)
+      })
+  }, [])
 
-  render() {
-    const { image } = this.state
-    const { user } = this.props
-    return (
-      <Main>
-        {
-          image &&
-          <>
-            <BackLink to={`/categories/${image.category_id}`}>Back to category</BackLink>
-            <img src={`/api/get_image/${image.address}`} alt={image.title}/>
-            <Details>
-              <h1>{image.title}</h1>
-              <span className="creator"><UserSVG />{` ${image.username}`}</span>
-              <span>{`#${image.category_name}`}</span>
-              <p>{image.description}</p>
-              <StyledButton to='/'>Home</StyledButton>
-              {
-                user.user_id === image.user_id &&
-                <>
+  const { user } = props
+
+  return (
+    <Main>
+      {
+        image &&
+        <>
+          <BackLink to={`/categories/${image.category_id}`}>Back to category</BackLink>
+          <img src={`/api/get_image/${image.address}`} alt={image.title} />
+          <Details>
+            <h1>{image.title}</h1>
+            <span className="creator"><UserSVG />{` ${image.username}`}</span>
+            <span>{`#${image.category_name}`}</span>
+            <p>{image.description}</p>
+            <StyledButton to='/'>Home</StyledButton>
+            {
+              user.user_id === image.user_id &&
+              <>
                 <StyledButton to='/'>Edit</StyledButton>
                 <StyledButton to='/'>Delete</StyledButton>
-                </>
-              }
-            </Details>
-          </>
-        }
-      </Main>
-    )
-  }
+              </>
+            }
+          </Details>
+        </>
+      }
+    </Main>
+  )
 }
 
 export default ImageDetail;

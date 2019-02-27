@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 //
 import { blue, white, black } from '../utils/colors';
 
@@ -65,43 +66,38 @@ const Category = styled.li`
   }
 `
 
-class CategoriesPage extends Component {
+const CategoriesPage = () => {
 
-  state = {
-    categories: null
-  }
+  const [categories, setCategories] = useState(null)
 
-  componentDidMount() {
-    fetch(`/api/categories`)
-    .then(res => res.json())
-    .then(res => { 
-      res.categories.sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
-      this.setState({ categories: res.categories })
-     })
-  }
+  useEffect(() => {
+    axios(`/api/categories`)
+      .then(({ data }) => {
+        data.categories.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+        setCategories(data.categories)
+      })
+  }, [])
 
-  render() {
-    return (
-      <Main>
-        <StyledButton to='/'>Home</StyledButton>
-        <p>You can create a new category while uploading an image.</p>
-        <CategoriesMain>
-          {
-            this.state.categories &&
-            this.state.categories.map(cat => (
-              <StyledLink key={cat.id} to={`/categories/${cat.id}`}>
+  return (
+    <Main>
+      <StyledButton to='/'>Home</StyledButton>
+      <p>You can create a new category while uploading an image.</p>
+      <CategoriesMain>
+        {
+          categories &&
+          categories.map(cat => (
+            <StyledLink key={cat.id} to={`/categories/${cat.id}`}>
               <Category>
                 <h3>{`#${cat.title}`}</h3>
                 <p>{`#${cat.images_total} images`}</p>
               </Category>
             </StyledLink>
-            ))
-          }
+          ))
+        }
 
-        </CategoriesMain>
-      </Main>
-    );
-  }
+      </CategoriesMain>
+    </Main>
+  );
 }
 
 export default CategoriesPage;

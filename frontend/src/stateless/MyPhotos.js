@@ -1,52 +1,50 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 //
 import { Main, H2, StyledLink } from './CategoryImages'
 
-class MyPhotos extends Component {
+const MyPhotos = (props) => {
 
-  state = {
-    images: null,
-    user: null
-  }
-  async componentDidMount() {    
-    let userId = await fetch('/api/check_credentials')
-    .then(res => res.json())
-    .then(({user_id}) => user_id)
+  const [images, setImages] = useState(null)
+  const [user, setUser] = useState(null)
 
-    fetch(`/api/get_user_images/${userId}`)
-      .then(res => res.json())
-      .then(({ images, user }) => {
-        this.setState({
-          images,
-          user
-        })
+  const getImages = async () => {
+    let userId = await axios('/api/check_credentials')
+      .then(({ data }) => data.user_id)
+
+    axios(`/api/get_user_images/${userId}`)
+      .then(({ data: { images, user } }) => {
+        setImages(images)
+        setUser(user)
       })
   }
 
-  render() {
-    return (
-      <Main>
-        {this.state.user && <H2>All images by: <span>{`#${this.state.user.name}`}</span></H2>}
-        <div>
-          <StyledLink to='/'>Home</StyledLink>
-        </div>
-        {
-          this.state.images && this.state.images.map((image, index) => (
-            <Link
-              key={image.id}
-              to={{
-                pathname: `/images/${image.address}`,
-                image: image
-              }}
-            >
-              <img src={`/api/get_image/${image.address}`} alt={`category`} />
-            </Link>
-          ))
-        }
-      </Main>
-    );
-  }
+  useEffect(() => {
+    getImages()
+  }, [])
+
+  return (
+    <Main>
+      {user && <H2>All images by: <span>{`#${user.name}`}</span></H2>}
+      <div>
+        <StyledLink to='/'>Home</StyledLink>
+      </div>
+      {
+        images && images.map((image, index) => (
+          <Link
+            key={image.id}
+            to={{
+              pathname: `/images/${image.address}`,
+              image: image
+            }}
+          >
+            <img src={`/api/get_image/${image.address}`} alt={`category`} />
+          </Link>
+        ))
+      }
+    </Main>
+  );
 }
 
 export default MyPhotos;

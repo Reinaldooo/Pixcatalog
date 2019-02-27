@@ -30,7 +30,6 @@ const App = () => {
 
   const logOutUser = () => {
     axios('/gdisconnect')
-      // .then(res => res.json())
       .then(res => {
         console.log(res)
         if (res.status === 200) {

@@ -48,13 +48,14 @@ def login():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    requestData = json.loads(request.data)
     # Validate state token
-    if request.args.get('serverToken') != login_session['serverToken']:
+    if requestData['serverToken'] != login_session['serverToken']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     # Obtain authorization code, now compatible with Python3
-    code = request.args.get('code')
+    code = requestData['code']
 
     try:
         # Upgrade the authorization code into a credentials object
@@ -241,12 +242,13 @@ def get_image(photo_address):
     return send_file(filename, mimetype='image/jpeg')
 
 
-@app.route("/api/upload", methods=["POST", "DELETE"])
+@app.route("/api/upload_image", methods=["POST"])
 def upload():
     target = os.path.join(APP_ROOT, 'images')
     if not os.path.isdir(target):
             os.mkdir(target)
-    fileId = request.headers.get('fileId')   
+    fileId = request.headers.get('fileId')
+    print(fileId, 'hue')   
     upload = request.files.get('filepond', '')
     filename = fileId
     destination = "/".join([target, '{}.jpeg'.format(filename)])
@@ -271,14 +273,18 @@ def upload():
     cropped_img = original.crop((left, upper, right, lower))
     #convert to make it a jpeg
     new_im = cropped_img.convert('RGB')
-    new_im.show()
+    # new_im.show()
     new_im.save(destination)
-    #save it to db
-    image = Image(user_id=1, category_id=1, title="hauhauhahuahuha",
-               description='nshdjhfgkjsdfkjhsdkf', address=filename)
+    return "Ok"
+
+@app.route('/api/upload_image_details', methods=["POST"])
+def upload_image_details():
+    details = json.loads(request.form.get('details'))
+    image = Image(user_id=details['user_id'], category_id=details['category'], title=details['title'],
+               description=details['description'], address=details['address'])
     session.add(image)
     session.commit()
-    return "Okay"
+    return 'Ok'
 
 
 if __name__ == '__main__':

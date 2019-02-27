@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from 'react-spinkit';
 import { GoogleLogin } from 'react-google-login';// Import React FilePond
+import axios from 'axios';
 // //
 import { white, blue, black } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
@@ -14,9 +15,11 @@ export const Main = styled.div`
   width: 40vw;
   max-width: 500px;
   border-radius: 1rem;
-  height: 50vh;
-  max-height: 700px;
+  min-height: 50vh;
+  /* height should be higher on upload page */
+  max-height: ${props => props.upload ? '90%' : '700px' };
   margin: 1rem auto 0;
+  padding: 1rem 2rem 1.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -28,6 +31,10 @@ export const Main = styled.div`
     font-size: .8rem;
     margin-bottom: 0;
     margin-top: 2rem;
+
+    &.register-user {
+      margin: 1rem auto 2rem;
+    }
   }
 `
 
@@ -76,6 +83,7 @@ class Login extends Component {
     username: '',
     password: '',
     passwordConfirm: '',
+    fetchingGoogle: false,
     serverToken: null,
   }
 
@@ -94,21 +102,24 @@ class Login extends Component {
     }, 2000);
   }
   getServerToken = () => {
-    fetch('/api/get_token')
-      .then(res => res.text())
-      .then(serverToken => this.setState({ serverToken }))
+    axios('/api/get_token')
+      .then(({data}) => this.setState({ serverToken: data }))
   }
   responseGoogle = (response) => {
-    fetch(`/gconnect?serverToken=${this.state.serverToken}&code=${response.code}`, { method: 'post' })
-      .then(res => res.json())
+    axios.post(`/gconnect`, {
+      serverToken: this.state.serverToken,
+      code: response.code
+    })
       .then(res => {
-        if (res.email) {
-          this.props.logInUser(res)
-          setTimeout(() => {
-            this.props.history.push(this.props.location.state.from)
-          }, 500);
+        console.log(res)
+        if (res.status === 200) {
+          this.props.logInUser(res.data)
+          this.props.history.push(this.props.location.state.from)
         }
       })
+  }
+  requestGoogle = () => {
+    this.setState({ fetchingGoogle: true })
   }
   componentDidMount() {
     this.getServerToken()
@@ -119,8 +130,8 @@ class Login extends Component {
     return (
       <Main>
         {
-          this.state.loading ?
-            <Spinner name="cube-grid" color={blue} fadeIn='half' />
+          (this.state.loading || this.state.fetchingGoogle) ?
+            <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
             :
             <>
               <UserIcon>
@@ -163,6 +174,7 @@ class Login extends Component {
                   responseType="code"
                   onSuccess={this.responseGoogle}
                   onFailure={this.responseGoogle}
+                  onRequest={this.requestGoogle}
                 />
               </div>
             </>
