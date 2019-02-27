@@ -25,12 +25,6 @@ class Upload extends Component {
     description: ''
   }
 
-  componentDidMount() { }
-
-  handleInit(e) {
-    console.log(e)
-  }
-
   handleImageText = (e) => {
     e.target.name === 'title' ?
       this.setState({ title: e.target.value })
@@ -43,6 +37,8 @@ class Upload extends Component {
   // }
 
   render() {
+    let imageAddress = shortid.generate()
+
     return (
       <Main white>
         <FilePond
@@ -59,12 +55,7 @@ class Upload extends Component {
             process: {
               url: 'api/upload',
               method: 'POST',
-              withCredentials: false,
-              headers: {'fileId': `${shortid.generate()}`},
-              timeout: 7000,
-              onload: null,
-              onerror: null,
-              ondata: null
+              headers: {'fileId': `${imageAddress}`}
             }
           }}
           onprocessfileprogress={this.handleInit}

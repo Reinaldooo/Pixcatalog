@@ -6,8 +6,13 @@ from database_setup import Category, Base, Image, User, engine
 
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
-Base.metadata.bind = engine
+                       
+Base.metadata.drop_all(engine)
+print("cleaning db")
+Base.metadata.create_all(engine)
+print("New tables created")
 
+Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 # A DBSession() instance establishes all conversations with the database
 # and represents a "staging zone" for all the objects loaded into the
