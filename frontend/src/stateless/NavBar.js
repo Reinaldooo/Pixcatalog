@@ -89,7 +89,7 @@ class NavBar extends Component {
           <p className="welcome">{username}</p>
           <UserSVG/>
           <StyledLink to="/myphotos">My Photos</StyledLink>
-          <StyledLink to="/">Upload</StyledLink>
+          <StyledLink to="/upload">Upload</StyledLink>
           <StyledButton onClick={this.handleLogOut} danger={this.state.danger}>{this.state.logOutText}</StyledButton>
           </>
           :

@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from 'react-spinkit';
-import axios from 'axios'
 import { GoogleLogin } from 'react-google-login';// Import React FilePond
 // //
 import { white, blue, black } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 
-const Main = styled.div`
+export const Main = styled.div`
   position: relative;
-  background-color: ${white};
+  /* show real white */
+  background-color: ${props => props.white ? 'white' : white };
   box-shadow: 5px 10px 25px rgba(0,0,0,.3);
   width: 40vw;
   max-width: 500px;
   border-radius: 1rem;
   height: 50vh;
-  max-height: 600px;
+  max-height: 700px;
   margin: 1rem auto 0;
   text-align: center;
-  /* display: flex;
-  flex-direction: column; */
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
@@ -31,14 +31,15 @@ const Main = styled.div`
   }
 `
 
-const StyledButton = styled.button`
+export const StyledButton = styled.button`
   text-decoration: none;
   color: ${blue};
   display: inline-block;
   font-weight: 600;
   border-radius: 5px;
   padding: 10px 14px;
-  background-color: ${white};
+  /* show real white */
+  background-color: ${props => props.white ? 'white' : white };
   border: ${props => props.google ? 'none;' : '2px solid lightgray;'};
   box-shadow: ${props => props.google ? 'none;' : '0 0 15px rgba(0,0,0,.2);'};
   margin: .5rem .2rem;
@@ -51,13 +52,14 @@ const StyledButton = styled.button`
   }
 `
 
-const Input = styled.input`
+export const Input = styled.input`
   display: block;
   height: 2.2rem;
   width: 60%;
   margin-bottom: 1rem;
   border: 2px solid ${blue};
-  background-color: ${white};
+  /* show real white */
+  background-color: ${props => props.white ? 'white' : white };
   border-radius: 5px;
   padding: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
@@ -75,8 +77,6 @@ class Login extends Component {
     password: '',
     passwordConfirm: '',
     serverToken: null,
-    files: [],
-    selectedFile: null
   }
 
   handleUser = (e) => {
@@ -110,29 +110,8 @@ class Login extends Component {
         }
       })
   }
-
   componentDidMount() {
     this.getServerToken()
-  }
-
-  fileChangedHandler = event => {
-    console.log(event.target.files[0])
-    this.setState({ selectedFile: event.target.files[0] })
-  }
-
-  uploadImage = (e) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append(
-      'myFile',
-      this.state.selectedFile,
-      'hue'
-    )
-    axios.post('api/upload', formData, {
-      onUploadProgress: progressEvent => {
-        console.log(progressEvent.loaded / progressEvent.total)
-      }
-    })
   }
 
   render() {
@@ -147,11 +126,7 @@ class Login extends Component {
               <UserIcon>
                 <UserSVG />
               </UserIcon>
-              <form onSubmit={this.uploadImage} id="upload-form" action="/api/upload" method="POST" encType="multipart/form-data">
-                  <input id="file-picker" type="file" name="file" accept="image/*" onChange={this.fileChangedHandler}/>
-                  <input type="submit" value="Upload!" id="upload-button"/>
-              </form>
-              {/* <Input
+              <Input
                 type="text"
                 name="username"
                 placeholder='Username'
@@ -189,7 +164,7 @@ class Login extends Component {
                   onSuccess={this.responseGoogle}
                   onFailure={this.responseGoogle}
                 />
-              </div> */}
+              </div>
             </>
         }
       </Main>

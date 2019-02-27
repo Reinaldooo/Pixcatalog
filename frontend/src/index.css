@@ -20,3 +20,7 @@ body {
 .logo-link {
   height: 80%;
 }
+
+.filepond--wrapper {
+  width: 100%;
+}

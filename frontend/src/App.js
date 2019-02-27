@@ -9,6 +9,7 @@ import CategoryImages from './stateless/CategoryImages';
 import MyPhotos from './stateless/MyPhotos';
 import ImageDetail from './stateless/ImageDetail';
 import Login from './stateless/Login';
+import Upload from './stateless/Upload';
 import styled from 'styled-components';
 
 const Main = styled.div`
@@ -31,12 +32,12 @@ class App extends Component {
 
   logOutUser = () => {
     fetch('/gdisconnect')
-    .then(res => res.json())
+    // .then(res => res.json())
     .then(res => {
       console.log(res)
-      // if(res.status === 200) {
-      //   this.setState({ user: false })
-      // }
+      if(res.status === 200) {
+        this.setState({ user: false })
+      }
     })
   }
 
@@ -62,6 +63,7 @@ class App extends Component {
               } />
               <Route exact path='/categories' component={CategoriesPage} />
               <Route exact path='/login' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
+              <Route exact path='/upload' render={(props) => <Upload {...props} user={this.state.user} />} />
               <Route exact path='/register' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
               <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={this.state.user} />} />
               <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={this.state.user} />} />

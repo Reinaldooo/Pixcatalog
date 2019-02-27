@@ -29,7 +29,6 @@ class MyPhotos extends Component {
       <Main>
         {this.state.user && <H2>All images by: <span>{`#${this.state.user.name}`}</span></H2>}
         <div>
-          <StyledLink to='/categories'>Categories</StyledLink>
           <StyledLink to='/'>Home</StyledLink>
         </div>
         {

@@ -241,18 +241,20 @@ def get_image(photo_address):
     return send_file(filename, mimetype='image/jpeg')
 
 
-@app.route("/api/upload", methods=["POST"])
+@app.route("/api/upload", methods=["POST", "DELETE"])
 def upload():
     target = os.path.join(APP_ROOT, 'images')
-    print(target)
     if not os.path.isdir(target):
             os.mkdir(target)
-    upload = request.files.get('myFile', '')
-    filename = shortuuid.uuid()
+    fileId = request.headers.get('fileId')   
+    upload = request.files.get('filepond', '')
+    filename = fileId
     destination = "/".join([target, '{}.jpeg'.format(filename)])
     #convert and crop image
     original = ImageEdit.open(upload)
-    width, height = original.size# Get dimensions
+    #Get original dimensions
+    width, height = original.size
+    #calculate how it should be cropped
     if width > height:
         delta = width - height
         left = int(delta/2)
@@ -265,16 +267,17 @@ def upload():
         upper = int(delta/2)
         right = width
         lower = width + upper
+    #crop image
     cropped_img = original.crop((left, upper, right, lower))
-    cropped_img.show()
+    #convert to make it a jpeg
     new_im = cropped_img.convert('RGB')
+    new_im.show()
     new_im.save(destination)
+    #save it to db
     image = Image(user_id=1, category_id=1, title="hauhauhahuahuha",
                description='nshdjhfgkjsdfkjhsdkf', address=filename)
     session.add(image)
     session.commit()
-    # return send_from_directory("images", filename, as_attachment=True)
-    print("Okay")
     return "Okay"
 
 
