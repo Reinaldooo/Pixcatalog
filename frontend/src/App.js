@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import axios from 'axios';
 //
 import NavBar from './stateless/NavBar';
 import UserInteraction from './stateless/UserInteraction';
@@ -19,62 +20,59 @@ const Main = styled.div`
   margin-top: -2%;
 `
 
-class App extends Component {
-  state = {
-    user: false,
-    categories: []
-  }
+const App = () => {
+  const [user, setUser] = useState(false);
 
-  logInUser = (user) => {
+  const logInUser = (user) => {
     console.log(user)
-    this.setState({ user })
+    setUser(user)
   }
 
-  logOutUser = () => {
-    fetch('/gdisconnect')
-    // .then(res => res.json())
+  const logOutUser = () => {
+    axios('/gdisconnect')
+      // .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        if (res.status === 200) {
+          setUser(false)
+        }
+      })
+  }
+
+  useEffect(() => {
+    axios('/api/check_credentials')
     .then(res => {
-      console.log(res)
-      if(res.status === 200) {
-        this.setState({ user: false })
-      }
-    })
-  }
+      console.log(res);
+      setUser(res.data)
+    });
+  }, []);
 
-  componentDidMount() {
-    fetch('/api/check_credentials')
-    .then(res => res.json())
-    .then(res => this.setState({ user: res }))
-  }
-
-  render() {
-    return (
-      <Router>
-        <div className="app">
-          <NavBar user={this.state.user} logInUser={this.logInUser} logOutUser={this.logOutUser}/>
-          <Switch>
-            <Route
-              exact path='/'
-              render={() =>
-                <Main>
-                  <ImagesGrid />
-                  <UserInteraction categories={this.state.categories}/>
-                </Main>
-              } />
-              <Route exact path='/categories' component={CategoriesPage} />
-              <Route exact path='/login' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
-              <Route exact path='/upload' render={(props) => <Upload {...props} user={this.state.user} />} />
-              <Route exact path='/register' render={(props) => <Login {...props} logInUser={this.logInUser} />} />
-              <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={this.state.user} />} />
-              <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={this.state.user} />} />
-              <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={this.state.user} />} />
-              {/* 404 pages */}
-              {/* <Route render={() => <ErrorPage/>}/> */}
-          </Switch>
-        </div>
-      </Router>
-    );
-  }
+  return (
+    <Router>
+      <div className="app">
+        <NavBar user={user} logInUser={logInUser} logOutUser={logOutUser} />
+        <Switch>
+          <Route
+            exact path='/'
+            render={() =>
+              <Main>
+                <ImagesGrid />
+                <UserInteraction />
+              </Main>
+            } />
+          <Route exact path='/categories' component={CategoriesPage} />
+          <Route exact path='/login' render={(props) => <Login {...props} logInUser={logInUser} />} />
+          <Route exact path='/upload' render={(props) => <Upload {...props} user={user} />} />
+          <Route exact path='/register' render={(props) => <Login {...props} logInUser={logInUser} />} />
+          <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={user} />} />
+          <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={user} />} />
+          <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={user} />} />
+          {/* 404 pages */}
+          {/* <Route render={() => <ErrorPage/>}/> */}
+        </Switch>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
