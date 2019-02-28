@@ -86,7 +86,7 @@ const CategoriesPage = () => {
         {
           categories &&
           categories.map(cat => (
-            <StyledLink key={cat.id} to={`/categories/${cat.id}`}>
+            <StyledLink key={cat.id} to={`/categories/${cat.title}`}>
               <Category>
                 <h3>{`#${cat.title}`}</h3>
                 <p>{`#${cat.images_total} images`}</p>

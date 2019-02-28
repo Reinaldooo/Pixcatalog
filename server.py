@@ -14,7 +14,6 @@ import json
 import os
 from werkzeug.utils import secure_filename
 import requests
-import shortuuid
 
 app = Flask(__name__, static_folder='./frontend/build/static',
             template_folder='./frontend/build')
@@ -29,6 +28,44 @@ APPLICATION_NAME = "PixCatalog"
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+def createCategory(title):
+    newCategory = Category(title=title)
+    session.add(newCategory)
+    session.commit()
+    category = session.query(Category).filter_by(title=title).one()
+    return category.id
+
+
+def getCategoryID(title):
+    try:
+        category = session.query(Category).filter_by(title=title).one()
+        return category.id
+    except:
+        return None
 
 
 @app.route('/', defaults={'path': ''})
@@ -131,28 +168,6 @@ def gconnect():
     return jsonify(username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
 
 
-def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
-
-
-def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
-
-
-def getUserID(email):
-    try:
-        user = session.query(User).filter_by(email=email).one()
-        return user.id
-    except:
-        return None
-
-
 @app.route('/api/check_credentials')
 def check():
     if 'username' in login_session:
@@ -199,14 +214,6 @@ def categories():
     return jsonify(categories=[i.serialize for i in categories])
 
 
-# @app.route('/api/top_categories')
-# def top_categories():
-#     top_categories = session.query(func.count(Image.category_id).label('unidades'),Image.category_id).group_by(Image.category_id).order_by("unidades DESC").all()
-#     print(top_categories)
-#     # return jsonify(categories=[i.serialize for i in top_categories])
-#     return "ha"
-
-
 @app.route('/api/top_categories')
 def top_categories():
     top_categories = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
@@ -214,13 +221,20 @@ def top_categories():
     .group_by(Image.category_id)\
     .order_by(desc("quantidade"))\
     .limit(6).all()
+
     return jsonify(top_categories)
 
 
-@app.route('/api/get_category_details/<int:category_id>')
-def get_category_images(category_id):
-    category = session.query(Category).filter_by(id=category_id).one()
+@app.route('/api/get_category_details/<string:category>')
+def get_category_images(category):
+    category = session.query(Category).filter_by(title=category).one()
     return jsonify(images=[i.serialize for i in category.images], category=category.serialize)
+
+
+@app.route('/api/get_image/<string:photo_address>')
+def get_image(photo_address):
+    filename = 'images/{}.jpeg'.format(photo_address)
+    return send_file(filename, mimetype='image/jpeg')
 
 
 @app.route('/api/get_image_details/<string:address>')
@@ -236,19 +250,12 @@ def get_user_images(user_id):
     return jsonify(images=[i.serialize for i in images], user=user.serialize)
 
 
-@app.route('/api/get_image/<string:photo_address>')
-def get_image(photo_address):
-    filename = 'images/{}.jpeg'.format(photo_address)
-    return send_file(filename, mimetype='image/jpeg')
-
-
 @app.route("/api/upload_image", methods=["POST"])
-def upload():
+def upload_image():
     target = os.path.join(APP_ROOT, 'images')
     if not os.path.isdir(target):
             os.mkdir(target)
     fileId = request.headers.get('fileId')
-    print(fileId, 'hue')   
     upload = request.files.get('filepond', '')
     filename = fileId
     destination = "/".join([target, '{}.jpeg'.format(filename)])
@@ -280,11 +287,30 @@ def upload():
 @app.route('/api/upload_image_details', methods=["POST"])
 def upload_image_details():
     details = json.loads(request.form.get('details'))
-    image = Image(user_id=details['user_id'], category_id=details['category'], title=details['title'],
+    category_id = getCategoryID(details['category'])
+    if not category_id:
+        category_id = createCategory(title=details['category'])
+
+    image = Image(user_id=details['user_id'], category_id=category_id, title=details['title'],
                description=details['description'], address=details['address'])
     session.add(image)
     session.commit()
     return 'Ok'
+
+
+@app.route('/api/update_image_details/<int:img_id>', methods=["POST"])
+def update_image_details(img_id):
+    details = json.loads(request.form.get('editedDetails'))
+    category_id = getCategoryID(details['category'])
+    if not category_id:
+        category_id = createCategory(title=details['category'])
+    editedImage = session.query(Image).filter_by(id=img_id).one()
+    editedImage.title = details['title']
+    editedImage.description = details['description']
+    editedImage.category_id = category_id    
+    session.add(editedImage)
+    session.commit()
+    return 'Ok, edited'
 
 
 if __name__ == '__main__':

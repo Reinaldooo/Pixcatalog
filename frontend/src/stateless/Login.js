@@ -4,13 +4,13 @@ import Spinner from 'react-spinkit';
 import { GoogleLogin } from 'react-google-login';// Import React FilePond
 import axios from 'axios';
 // //
-import { white, blue, black } from '../utils/colors';
+import { white, blue, black, red } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 
 export const Main = styled.div`
   position: relative;
   /* show real white */
-  background-color: ${props => props.white ? 'white' : white };
+  background-color: ${props => props.white ? '#f1f0ef' : white };
   box-shadow: 5px 10px 25px rgba(0,0,0,.3);
   width: 40vw;
   max-width: 500px;
@@ -40,14 +40,14 @@ export const Main = styled.div`
 
 export const StyledButton = styled.button`
   text-decoration: none;
-  color: ${blue};
+  color: ${props => props.danger ? red : blue};
   display: inline-block;
-  font-weight: 600;
+  font-weight: 400;
   border-radius: 5px;
-  padding: 10px 14px;
+  padding: 5px 14px;
   /* show real white */
-  background-color: ${props => props.white ? 'white' : white };
-  border: ${props => props.google ? 'none;' : '2px solid lightgray;'};
+  background-color: ${props => props.white ? '#f1f0ef' : white };
+  border: none;
   box-shadow: ${props => props.google ? 'none;' : '0 0 15px rgba(0,0,0,.2);'};
   margin: .5rem .2rem;
   text-align: center;
@@ -66,7 +66,7 @@ export const Input = styled.input`
   margin-bottom: 1rem;
   border: 2px solid ${blue};
   /* show real white */
-  background-color: ${props => props.white ? 'white' : white };
+  background-color: ${props => props.white ? '#f1f0ef' : white };
   border-radius: 5px;
   padding: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
@@ -87,12 +87,6 @@ class Login extends Component {
     serverToken: null,
   }
 
-  handleUser = (e) => {
-    this.setState({ username: e.target.value })
-  }
-  handlePwd = (e) => {
-    this.setState({ password: e.target.value })
-  }
   handleLogin = () => {
     this.setState({ loading: true })
     setTimeout(() => {
@@ -101,10 +95,12 @@ class Login extends Component {
       this.props.history.push("/")
     }, 2000);
   }
+
   getServerToken = () => {
     axios('/api/get_token')
       .then(({data}) => this.setState({ serverToken: data }))
   }
+
   responseGoogle = (response) => {
     axios.post(`/gconnect`, {
       serverToken: this.state.serverToken,
@@ -118,9 +114,11 @@ class Login extends Component {
         }
       })
   }
+
   requestGoogle = () => {
     this.setState({ fetchingGoogle: true })
   }
+  
   componentDidMount() {
     this.getServerToken()
   }
@@ -141,15 +139,11 @@ class Login extends Component {
                 type="text"
                 name="username"
                 placeholder='Username'
-                onChange={this.handleUser}
-                value={this.state.username}
               />
               <Input
                 type="password"
                 name="password"
                 placeholder='Password'
-                onChange={this.handlePwd}
-                value={this.state.password}
               />
               {
                 register &&
@@ -157,8 +151,6 @@ class Login extends Component {
                   type="password"
                   name="passwordConfirm"
                   placeholder='Confirm Password'
-                  onChange={this.handlePwd}
-                  value={this.state.passwordConfirm}
                 />
               }
               <div>

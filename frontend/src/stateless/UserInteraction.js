@@ -113,7 +113,7 @@ class UserInteraction extends Component {
         <Categories>
           {
             this.state.categories.length > 0 && this.state.categories.map((c) => (
-              <StyledLink key={c[1]} to={`/categories/${c[2]}`}>
+              <StyledLink key={c[1]} to={`/categories/${c[1]}`}>
                 <Category>
                   <h3>{`#${c[1]}`}</h3>
                   <p>{`${c[0]} images`}</p>

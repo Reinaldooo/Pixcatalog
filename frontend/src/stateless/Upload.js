@@ -13,26 +13,27 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // //
 import { white, blue } from '../utils/colors';
-import { Main, Input, StyledButton } from './Login'
+import { Main } from './Login'
+import UploadDetails from './UploadDetails';
 
 
 // Register filepond plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
-const Textarea = styled.textarea`
+export const Textarea = styled.textarea`
   display: block;
   height: 6rem;
   width: 60%;
   margin-bottom: 1rem;
   border: 2px solid ${blue};
   /* show real white */
-  background-color: ${props => props.white ? 'white' : white};
+  background-color: ${props => props.white ? '#f1f0ef' : white};
   border-radius: 5px;
   padding: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
 `
 
-const Select = styled.select`
+export const Select = styled.select`
   width: 60%;
   border: 2px solid ${blue};
   height: 1.5rem;
@@ -47,7 +48,6 @@ class Upload extends Component {
     description: '',
     imageAddress: shortid.generate() ,
     category: '',
-    categories: null,
     saving: false,
     uploaded: false
   }
@@ -60,7 +60,7 @@ class Upload extends Component {
       case 'description':
         this.setState({ description: e.target.value })
         break
-      case 'select':
+      case 'category':
         this.setState({ category: e.target.value })
         break
       default:
@@ -77,7 +77,8 @@ class Upload extends Component {
     }
   }
 
-  handleSave = () => {
+  handleSave = (e) => {
+    e.preventDefault()
     let details = {
       title: this.state.title,
       description: this.state.description,
@@ -99,16 +100,8 @@ class Upload extends Component {
     this.setState({ saving: true })
   }
 
-  componentDidMount() {
-    axios(`/api/categories`)
-      .then(({ data }) => {
-        data.categories.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
-        this.setState({ categories: data.categories })
-      })
-  }
-
   render() {
-    const { files, saving, title, description, categories, imageAddress } = this.state
+    const { files, saving, title, description, imageAddress } = this.state
     return (
       <Main white upload>
         {
@@ -142,32 +135,13 @@ class Upload extends Component {
                   });
                 }}
               />
-              <Input
-                white
-                type="text"
-                name="title"
-                placeholder='Title'
-                onChange={this.handleImageText}
-                value={title}
+              <UploadDetails
+                upload={true}
+                title={title}
+                description={description}
+                handleImageText={this.handleImageText}
+                handleSave={this.handleSave}
               />
-              <Textarea
-                white
-                name="description"
-                placeholder='Description'
-                onChange={this.handleImageText}
-                value={description}
-              />
-              <Select white name='select' onChange={this.handleImageText}>
-                <option value="none">Category</option>
-                {
-                  categories && categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.title}</option>
-                  ))
-                }
-              </Select>
-              <div>
-                <StyledButton to='/' white onClick={this.handleSave}>Save</StyledButton>
-              </div>
             </>
         }
       </Main>
