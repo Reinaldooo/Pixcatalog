@@ -86,7 +86,7 @@ const CategoryImages = (props) => {
               image: image
             }}
           >
-            <StyledImg user={isOwner(image.user_id)} src={`/api/get_image/${image.address}`} alt={`category`} />
+            <StyledImg user={isOwner(image.user_id)} src={`/api/get_image_thumb/${image.address}`} alt={`category`} />
           </Link>
         ))
       }

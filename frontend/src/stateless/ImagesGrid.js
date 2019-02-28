@@ -40,7 +40,7 @@ const ImagesGrid = (props) => {
       <GridContainer>
         {
           helperArray.map((i, index) => (
-            <img key={index} src={[`/api/get_image/img${index}`]} alt={`main-${index+1}`}/>
+            <img key={index} src={[`/api/get_image_thumb/img${index}`]} alt={`main-${index+1}`}/>
           ))
         }
       </GridContainer>

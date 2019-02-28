@@ -93,7 +93,8 @@ class Upload extends Component {
     )
     axios.post('api/upload_image_details', formData)
       .then((res) => {
-        if (res.data === "Ok") {
+        if (res.status === 200) {
+          console.log(res)
           this.props.history.push(`/images/${this.state.imageAddress}`)
         }
       })

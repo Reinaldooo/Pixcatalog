@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 //
@@ -65,18 +65,13 @@ const NavBar = (props) => {
   const [danger, setDanger] = useState(false)
 
   const handleLogOut = () => {
-    if (logOutText === 'Logout') {
-      setLogOutText('Confirm')
-      setDanger(true)
-    } else if (logOutText === 'Confirm') {
       setLogOutText('...')
-      props.logOutUser()
-      setTimeout(() => {
-        setLogOutText('Logout')
-        setDanger(false)
-      }, 2000);
-    }
+      props.logOutUser()   
   }
+
+  useEffect(() => {
+    return () => { setLogOutText('Logout') }
+  }, [])
 
   let { username } = props.user;
 
@@ -91,7 +86,7 @@ const NavBar = (props) => {
               <UserSVG />
               <StyledLink to="/myphotos">My Photos</StyledLink>
               <StyledLink to="/upload">Upload</StyledLink>
-              <StyledButton onClick={handleLogOut} danger={danger}>{logOutText}</StyledButton>
+              <StyledButton onClick={handleLogOut}>{logOutText}</StyledButton>
             </>
             :
             <>

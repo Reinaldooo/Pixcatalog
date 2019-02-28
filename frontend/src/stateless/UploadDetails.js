@@ -12,7 +12,7 @@ const Form = styled.form`
   justify-content: center;
 `
 
-const UploadDetails = ({ handleSave, handleImageText, defaultTitle, defaultDescription, defaultCategory, handleDelete, handleCancel }) => {
+const UploadDetails = ({ handleSave, handleImageText, defaultTitle, defaultDescription, defaultCategory, handleDeleteConfirm, handleCancel }) => {
 
   // const [categories, setCategories] = useState([])
 
@@ -52,10 +52,10 @@ const UploadDetails = ({ handleSave, handleImageText, defaultTitle, defaultDescr
       <div>
         <StyledButton white onClick={handleSave}>Save</StyledButton>
         {
-          handleDelete &&
+          handleDeleteConfirm &&
           <>
             <StyledButton white onClick={handleCancel}>Cancel</StyledButton>
-            <StyledButton white danger onClick={handleDelete}>Delete</StyledButton>
+            <StyledButton white danger onClick={handleDeleteConfirm}>Delete</StyledButton>
           </>
         }
       </div>

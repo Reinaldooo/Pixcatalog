@@ -237,9 +237,18 @@ def get_image(photo_address):
     return send_file(filename, mimetype='image/jpeg')
 
 
+@app.route('/api/get_image_thumb/<string:photo_address>')
+def get_image_thumb(photo_address):
+    filename = 'thumb/{}.jpeg'.format(photo_address)
+    return send_file(filename, mimetype='image/jpeg')
+
+
 @app.route('/api/get_image_details/<string:address>')
 def img_details(address):
-    image = session.query(Image).filter_by(address=address).one()
+    try:
+        image = session.query(Image).filter_by(address=address).one()
+    except:
+        return "Image not found"
     return jsonify(image=image.serialize)
 
 
@@ -253,12 +262,14 @@ def get_user_images(user_id):
 @app.route("/api/upload_image", methods=["POST"])
 def upload_image():
     target = os.path.join(APP_ROOT, 'images')
+    targetThumb = os.path.join(APP_ROOT, 'thumb')
     if not os.path.isdir(target):
             os.mkdir(target)
     fileId = request.headers.get('fileId')
     upload = request.files.get('filepond', '')
     filename = fileId
     destination = "/".join([target, '{}.jpeg'.format(filename)])
+    destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(filename)])
     #convert and crop image
     original = ImageEdit.open(upload)
     #Get original dimensions
@@ -280,8 +291,12 @@ def upload_image():
     cropped_img = original.crop((left, upper, right, lower))
     #convert to make it a jpeg
     new_im = cropped_img.convert('RGB')
-    # new_im.show()
+    thumb = new_im.copy()
     new_im.save(destination)
+    size = 300, 300
+    thumb.thumbnail(size)
+    thumb.save(destinationThumb)
+    # new_im.show()
     return "Ok"
 
 @app.route('/api/upload_image_details', methods=["POST"])
@@ -295,13 +310,12 @@ def upload_image_details():
                description=details['description'], address=details['address'])
     session.add(image)
     session.commit()
-    return 'Ok'
+    return 'Ok, uploaded'
 
 
 @app.route('/api/update_image_details/<int:img_id>', methods=["POST"])
 def update_image_details(img_id):
     details = json.loads(request.form.get('editedDetails'))
-    print(details)
     category_id = getCategoryID(details['category'])
     if not category_id:
         category_id = createCategory(title=details['category'])
@@ -312,6 +326,14 @@ def update_image_details(img_id):
     session.add(editedImage)
     session.commit()
     return 'Ok, edited'
+
+
+@app.route('/api/delete_image/<int:img_id>', methods=['POST'])
+def delete_image(img_id):
+    imageToDelete = session.query(Image).filter_by(id=img_id).one()
+    session.delete(imageToDelete)
+    session.commit()
+    return "Image deleted"
 
 
 if __name__ == '__main__':

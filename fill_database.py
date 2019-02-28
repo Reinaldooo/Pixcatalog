@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import random, requests
+import random, requests, os
+from PIL import Image as ImageEdit
 
 from database_setup import Category, Base, Image, User, engine
 
@@ -22,6 +23,8 @@ DBSession = sessionmaker(bind=engine)
 # revert all of them back to the last commit by calling
 # session.rollback()
 session = DBSession()
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Create dummy user
 User1 = User(name="Reinaldooo", email="rewifetri@gmail.com",
@@ -133,6 +136,12 @@ images = [
 #   if response.status_code == 200:
 #     with open("./images/{}.jpeg".format(img), 'wb') as f:
 #         f.write(response.content)
+#     targetThumb = os.path.join(APP_ROOT, 'thumb')    
+#     destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(img)])
+#     imgN = ImageEdit.open("{}/images/{}.jpeg".format(APP_ROOT, img))
+#     size = 300, 300
+#     imgN.thumbnail(size)
+#     imgN.save(destinationThumb)
 
 categories = [
   1,

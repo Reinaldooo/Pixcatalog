@@ -1,6 +1,5 @@
 Flask
 SQLAlchemy
 Pillow
-shortuuid
 oauth2client
 requests

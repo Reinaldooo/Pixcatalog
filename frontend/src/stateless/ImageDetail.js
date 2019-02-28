@@ -49,6 +49,7 @@ const StyledButton = styled.button`
   font-weight: 600;
   font-size: .9rem;
   border-radius: 5px;
+  border: none;
   padding: 5px 10px;
   background-color: ${white};
   margin: .5rem .2rem;
@@ -76,11 +77,12 @@ const ImageDetail = (props) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
     axios(`/api/get_image_details/${props.match.params.image}`)
       .then(({ data }) => {
-        console.log(data.image);
+        console.log(data);
         setImage(data.image)
       })
   }, [])
@@ -112,9 +114,18 @@ const ImageDetail = (props) => {
     setEdit(false)
   }
 
+  const handleDeleteConfirm = () => {
+    setConfirmDelete(true)
+  }
+
   const handleDelete = (e) => {
     e.preventDefault()
-    console.log('delete')
+    axios.post(`/api/delete_image/${image.id}`)
+    .then((res) => {
+      if (res.status === 200) {
+        props.history.push("/myphotos")
+        }
+    })
   }
   
   const handleSave = (e) => {
@@ -168,17 +179,27 @@ const ImageDetail = (props) => {
                 </>
               }
               </>
-              :
-                <UploadDetails
-                  upload={false}
-                  defaultTitle={image.title}
-                  defaultDescription={image.description}
-                  defaultCategory={image.category_name}
-                  handleImageText={handleImageText}
-                  handleSave={handleSave}
-                  handleDelete={handleDelete}
-                  handleCancel={handleCancel}
-                />
+              : 
+                <>
+                {
+                  confirmDelete ?
+                  <>
+                  <StyledButton danger onClick={handleDelete}>Confirm</StyledButton>
+                  <StyledButton onClick={() => setConfirmDelete(false)}>Cancel</StyledButton>
+                  </>
+                  :
+                  <UploadDetails
+                    upload={false}
+                    defaultTitle={image.title}
+                    defaultDescription={image.description}
+                    defaultCategory={image.category_name}
+                    handleImageText={handleImageText}
+                    handleSave={handleSave}
+                    handleDeleteConfirm={handleDeleteConfirm}
+                    handleCancel={handleCancel}
+                  />
+                }
+                </>
             }
           </Details>
         </>

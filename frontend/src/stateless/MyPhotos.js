@@ -39,7 +39,7 @@ const MyPhotos = (props) => {
               image: image
             }}
           >
-            <img src={`/api/get_image/${image.address}`} alt={`category`} />
+            <img src={`/api/get_image_thumb/${image.address}`} alt={`category`} />
           </Link>
         ))
       }
