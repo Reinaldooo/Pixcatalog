@@ -306,9 +306,9 @@ def update_image_details(img_id):
     if not category_id:
         category_id = createCategory(title=details['category'])
     editedImage = session.query(Image).filter_by(id=img_id).one()
-    editedImage['title'] = details['title']
-    editedImage['description'] = details['description']
-    editedImage['category_id'] = category_id    
+    editedImage.title = details['title']
+    editedImage.description = details['description']
+    editedImage.category_id = category_id    
     session.add(editedImage)
     session.commit()
     return 'Ok, edited'
