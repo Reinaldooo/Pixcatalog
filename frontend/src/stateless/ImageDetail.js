@@ -103,8 +103,8 @@ const ImageDetail = (props) => {
 
   const handleEdit = () => {
     setTitle(image.title)
-    setTitle(image.description)
-    setTitle(image.category)
+    setDescription(image.description)
+    setCategory(image.category)
     setEdit(true)
   }
 
