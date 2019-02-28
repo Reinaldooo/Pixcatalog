@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, send_file, json, make_response
+from flask import Flask, render_template, request, redirect, jsonify, url_for, send_file, json, make_response, abort
 from flask import session as login_session
 from PIL import Image as ImageEdit
 from sqlalchemy import create_engine, asc, func, desc
@@ -44,9 +44,18 @@ def getUserInfo(user_id):
     return user
 
 
-def getUserID(email):
+def getUserIDByEmail(email):
     try:
         user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+def getUserIDByName(user):
+    try:
+        user = session.query(User).filter_by(name=user).one()
+        print(user)
         return user.id
     except:
         return None
@@ -81,6 +90,30 @@ def login():
     login_session['serverToken'] = state
     # return "The current session state is %s" % login_session['state']
     return state
+
+
+@app.route('/api/create_user', methods = ['POST', 'GET'])
+def users():
+    if request.method == "POST":
+        username = request.json.get('username')
+        password = request.json.get('password')
+        email = request.json.get('email')
+        if username is None or password is None:
+            abort(400) # missing arguments
+        if session.query(User).filter_by(name = username).first() is not None:
+            abort(400) # existing user
+        if session.query(User).filter_by(email = email).first() is not None:
+            abort(400) # existing user
+        user = User(name = username)
+        user.hash_password(password)
+        user.email = email
+        user.picture = "https://picsum.photos/500?random"
+        session.add(user)
+        session.commit()
+        return jsonify({ 'username': user.name }), 201
+    else:
+        users = session.query(User).all()
+        return jsonify(users=[i.serialize for i in users])
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -160,7 +193,7 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-    user_id = getUserID(login_session['email'])
+    user_id = getUserIDByEmail(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
@@ -168,8 +201,24 @@ def gconnect():
     return jsonify(username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
 
 
+@app.route('/api/check_username/<string:user>', methods=["POST"])
+def check_user(user):
+    user_id = getUserIDByName(user.lower())
+    if not user_id:
+        return "Ok"
+    return "Used"
+
+
+@app.route('/api/check_email/<string:user>', methods=["POST"])
+def check_email(user):
+    user_id = getUserIDByEmail(user.lower())
+    if not user_id:
+        return "Ok"
+    return "Used"
+
+
 @app.route('/api/check_credentials')
-def check():
+def check_credentials():
     if 'username' in login_session:
         return jsonify(username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
     else:

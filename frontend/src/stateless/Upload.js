@@ -13,7 +13,7 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // //
 import { white, blue } from '../utils/colors';
-import { Main } from './Login'
+import { Main } from './LoginAndRegister'
 import UploadDetails from './UploadDetails';
 
 

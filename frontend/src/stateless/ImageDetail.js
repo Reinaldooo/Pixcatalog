@@ -161,7 +161,7 @@ const ImageDetail = (props) => {
         image &&
         <>
           <BackLink to={`/categories/${image.category_name}`}>Back to category</BackLink>
-          <img src={`/api/get_image/${image.address}`} alt={image.title} />
+          <img src={"https://picsum.photos/300?random"} alt={image.title} />
           {/* <MainII/> */}
           <Details>
             {

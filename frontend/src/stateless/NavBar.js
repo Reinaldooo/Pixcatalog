@@ -62,7 +62,6 @@ const StyledLink = styled(Link)`
 const NavBar = (props) => {
 
   const [logOutText, setLogOutText] = useState('Logout')
-  const [danger, setDanger] = useState(false)
 
   const handleLogOut = () => {
       setLogOutText('...')

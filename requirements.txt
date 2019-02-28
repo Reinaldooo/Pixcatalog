@@ -3,3 +3,4 @@ SQLAlchemy
 Pillow
 oauth2client
 requests
+passlib

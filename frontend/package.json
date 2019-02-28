@@ -9,6 +9,7 @@
     "filepond-plugin-image-exif-orientation": "^1.0.4",
     "filepond-plugin-image-preview": "^4.0.3",
     "react": "^16.8.3",
+    "react-debounce-input": "^3.2.0",
     "react-dom": "^16.8.3",
     "react-filepond": "^7.0.1",
     "react-google-login": "^5.0.2",

@@ -27,7 +27,7 @@ session = DBSession()
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Create dummy user
-User1 = User(name="Reinaldooo", email="rewifetri@gmail.com",
+User1 = User(name="reinaldooo", email="rewifetri@gmail.com",
              picture='https://picsum.photos/500?random')
 session.add(User1)
 session.commit()

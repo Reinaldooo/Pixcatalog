@@ -9,7 +9,7 @@ import CategoriesPage from './stateless/CategoriesPage';
 import CategoryImages from './stateless/CategoryImages';
 import MyPhotos from './stateless/MyPhotos';
 import ImageDetail from './stateless/ImageDetail';
-import Login from './stateless/Login';
+import LoginAndRegister from './stateless/LoginAndRegister';
 import Upload from './stateless/Upload';
 import styled from 'styled-components';
 
@@ -60,9 +60,9 @@ const App = () => {
               </Main>
             } />
           <Route exact path='/categories' component={CategoriesPage} />
-          <Route exact path='/login' render={(props) => <Login {...props} logInUser={logInUser} />} />
+          <Route exact path='/login' render={(props) => <LoginAndRegister {...props} logInUser={logInUser} />} />
           <Route exact path='/upload' render={(props) => <Upload {...props} user={user} />} />
-          <Route exact path='/register' render={(props) => <Login {...props} logInUser={logInUser} />} />
+          <Route exact path='/register' render={(props) => <LoginAndRegister {...props} logInUser={logInUser} />} />
           <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={user} />} />
           <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={user} />} />
           <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={user} />} />
