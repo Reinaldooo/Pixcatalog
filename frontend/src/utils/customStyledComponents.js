@@ -40,7 +40,7 @@ export const SuccessFlash = styled.span`
   position: absolute;
   border-radius: 5px;
   font-size: 1.1rem;
-  top: 5%;
+  top: ${props => props.upper ? '-10%' : '5%'}
   left: 25%;
   animation: ${buble} 1s linear infinite;
 `
@@ -67,5 +67,9 @@ export const InputWrapper = styled.div`
 export const Label = styled.label`
   font-size: .8rem;
   margin-bottom: 1rem;
-  color: ${props => props.danger === 'yes' ? red : black};
+  color: ${props => {
+    if (props.danger === 'yes') { return red }
+    if (props.darkBackground) { return white }
+    return black
+  }};
 `

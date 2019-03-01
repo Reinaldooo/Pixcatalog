@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-
 //
 import { blue, white, black } from '../utils/colors';
-
 
 export const Main = styled.div`
   width: 80%;
@@ -20,6 +18,9 @@ export const Main = styled.div`
     transition: opacity .3s;    
     &:hover {
       opacity: .7;
+    }
+    @media (max-width: 900px) {
+      width: 45%
     }
   }
   div {

@@ -21,12 +21,13 @@ const UploadDetails = ({
   defaultDescription,
   defaultCategory,
   handleDeleteConfirm,
-  handleCancel }) => {
+  handleCancel,
+  darkBackground }) => {
 
   return (
     <Form onSubmit={handleSave}>
       <InputWrapper>
-        <Label htmlFor="title">Image Title</Label>
+        <Label darkBackground={darkBackground} htmlFor="title">Image Title</Label>
         <Input
           white
           id="title"
@@ -38,7 +39,7 @@ const UploadDetails = ({
         />
       </InputWrapper>
       <InputWrapper>
-        <Label htmlFor="description">Image description</Label>
+        <Label darkBackground={darkBackground} htmlFor="description">Image description</Label>
         <Textarea
           white
           id="description"
@@ -49,11 +50,10 @@ const UploadDetails = ({
         />
       </InputWrapper>
       <InputWrapper>
-        <Label htmlFor="category">Category</Label>
+        <Label darkBackground={darkBackground} htmlFor="category">Category</Label>
         <Input
           white
           id="category"
-          white
           type="text"
           name="category"
           placeholder='Category'

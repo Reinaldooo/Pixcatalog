@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { ErrorFlash, SuccessFlash } from '../utils/customStyledComponents';
 // //
 import { white, black, blue } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
@@ -24,9 +25,18 @@ const Main = styled.div`
 
 const Details = styled.div`
   text-align: center;
+  position: relative;
   color: ${white};
   padding: 2rem;
+  min-height: 40vh;
   flex: 1;
+  max-width: 800px;
+
+  p {
+    width: 80%;
+    word-wrap: break-word;
+    margin: 1rem auto;
+  }
 
   h1 {
     margin-bottom: 0;
@@ -78,6 +88,8 @@ const ImageDetail = (props) => {
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [categoryEmpty, setCategoryEmpty] = useState(false)
+  const [editSuccess, setEditSuccess] = useState(false)
 
   useEffect(() => {
     axios(`/api/get_image_details/${props.match.params.image}`)
@@ -121,36 +133,47 @@ const ImageDetail = (props) => {
   const handleDelete = (e) => {
     e.preventDefault()
     axios.post(`/api/delete_image/${image.id}`)
-    .then((res) => {
-      if (res.status === 200) {
-        props.history.push("/myphotos")
-        }
-    })
-  }
-  
-  const handleSave = (e) => {
-    e.preventDefault()
-    let details = {
-      title,
-      description,
-      category,
-    }
-    image.title = title
-    image.description = description
-    image.category_name = category
-    setImage(image)
-    setEdit(false)
-    const formData = new FormData()
-    formData.append(
-      'editedDetails',
-      JSON.stringify(details),
-    )
-    axios.post(`/api/update_image_details/${image.id}`, formData)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res)
-         }
+          props.history.push("/myphotos")
+        }
       })
+  }
+
+  const handleSave = (e) => {
+    if (category.length === 0) {
+      e.preventDefault()
+      setCategoryEmpty(true)
+      setTimeout(() => {
+        setCategoryEmpty(false)
+      }, 1500);
+    } else {
+
+      e.preventDefault()
+      let details = {
+        title,
+        description,
+        category,
+      }
+      image.title = title
+      image.description = description
+      image.category_name = category
+      setImage(image)
+      setEdit(false)
+      const formData = new FormData()
+      formData.append(
+        'editedDetails',
+        JSON.stringify(details),
+      )
+      axios.post(`/api/update_image_details/${image.id}`, formData)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res)
+            setEditSuccess(true)
+            setTimeout(() => { setEditSuccess(false) }, 1500)
+          }
+        })
+    }
   }
 
   const { user } = props
@@ -165,39 +188,51 @@ const ImageDetail = (props) => {
           <Details>
             {
               !edit ?
-              <>
-              <h1>{image.title}</h1>
-              {console.log(props)}
-              <span className="creator"><UserSVG />{` ${image.username}`}</span>
-              <span>{`#${image.category_name}`}</span>
-              <p>{image.description}</p>
-              {
-                user.user_id === image.user_id &&
                 <>
-                  <StyledButton onClick={() => handleEdit()}>Edit</StyledButton>
+                  {
+                    editSuccess && <SuccessFlash upper>Image Edited</SuccessFlash>
+                  }
+                  <h1>{image.title}</h1>
+                  {console.log(props)}
+                  <span className="creator"><UserSVG />{` ${image.username}`}</span>
+                  <span>{`#${image.category_name}`}</span>
+                  <p>{image.description}</p>
+                  {
+                    user.user_id === image.user_id &&
+                    <>
+                      <StyledButton onClick={() => handleEdit()}>Edit</StyledButton>
+                    </>
+                  }
                 </>
-              }
-              </>
-              : 
+                :
                 <>
-                {
-                  confirmDelete ?
-                  <>
-                  <StyledButton danger onClick={handleDelete}>Confirm</StyledButton>
-                  <StyledButton onClick={() => setConfirmDelete(false)}>Cancel</StyledButton>
-                  </>
-                  :
-                  <UploadDetails
-                    upload={false}
-                    defaultTitle={image.title}
-                    defaultDescription={image.description}
-                    defaultCategory={image.category_name}
-                    handleImageText={handleImageText}
-                    handleSave={handleSave}
-                    handleDeleteConfirm={handleDeleteConfirm}
-                    handleCancel={handleCancel}
-                  />
-                }
+                  {
+                    confirmDelete ?
+                      <>
+                        <StyledButton danger onClick={handleDelete}>Confirm</StyledButton>
+                        <StyledButton onClick={() => setConfirmDelete(false)}>Cancel</StyledButton>
+                      </>
+                      :
+                      <>
+                        {
+                          categoryEmpty && <ErrorFlash>Please choose a category</ErrorFlash>
+                        }
+                        {
+                          editSuccess && <SuccessFlash>Image Edited</SuccessFlash>
+                        }
+                        <UploadDetails
+                          upload={false}
+                          defaultTitle={image.title}
+                          defaultDescription={image.description}
+                          defaultCategory={image.category_name}
+                          handleImageText={handleImageText}
+                          handleSave={handleSave}
+                          handleDeleteConfirm={handleDeleteConfirm}
+                          handleCancel={handleCancel}
+                          darkBackground={true}
+                        />
+                      </>
+                  }
                 </>
             }
           </Details>

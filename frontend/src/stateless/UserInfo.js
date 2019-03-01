@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-import { white, blue, red, black } from '../utils/colors';
 import { Input, InputWrapper, Label } from '../utils/customStyledComponents';
 
 

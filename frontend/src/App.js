@@ -18,6 +18,9 @@ const Main = styled.div`
   height: calc(100vh - 100px);
   width: 100%;
   margin-top: -2%;
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `
 
 const App = (props) => {

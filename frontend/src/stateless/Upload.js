@@ -71,7 +71,9 @@ class Upload extends Component {
 
   handleSave = (e) => {
     e.preventDefault()
-    if (this.state.category.length > 2) {
+    let categoryOk = this.state.category.length > 2
+    let fileAdded = this.state.files.length > 0
+    if (categoryOk && fileAdded) {
       this.pond.processFile().then(file => {
         this.setState({ saving: true })
         let details = {
@@ -94,7 +96,7 @@ class Upload extends Component {
             }
           })
       });
-    } else if (this.state.files.length === 0) {
+    } else if (!fileAdded) {
 
       this.setState({ noFile: true })
       setTimeout(() => {
@@ -120,7 +122,7 @@ class Upload extends Component {
             :
             <>
               {
-                categoryEmpty && <ErrorFlash>Category must have at least 3 chars</ErrorFlash>
+                categoryEmpty && <ErrorFlash>Please choose a category</ErrorFlash>
               }
               {
                 noFile && <ErrorFlash>You must choose one image</ErrorFlash>
