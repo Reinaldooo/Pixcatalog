@@ -77,9 +77,11 @@ def getCategoryID(title):
         return None
 
 
-@app.route('/', defaults={'path': ''})
+@app.route('/', defaults={'path': ''}, methods=["GET", "DELETE"])
 @app.route('/<path:path>')
 def index(path):
+    if request.method == "DELETE":
+        print(request)
     return render_template('index.html')
 
 

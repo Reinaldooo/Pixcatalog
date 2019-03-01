@@ -71,8 +71,7 @@ class Upload extends Component {
   handleUploadFinish = (err, file) => {
     if (!err) {
       this.setState({
-        uploaded: true,
-        imageAddress: file.getMetadata().customName
+        uploaded: true
       })
     }
   }
@@ -83,7 +82,6 @@ class Upload extends Component {
       title: this.state.title,
       description: this.state.description,
       category: this.state.category,
-      address: this.state.imageAddress,
       user_id: this.props.user.user_id
     }
     const formData = new FormData()
@@ -130,7 +128,7 @@ class Upload extends Component {
                 onprocessfile={this.handleUploadFinish}
                 onupdatefiles={fileItems => {
                   // Set currently active file objects to this.state
-                  fileItems[0].setMetadata({ customName: imageAddress })
+                  fileItems[0] && fileItems[0].setMetadata({ customName: imageAddress })
                   this.setState({
                     files: fileItems.map(fileItem => fileItem.file)
                   });

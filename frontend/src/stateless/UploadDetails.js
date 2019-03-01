@@ -14,16 +14,6 @@ const Form = styled.form`
 
 const UploadDetails = ({ handleSave, handleImageText, defaultTitle, defaultDescription, defaultCategory, handleDeleteConfirm, handleCancel }) => {
 
-  // const [categories, setCategories] = useState([])
-
-  // useEffect(() => {
-  //   axios(`/api/categories`)
-  //     .then(({ data }) => {
-  //       data.categories.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
-  //       setCategories(data.categories)
-  //     })
-  // }, [])
-
   return (
     <Form onSubmit={handleSave}>
       <Input

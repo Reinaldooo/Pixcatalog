@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Spinner from 'react-spinkit';
 import { GoogleLogin } from 'react-google-login';// Import React FilePond
 import axios from 'axios';
-import { DebounceInput } from 'react-debounce-input';
 // //
 import { white, blue, black, red } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
@@ -71,23 +70,6 @@ export const Input = styled.input`
   border-radius: 5px;
   padding: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
-`
-
-export const InputDebounce = styled(DebounceInput)`
-  display: block;
-  height: 2.2rem;
-  width: 60%;
-  margin-bottom: 1rem;
-  border: ${props => props.used === 'yes' ? `2px solid ${red}` : `2px solid ${blue}`};
-  /* show real white */
-  background-color: ${props => props.white ? '#f1f0ef' : white};
-  border-radius: 5px;
-  padding: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
-
-  :focus {
-    outline: none;
-  }
 `
 
 const UserIcon = styled.div`
