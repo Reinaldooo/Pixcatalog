@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 //
 import { StyledButton } from './LoginAndRegister';
-import { Input } from './UserInfo';
+import { Input, Label, InputWrapper } from '../utils/customStyledComponents';
 import { Textarea } from './Upload';
+
 
 const Form = styled.form`
   width: 100%;
@@ -13,33 +14,53 @@ const Form = styled.form`
   justify-content: center;
 `
 
-const UploadDetails = ({ handleSave, handleImageText, defaultTitle, defaultDescription, defaultCategory, handleDeleteConfirm, handleCancel }) => {
+const UploadDetails = ({
+  handleSave,
+  handleImageText,
+  defaultTitle,
+  defaultDescription,
+  defaultCategory,
+  handleDeleteConfirm,
+  handleCancel }) => {
 
   return (
     <Form onSubmit={handleSave}>
-      <Input
-        white
-        type="text"
-        name="title"
-        placeholder='Title'
-        defaultValue={defaultTitle}
-        onChange={handleImageText}
-      />
-      <Textarea
-        white
-        name="description"
-        placeholder='Description'
-        defaultValue={defaultDescription}
-        onChange={handleImageText}
-      />
-      <Input
-        white
-        type="text"
-        name="category"
-        placeholder='Category'
-        defaultValue={defaultCategory}
-        onChange={handleImageText}
-      />
+      <InputWrapper>
+        <Label htmlFor="title">Image Title</Label>
+        <Input
+          white
+          id="title"
+          type="text"
+          name="title"
+          placeholder='Title'
+          defaultValue={defaultTitle}
+          onChange={handleImageText}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Label htmlFor="description">Image description</Label>
+        <Textarea
+          white
+          id="description"
+          name="description"
+          placeholder='Description'
+          defaultValue={defaultDescription}
+          onChange={handleImageText}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Label htmlFor="category">Category</Label>
+        <Input
+          white
+          id="category"
+          white
+          type="text"
+          name="category"
+          placeholder='Category'
+          defaultValue={defaultCategory}
+          onChange={handleImageText}
+        />
+      </InputWrapper>
       <div>
         <StyledButton white onClick={handleSave}>Save</StyledButton>
         {

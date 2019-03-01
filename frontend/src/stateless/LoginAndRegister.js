@@ -57,7 +57,7 @@ export const StyledButton = styled.button`
   background-color: ${props => props.white ? '#f1f0ef' : white};
   border: none;
   box-shadow: ${props => props.google ? 'none;' : '0 0 15px rgba(0,0,0,.2);'};
-  margin: .5rem .2rem;
+  margin: 1rem .2rem;
   text-align: center;
   font-size: .9em;
   cursor: pointer;
@@ -112,7 +112,7 @@ class Login extends Component {
   handleSave = () => {
     let register = this.props.match.path === '/register'
     let redirectTo = this.props.location.state ? this.props.location.state.from : '/'
-    if (redirectTo === '/login') redirectTo = '/'
+    if (redirectTo === '/login' || redirectTo === '/register') redirectTo = '/'
 
     if (register) { //REGISTER VALIDATION
 
@@ -193,8 +193,6 @@ class Login extends Component {
       if (e.target.value.length > 1) {
         this.debounceCheck('user', e.target.value)
       }
-    } else {
-      this.setState({ username: e.target.value })
     }
   }
 
@@ -248,7 +246,8 @@ class Login extends Component {
         username: '',
         email: '',
         password: '',
-        passwordConfirm: ''
+        passwordConfirm: '',
+        fetching: false
       })
       if (this.props.match.path === '/login') {
         this.getServerToken()
@@ -258,7 +257,18 @@ class Login extends Component {
 
   render() {
     let register = this.props.match.path === '/register'
-    let { usernameUsed, emailUsed, username, password, passwordConfirm, email, invalidCredentials, registerInputError, registerInputErrorText, regSuccess } = this.state
+    let {
+      usernameUsed,
+      emailUsed,
+      username,
+      password,
+      passwordConfirm,
+      email,
+      invalidCredentials,
+      registerInputError,
+      registerInputErrorText,
+      regSuccess } = this.state
+
     return (
       <Main>
         {

@@ -1,31 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { white, blue, red, black } from '../utils/colors';
+import { Input, InputWrapper, Label } from '../utils/customStyledComponents';
 
-export const Input = styled.input`
-  display: block;
-  height: 2.2rem;
-  width: 100%;
-  margin: .5rem auto 0;
-  border: ${props => props.danger === 'yes' ? `2px solid ${red}` : `2px solid ${blue}`};
-  /* show real white */
-  background-color: ${props => props.white ? '#f1f0ef' : white};
-  outline-color: ${props => props.danger === 'yes' ? red : blue};
-  border-radius: 5px;
-  padding: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
-`
-
-const InputWrapper = styled.div`
-  width: 60%;
-  position: relative;
-`
-
-const Label = styled.label`
-  font-size: .8rem;
-  margin-bottom: 1rem;
-  color: ${props => props.danger === 'yes' ? red : black};
-`
 
 const UserInfo = ({
   usernameUsed,

@@ -15,6 +15,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { white, blue } from '../utils/colors';
 import { Main } from './LoginAndRegister'
 import UploadDetails from './UploadDetails';
+import { ErrorFlash } from '../utils/customStyledComponents';
 
 
 // Register filepond plugins
@@ -23,8 +24,8 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, F
 export const Textarea = styled.textarea`
   display: block;
   height: 6rem;
-  width: 60%;
-  margin-bottom: 1rem;
+  width: 100%;
+  margin-top: .5rem;
   border: 2px solid ${blue};
   /* show real white */
   background-color: ${props => props.white ? '#f1f0ef' : white};
@@ -48,7 +49,8 @@ class Upload extends Component {
     description: '',
     imageAddress: shortid.generate() ,
     category: '',
-    saving: false
+    saving: false,
+    noFile: false
   }
 
   handleImageText = (e) => {
@@ -69,32 +71,47 @@ class Upload extends Component {
 
   handleSave = (e) => {
     e.preventDefault()
-    this.pond.processFile().then(file => {
-      this.setState({ saving: true })
-      let details = {
-        title: this.state.title,
-        description: this.state.description,
-        category: this.state.category,
-        address: this.state.imageAddress,
-        user_id: this.props.user.user_id
-      }
-      const formData = new FormData()
-      formData.append(
-        'details',
-        JSON.stringify(details),
-      )
-      axios.post('api/upload_image_details', formData)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res)
-            this.props.history.push(`/images/${this.state.imageAddress}`)
-          }
-        })
-    });
+    if (this.state.category.length > 2) {
+      this.pond.processFile().then(file => {
+        this.setState({ saving: true })
+        let details = {
+          title: this.state.title,
+          description: this.state.description,
+          category: this.state.category,
+          address: this.state.imageAddress,
+          user_id: this.props.user.user_id
+        }
+        const formData = new FormData()
+        formData.append(
+          'details',
+          JSON.stringify(details),
+        )
+        axios.post('api/upload_image_details', formData)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res)
+              this.props.history.push(`/images/${this.state.imageAddress}`)
+            }
+          })
+      });
+    } else if (this.state.files.length === 0) {
+
+      this.setState({ noFile: true })
+      setTimeout(() => {
+        this.setState({ noFile: false })
+      }, 2000);
+
+    } else {      
+
+      this.setState({ categoryEmpty: true })
+      setTimeout(() => {
+        this.setState({ categoryEmpty: false })
+      }, 2000);
+    }
   }
 
   render() {
-    const { files, saving, title, description, imageAddress } = this.state
+    const { files, saving, title, description, imageAddress,  categoryEmpty, noFile } = this.state
     return (
       <Main white upload>
         {
@@ -102,6 +119,12 @@ class Upload extends Component {
             <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
             :
             <>
+              {
+                categoryEmpty && <ErrorFlash>Category must have at least 3 chars</ErrorFlash>
+              }
+              {
+                noFile && <ErrorFlash>You must choose one image</ErrorFlash>
+              }
               <FilePond
                 ref={ref => (this.pond = ref)}
                 files={files}
