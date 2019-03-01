@@ -82,7 +82,7 @@ def getCategoryID(title):
 def index(path):
     if request.method == "DELETE":
         print(request)
-    return render_template('index.html')
+    return render_template('index.html', token="hue")
 
 
 @app.route('/api/get_token')
@@ -126,7 +126,7 @@ def login():
         try:
             user = session.query(User).filter_by(name=username).one()
         except:
-            return "Incorrect user or password"    
+            return jsonify(status=False)   
         ok = user.verify_password(password)
         if ok:
             login_session['username'] = user.name
@@ -134,8 +134,9 @@ def login():
             login_session['email'] = user.email
             login_session['user_id'] = user.id
             return jsonify(status="Ok", username=user.name, email=user.email, user_id=user.id)
-        return jsonify(status="Incorrect user or password")   
+        return jsonify(status=False)   
     else:
+        #remove
         users = session.query(User).all()
         return jsonify(status="Ok", users=[i.serialize for i in users])
 

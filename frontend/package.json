@@ -8,6 +8,7 @@
     "filepond-plugin-file-validate-type": "^1.2.2",
     "filepond-plugin-image-exif-orientation": "^1.0.4",
     "filepond-plugin-image-preview": "^4.0.3",
+    "lodash.debounce": "^4.0.8",
     "react": "^16.8.3",
     "react-debounce-input": "^3.2.0",
     "react-dom": "^16.8.3",

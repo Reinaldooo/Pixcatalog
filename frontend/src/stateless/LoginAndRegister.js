@@ -3,9 +3,12 @@ import styled from 'styled-components';
 import Spinner from 'react-spinkit';
 import { GoogleLogin } from 'react-google-login';// Import React FilePond
 import axios from 'axios';
-// //
+import debounce from 'lodash.debounce'
+// Local imports
 import { white, blue, black, red } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
+import { ErrorFlash, SuccessFlash, UserIcon } from '../utils/customStyledComponents';
+import UserInfo from './UserInfo';
 
 export const Main = styled.div`
   position: relative;
@@ -26,11 +29,15 @@ export const Main = styled.div`
   align-items: center;
   justify-content: center;
 
+  div.buttons {
+    margin-top: 1rem;
+  }
+
   p {
     color: ${black};
     font-size: .8rem;
     margin-bottom: 0;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 
     &.register-user {
       margin: 1rem auto 2rem;
@@ -39,6 +46,7 @@ export const Main = styled.div`
 `
 
 export const StyledButton = styled.button`
+  margin-top: 1.4rem;
   text-decoration: none;
   color: ${props => props.danger ? red : blue};
   display: inline-block;
@@ -59,63 +67,109 @@ export const StyledButton = styled.button`
   }
 `
 
-export const Input = styled.input`
-  display: block;
-  height: 2.2rem;
-  width: 60%;
-  margin-bottom: 1rem;
-  border: 2px solid ${blue};
-  /* show real white */
-  background-color: ${props => props.white ? '#f1f0ef' : white};
-  border-radius: 5px;
-  padding: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
-`
-
-const UserIcon = styled.div`
-  width: 40px;
-  margin-bottom: 1rem;
-`
-
 class Login extends Component {
 
   state = {
+    regSuccess: false,
     username: '',
     password: '',
     passwordConfirm: '',
     email: '',
-    fetchingGoogle: false,
+    fetching: false,
     serverToken: null,
     usernameUsed: "no",
     emailUsed: "no",
+    emailValid: false,
+    userValid: false,
+    invalidCredentials: false,
+    validPasswordCheck: false,
+    registerInputError: false,
+    registerInputErrorText: ''
   }
+
+  debounceCheck = debounce((type, data) => {
+    if (type === "user") {
+      axios.post(`/api/check_username/${data}`)
+        .then(({ status, data }) => {
+          console.log(data)
+          if (status === 200) {
+            data === 'Used' ?
+             this.setState({ usernameUsed: 'yes', userValid: false })
+             :
+             this.setState({ userValid: true })
+          }
+        })
+    } else {
+      axios.post(`/api/check_email/${data}`)
+        .then(({ status, data }) => {
+          if (status === 200) {
+            data === 'Used' && this.setState({ emailUsed: 'yes', emailValid: false }); console.log(data)
+          }
+        })
+    }
+  }, 1500);
 
   handleSave = () => {
     let register = this.props.match.path === '/register'
-    if (register) {
-      let newUser = {}
-      newUser.username = this.state.username
-      newUser.password = this.state.password
-      newUser.email = this.state.email
-      axios.post(`/api/create_user`, newUser)
-      .then((res) => { console.log(res) })
-    } else {
-      this.setState({ fetchingGoogle: true })
+    let redirectTo = this.props.location.state ? this.props.location.state.from : '/'
+    if (redirectTo === '/login') redirectTo = '/'
+
+    if (register) { //REGISTER VALIDATION
+
+      if (!this.state.emailValid || !this.state.userValid) {
+        this.setState({ registerInputError: true, registerInputErrorText: "Please fill all fields." })
+        setTimeout(() => {
+          this.setState({ registerInputError: false, registerInputErrorText: "" })
+        }, 2000);
+
+      } else if (!this.state.validPasswordCheck) {
+
+        this.setState({ registerInputError: true, registerInputErrorText: "Passwords don't match" })
+        setTimeout(() => {
+          this.setState({ registerInputError: false, registerInputErrorText: "" })
+        }, 2000);
+
+      } else { //REGISTER USER  
+
+        let newUser = {}
+        newUser.username = this.state.username
+        newUser.password = this.state.password
+        newUser.email = this.state.email
+        axios.post(`/api/create_user`, newUser)
+          .then(({status, data}) => {
+            console.log(data)
+            if (status === 201) {
+              this.setState({ regSuccess: true })
+              setTimeout(() => { this.setState({ regSuccess: false }) }, 2000)
+              this.props.history.push('/login')
+            }
+          })
+      }
+
+    } else { // LOGIN
+      this.setState({ fetching: true })
       let user = {}
       user.username = this.state.username
       user.password = this.state.password
       axios.post(`/api/login`, user)
-      .then(({ data }) => {
-        console.log(data)
-        this.props.logInUser(data)
-        this.props.history.push('/')
-       })      
+        .then(({ data }) => {
+          if (!data.status) {
+            console.log(data)
+            this.setState({ invalidCredentials: true, fetching: false })
+            setTimeout(() => { this.setState({ invalidCredentials: false }) }, 3000)
+          } else {
+            console.log(data)
+            this.props.logInUser(data)
+            this.props.history.push(redirectTo)
+          }
+        })
     }
   }
 
   getServerToken = () => {
     axios('/api/get_token')
       .then(({ data }) => this.setState({ serverToken: data }))
+    //In production, get the window.token
   }
 
   responseGoogle = (response) => {
@@ -133,36 +187,49 @@ class Login extends Component {
   }
 
   checkUser = (e) => {
-    this.setState({ username: e.target.value })
-    // axios.post(`/api/check_username/${this.state.username}`)
-    //   .then(({ status, data }) => {
-    //     if (status === 200) {
-    //       data === 'Used' && this.setState({ usernameUsed: 'yes' })
-    //     }
-    //   })
+    let register = this.props.match.path === '/register'
+    this.setState({ usernameUsed: 'no', username: e.target.value })
+    if (register) {
+      if (e.target.value.length > 1) {
+        this.debounceCheck('user', e.target.value)
+      }
+    } else {
+      this.setState({ username: e.target.value })
+    }
   }
 
-  checkEmail= (e) => {
-    this.setState({ email: e.target.value })
-    // axios.post(`/api/check_email/${e.target.value}`)
-    //   .then(({ status, data }) => {
-    //     if (status === 200) {
-    //       data === 'Used' && this.setState({ emailUsed: 'yes' }); console.log(data)
-    //     }
-    //   })
+  checkEmail = (e) => {
+    this.setState({ email: e.target.value, emailUsed: 'no' })
+    let valid = e.target.value.includes('@' && '.')
+    if (valid) {
+      this.setState({ emailValid: true })
+      this.debounceCheck('email', e.target.value)
+    } else {
+      this.setState({ emailValid: false })
+    }
   }
 
   requestGoogle = () => {
-    this.setState({ fetchingGoogle: true })
+    this.setState({ fetching: true })
   }
 
   handleTextInput = (e) => {
     switch (e.target.name) {
       case 'password':
         this.setState({ password: e.target.value })
+        if (this.state.passwordConfirm === e.target.value) {
+          this.setState({ validPasswordCheck: true })
+        } else {
+          this.setState({ validPasswordCheck: false })
+        }
         break
       case 'passwordConfirm':
         this.setState({ passwordConfirm: e.target.value })
+        if (this.state.password === e.target.value) {
+          this.setState({ validPasswordCheck: true })
+        } else {
+          this.setState({ validPasswordCheck: false })
+        }
         break
       default:
         break
@@ -191,52 +258,39 @@ class Login extends Component {
 
   render() {
     let register = this.props.match.path === '/register'
-    let { usernameUsed, emailUsed } = this.state
+    let { usernameUsed, emailUsed, username, password, passwordConfirm, email, invalidCredentials, registerInputError, registerInputErrorText, regSuccess } = this.state
     return (
       <Main>
         {
-          (this.state.loading || this.state.fetchingGoogle) ?
+          (this.state.loading || this.state.fetching) ?
             <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
             :
             <>
+              {
+                invalidCredentials && <ErrorFlash>Invalid user or password</ErrorFlash>
+              }
+              {
+                registerInputError && <ErrorFlash>{registerInputErrorText}</ErrorFlash>
+              }
+              {
+                regSuccess && <SuccessFlash>User Created, please login</SuccessFlash>
+              }
               <UserIcon>
                 <UserSVG />
               </UserIcon>
-              <Input
-                placeholder="Username"
-                name="username"
-                value={this.state.username}
-                used={usernameUsed}
-                onChange={this.checkUser}
+              <UserInfo
+                usernameUsed={usernameUsed}
+                emailUsed={emailUsed}
+                username={username}
+                password={password}
+                passwordConfirm={passwordConfirm}
+                email={email}
+                handleTextInput={this.handleTextInput}
+                checkUser={this.checkUser}
+                checkEmail={this.checkEmail}
+                register={register}
               />
-              {
-                register &&
-                <Input
-                  placeholder="Email"
-                  name="email"
-                  value={this.state.email}                  
-                  used={emailUsed}
-                  onChange={this.checkEmail}
-                />
-              }
-              <Input
-                type="password"
-                name="password"
-                placeholder='Password'
-                value={this.state.password}
-                onChange={this.handleTextInput}
-              />
-              {
-                register &&
-                <Input
-                  type="password"
-                  name="passwordConfirm"
-                  placeholder='Confirm Password'
-                  value={this.state.passwordConfirm}
-                  onChange={this.handleTextInput}
-                />
-              }
-              <div>
+              <div className="buttons">
                 <StyledButton to='/' onClick={this.handleSave}>{register ? 'Register' : 'Login'}</StyledButton>
                 <p>{`You can also ${register ? 'register' : 'login'} using Google.`}</p>
                 <GoogleLogin

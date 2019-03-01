@@ -29,7 +29,8 @@ class User(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'picture': self.picture
+            'picture': self.picture,
+            'email': self.email
         }
 
 

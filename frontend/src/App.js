@@ -41,7 +41,6 @@ const App = (props) => {
   useEffect(() => {
     axios('/api/check_credentials')
     .then(res => {
-      console.log(res);
       setUser(res.data)
     });
   }, []);
