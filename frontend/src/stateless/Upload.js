@@ -78,25 +78,28 @@ class Upload extends Component {
 
   handleSave = (e) => {
     e.preventDefault()
-    let details = {
-      title: this.state.title,
-      description: this.state.description,
-      category: this.state.category,
-      user_id: this.props.user.user_id
-    }
-    const formData = new FormData()
-    formData.append(
-      'details',
-      JSON.stringify(details),
-    )
-    axios.post('api/upload_image_details', formData)
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(res)
-          this.props.history.push(`/images/${this.state.imageAddress}`)
-        }
-      })
-    this.setState({ saving: true })
+    this.pond.processFile().then(file => {
+      let details = {
+        title: this.state.title,
+        description: this.state.description,
+        category: this.state.category,
+        address: this.state.imageAddress,
+        user_id: this.props.user.user_id
+      }
+      const formData = new FormData()
+      formData.append(
+        'details',
+        JSON.stringify(details),
+      )
+      axios.post('api/upload_image_details', formData)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res)
+            this.props.history.push(`/images/${this.state.imageAddress}`)
+          }
+        })
+      this.setState({ saving: true })
+    });
   }
 
   render() {
@@ -112,8 +115,8 @@ class Upload extends Component {
                 ref={ref => (this.pond = ref)}
                 files={files}
                 allowMultiple={false}
-                allowReplace={true}
-                instantUpload={true}
+                allowRevert={false}
+                instantUpload={false}
                 allowFileTypeValidation={true}
                 acceptedFileTypes={['image/*']}
                 maxFiles={1}
@@ -128,7 +131,6 @@ class Upload extends Component {
                 onprocessfile={this.handleUploadFinish}
                 onupdatefiles={fileItems => {
                   // Set currently active file objects to this.state
-                  fileItems[0] && fileItems[0].setMetadata({ customName: imageAddress })
                   this.setState({
                     files: fileItems.map(fileItem => fileItem.file)
                   });
