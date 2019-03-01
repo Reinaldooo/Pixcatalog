@@ -69,7 +69,7 @@ const NavBar = (props) => {
   }
 
   useEffect(() => {
-    return () => { setLogOutText('Logout') }
+    setLogOutText('Logout')
   }, [])
 
   let { username } = props.user;

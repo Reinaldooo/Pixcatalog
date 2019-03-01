@@ -84,7 +84,7 @@ def index(path):
 
 
 @app.route('/api/get_token')
-def login():
+def get_token():
     state = ''.join(
         random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['serverToken'] = state
@@ -98,12 +98,12 @@ def users():
         username = request.json.get('username')
         password = request.json.get('password')
         email = request.json.get('email')
-        if username is None or password is None:
-            abort(400) # missing arguments
+        if username is '' or password is '' or email is '':
+            return "You must provide all fields"
         if session.query(User).filter_by(name = username).first() is not None:
-            abort(400) # existing user
+            return "Username used"
         if session.query(User).filter_by(email = email).first() is not None:
-            abort(400) # existing user
+            return "Email used"
         user = User(name = username)
         user.hash_password(password)
         user.email = email
@@ -114,6 +114,28 @@ def users():
     else:
         users = session.query(User).all()
         return jsonify(users=[i.serialize for i in users])
+
+
+@app.route('/api/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == "POST":
+        username = request.json.get('username')
+        password = request.json.get('password')
+        try:
+            user = session.query(User).filter_by(name=username).one()
+        except:
+            return "Incorrect user or password"    
+        ok = user.verify_password(password)
+        if ok:
+            login_session['username'] = user.name
+            login_session['picture'] = user.picture
+            login_session['email'] = user.email
+            login_session['user_id'] = user.id
+            return jsonify(status="Ok", username=user.name, email=user.email, user_id=user.id)
+        return jsonify(status="Incorrect user or password")   
+    else:
+        users = session.query(User).all()
+        return jsonify(status="Ok", users=[i.serialize for i in users])
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -198,7 +220,7 @@ def gconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
-    return jsonify(username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
+    return jsonify(status="Ok", username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
 
 
 @app.route('/api/check_username/<string:user>', methods=["POST"])
@@ -225,34 +247,46 @@ def check_credentials():
         return jsonify(error="Not logged in")
 
 
-@app.route('/gdisconnect')
-def gdisconnect():
+@app.route('/logout')
+def logout():
         # Only disconnect a connected user.
     access_token = login_session.get('access_token')
-    if access_token is None:
+    username = login_session.get('username')
+    gplus_id = login_session.get('gplus_id')
+    if access_token is None and username is None:
         response = make_response(
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[0]
-    if result['status'] == '200':
-        # Reset the user's sesson.
-        del login_session['access_token']
-        del login_session['gplus_id']
+    if gplus_id is not None:
+        url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+        h = httplib2.Http()
+        result = h.request(url, 'GET')[0]
+        if result['status'] == '200':
+            # Reset the user's sesson.
+            del login_session['access_token']
+            del login_session['gplus_id']
+            del login_session['username']
+            del login_session['email']
+            del login_session['picture']
+            del login_session['user_id']
+
+            response = make_response(json.dumps('Successfully disconnected from Google.'), 200)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+        else:
+            # For whatever reason, the given token was invalid.
+            print(result)
+            response = make_response(
+                json.dumps('Failed to revoke token for given user.'))
+            response.headers['Content-Type'] = 'application/json'
+            return response
+    else:
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-
+        del login_session['user_id']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    else:
-        # For whatever reason, the given token was invalid.
-        print(result)
-        response = make_response(
-            json.dumps('Failed to revoke token for given user.'))
         response.headers['Content-Type'] = 'application/json'
         return response
 

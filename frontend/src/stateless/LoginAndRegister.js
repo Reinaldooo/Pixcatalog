@@ -111,7 +111,23 @@ class Login extends Component {
   handleSave = () => {
     let register = this.props.match.path === '/register'
     if (register) {
-      console.log(this.state)
+      let newUser = {}
+      newUser.username = this.state.username
+      newUser.password = this.state.password
+      newUser.email = this.state.email
+      axios.post(`/api/create_user`, newUser)
+      .then((res) => { console.log(res) })
+    } else {
+      this.setState({ fetchingGoogle: true })
+      let user = {}
+      user.username = this.state.username
+      user.password = this.state.password
+      axios.post(`/api/login`, user)
+      .then(({ data }) => {
+        console.log(data)
+        this.props.logInUser(data)
+        this.props.history.push('/')
+       })      
     }
   }
 
@@ -125,11 +141,11 @@ class Login extends Component {
       serverToken: this.state.serverToken,
       code: response.code
     })
-      .then(res => {
-        console.log(res)
-        if (res.status === 200) {
-          this.props.logInUser(res.data)
-          this.props.history.push(this.props.location.state.from)
+      .then(({ data, status }) => {
+        console.log(data)
+        if (status === 200) {
+          this.props.logInUser(data)
+          this.props.history.push('/')
         }
       })
   }
@@ -172,7 +188,23 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    this.getServerToken()
+    if (this.props.match.path === '/login') {
+      this.getServerToken()
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.path !== this.props.match.path) {
+      this.setState({
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirm: ''
+      })
+      if (this.props.match.path === '/login') {
+        this.getServerToken()
+      }
+    }
   }
 
   render() {
@@ -191,6 +223,7 @@ class Login extends Component {
               <Input
                 placeholder="Username"
                 name="username"
+                value={this.state.username}
                 used={usernameUsed}
                 onChange={this.checkUser}
               />
@@ -199,6 +232,7 @@ class Login extends Component {
                 <Input
                   placeholder="Email"
                   name="email"
+                  value={this.state.email}                  
                   used={emailUsed}
                   onChange={this.checkEmail}
                 />
@@ -207,6 +241,7 @@ class Login extends Component {
                 type="password"
                 name="password"
                 placeholder='Password'
+                value={this.state.password}
                 onChange={this.handleTextInput}
               />
               {
@@ -215,6 +250,7 @@ class Login extends Component {
                   type="password"
                   name="passwordConfirm"
                   placeholder='Confirm Password'
+                  value={this.state.passwordConfirm}
                   onChange={this.handleTextInput}
                 />
               }

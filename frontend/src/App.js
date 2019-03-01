@@ -20,7 +20,7 @@ const Main = styled.div`
   margin-top: -2%;
 `
 
-const App = () => {
+const App = (props) => {
   const [user, setUser] = useState(false);
 
   const logInUser = (user) => {
@@ -29,7 +29,7 @@ const App = () => {
   }
 
   const logOutUser = () => {
-    axios('/gdisconnect')
+    axios('/logout')
       .then(res => {
         console.log(res)
         if (res.status === 200) {
