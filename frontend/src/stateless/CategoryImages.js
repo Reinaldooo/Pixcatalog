@@ -9,6 +9,7 @@ import { blue, white, black } from '../utils/colors';
 
 export const Main = styled.div`
   width: 80%;
+  box-sizing: border-box;
   min-height: 200px;
   margin: 0 auto 10rem;
   text-align: center;
@@ -18,7 +19,7 @@ export const Main = styled.div`
     border-radius: .2rem;
     transition: opacity .3s;    
     &:hover {
-      transform: translate(1px, 2px);
+      opacity: .7;
     }
   }
   div {

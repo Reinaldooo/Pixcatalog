@@ -48,8 +48,7 @@ class Upload extends Component {
     description: '',
     imageAddress: shortid.generate() ,
     category: '',
-    saving: false,
-    uploaded: false
+    saving: false
   }
 
   handleImageText = (e) => {
@@ -68,17 +67,10 @@ class Upload extends Component {
     }
   }
 
-  handleUploadFinish = (err, file) => {
-    if (!err) {
-      this.setState({
-        uploaded: true
-      })
-    }
-  }
-
   handleSave = (e) => {
     e.preventDefault()
     this.pond.processFile().then(file => {
+      this.setState({ saving: true })
       let details = {
         title: this.state.title,
         description: this.state.description,
@@ -98,7 +90,6 @@ class Upload extends Component {
             this.props.history.push(`/images/${this.state.imageAddress}`)
           }
         })
-      this.setState({ saving: true })
     });
   }
 

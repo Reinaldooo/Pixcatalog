@@ -14,7 +14,7 @@ const Logo = styled.img`
 const Nav = styled.div`
   height: 100px;
   padding: 1.5rem 5rem;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,7 +70,7 @@ const NavBar = (props) => {
 
   useEffect(() => {
     setLogOutText('Logout')
-  }, [])
+  }, [props.user])
 
   let { username } = props.user;
 
