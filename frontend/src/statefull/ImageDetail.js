@@ -6,7 +6,7 @@ import { ErrorFlash, SuccessFlash } from '../utils/customStyledComponents';
 // //
 import { white, black, blue } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
-import UploadDetails from './UploadDetails'
+import UploadDetails from '../stateless/UploadDetails'
 
 const Main = styled.div`
   position: relative;
@@ -20,6 +20,12 @@ const Main = styled.div`
     width: 50%;
     border-radius: .9rem;
     flex: 1;
+    @media (max-width: 900px) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 900px) {
+      flex-direction: column;
   }
 `
 
@@ -94,7 +100,6 @@ const ImageDetail = (props) => {
   useEffect(() => {
     axios(`/api/get_image_details/${props.match.params.image}`)
       .then(({ data }) => {
-        console.log(data);
         setImage(data.image)
       })
   }, [])
@@ -168,7 +173,6 @@ const ImageDetail = (props) => {
       axios.post(`/api/update_image_details/${image.id}`, formData)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
             setEditSuccess(true)
             setTimeout(() => { setEditSuccess(false) }, 1500)
           }
@@ -193,7 +197,6 @@ const ImageDetail = (props) => {
                     editSuccess && <SuccessFlash upper>Image Edited</SuccessFlash>
                   }
                   <h1>{image.title}</h1>
-                  {console.log(props)}
                   <span className="creator"><UserSVG />{` ${image.username}`}</span>
                   <span>{`#${image.category_name}`}</span>
                   <p>{image.description}</p>

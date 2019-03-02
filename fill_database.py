@@ -1,13 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import random, requests, os
+import random
+import os
+import requests
 from PIL import Image as ImageEdit
 
 from database_setup import Category, Base, Image, User, engine
 
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
-                       
+
 Base.metadata.drop_all(engine)
 print("cleaning db")
 Base.metadata.create_all(engine)
@@ -64,7 +66,7 @@ session.add(category7)
 session.add(category8)
 session.commit()
 
-images = [ 
+images = [
   "img0",
   "img1",
   "img2",
@@ -136,7 +138,7 @@ images = [
 #   if response.status_code == 200:
 #     with open("./images/{}.jpeg".format(img), 'wb') as f:
 #         f.write(response.content)
-#     targetThumb = os.path.join(APP_ROOT, 'thumb')    
+#     targetThumb = os.path.join(APP_ROOT, 'thumb')
 #     destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(img)])
 #     imgN = ImageEdit.open("{}/images/{}.jpeg".format(APP_ROOT, img))
 #     size = 300, 300
@@ -172,17 +174,24 @@ titles = [
 descriptions = [
   "Is this real life? I can't believe i'm here",
   "Look at that building, its amazing",
-  "Last night we watched the stars for hours, and in the morning we had this amazing view",
+  "Last night we watched the stars for hours, and in\
+  the morning we had this amazing view",
   "I dare you to find the error in this picture",
   ""
 ]
 
+
 def populate_random():
-  for img in images:
-    image = Image(user_id=random.choice(users), category_id=random.choice(categories), title=random.choice(titles),
-               description=random.choice(descriptions), address=img)
-    session.add(image)
-    session.commit()
+    for img in images:
+        image = Image(
+                      user_id=random.choice(users),
+                      category_id=random.choice(categories),
+                      title=random.choice(titles),
+                      description=random.choice(descriptions),
+                      address=img)
+        session.add(image)
+        session.commit()
+
 
 populate_random()
 print("added menu items!")

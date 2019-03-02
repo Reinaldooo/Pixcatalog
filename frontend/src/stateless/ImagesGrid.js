@@ -11,6 +11,9 @@ const Main = styled.div`
   justify-content: center;
   align-items: center;
   padding-left: 3rem;
+  @media (max-width: 764px) {
+    padding-left: 0;
+  }
 `
 
 const GridContainer = styled.div`
@@ -29,8 +32,9 @@ const GridContainer = styled.div`
       visibility: hidden;
     }
   }
-  @media (max-width: 1400px) {
-    width: 85%;
+  @media (max-width: 764px) {
+    width: 75%;
+    border-radius: 2rem;
   }
 `
 

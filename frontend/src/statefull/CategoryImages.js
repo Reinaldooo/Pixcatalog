@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
+import Spinner from 'react-spinkit';
 import axios from 'axios';
 //
 import { blue, white, black } from '../utils/colors';
@@ -26,6 +27,9 @@ export const Main = styled.div`
   div {
     width: 50%;
     margin: 1rem auto;
+  }
+  @media (max-width: 900px) {
+      width: 90%
   }
 `
 
@@ -73,24 +77,30 @@ const CategoryImages = (props) => {
 
   return (
     <Main>
-      <H2>All <span>{`#${state.categoryTitle}`}</span> images</H2>
-      <div>
-        <StyledLink to='/categories'>Categories</StyledLink>
-        {console.log(state)}
-        <StyledLink to='/'>Home</StyledLink>
-      </div>
       {
-        state.images && state.images.map((image, index) => (
-          <Link
-            key={image.id}
-            to={{
-              pathname: `/images/${image.address}`,
-              image: image
-            }}
-          >
-            <StyledImg user={isOwner(image.user_id)} src={`/api/get_image_thumb/${image.address}`} alt={`category`} />
-          </Link>
-        ))
+        state.images ?
+          <>
+            <H2>All <span>{`#${state.categoryTitle}`}</span> images</H2>
+            <div>
+              <StyledLink to='/categories'>Categories</StyledLink>
+              <StyledLink to='/'>Home</StyledLink>
+            </div>
+            {
+              state.images.map(image => (
+                <Link
+                  key={image.id}
+                  to={{
+                    pathname: `/images/${image.address}`,
+                    image: image
+                  }}
+                >
+                  <StyledImg user={isOwner(image.user_id)} src={`/api/get_image_thumb/${image.address}`} alt={`category`} />
+                </Link>
+              ))
+            }
+          </>
+          :
+          <Spinner name="cube-grid" color={blue} fadeIn='half' />
       }
     </Main>
   );

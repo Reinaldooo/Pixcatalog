@@ -40,7 +40,7 @@ export const SuccessFlash = styled.span`
   position: absolute;
   border-radius: 5px;
   font-size: 1.1rem;
-  top: ${props => props.upper ? '-10%' : '5%'}
+  top: ${props => props.upper ? '-10%' : '5%'};
   left: 25%;
   animation: ${buble} 1s linear infinite;
 `

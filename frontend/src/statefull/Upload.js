@@ -14,7 +14,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // //
 import { white, blue } from '../utils/colors';
 import { Main } from './LoginAndRegister'
-import UploadDetails from './UploadDetails';
+import UploadDetails from '../stateless/UploadDetails';
 import { ErrorFlash } from '../utils/customStyledComponents';
 
 
@@ -91,7 +91,6 @@ class Upload extends Component {
         axios.post('api/upload_image_details', formData)
           .then((res) => {
             if (res.status === 200) {
-              console.log(res)
               this.props.history.push(`/images/${this.state.imageAddress}`)
             }
           })

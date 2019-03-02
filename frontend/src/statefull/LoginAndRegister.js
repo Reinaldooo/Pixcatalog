@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce'
 import { white, blue, black, red } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 import { ErrorFlash, SuccessFlash, UserIcon } from '../utils/customStyledComponents';
-import UserInfo from './UserInfo';
+import UserInfo from '../stateless/UserInfo';
 
 export const Main = styled.div`
   position: relative;
@@ -91,7 +91,6 @@ class Login extends Component {
     if (type === "user") {
       axios.post(`/api/check_username/${data}`)
         .then(({ status, data }) => {
-          console.log(data)
           if (status === 200) {
             data === 'Used' ?
              this.setState({ usernameUsed: 'yes', userValid: false })
@@ -103,7 +102,7 @@ class Login extends Component {
       axios.post(`/api/check_email/${data}`)
         .then(({ status, data }) => {
           if (status === 200) {
-            data === 'Used' && this.setState({ emailUsed: 'yes', emailValid: false }); console.log(data)
+            data === 'Used' && this.setState({ emailUsed: 'yes', emailValid: false });
           }
         })
     }
@@ -137,7 +136,6 @@ class Login extends Component {
         newUser.email = this.state.email
         axios.post(`/api/create_user`, newUser)
           .then(({status, data}) => {
-            console.log(data)
             if (status === 201) {
               this.setState({ regSuccess: true })
               setTimeout(() => { this.setState({ regSuccess: false }) }, 2000)
@@ -154,11 +152,9 @@ class Login extends Component {
       axios.post(`/api/login`, user)
         .then(({ data }) => {
           if (!data.status) {
-            console.log(data)
             this.setState({ invalidCredentials: true, fetching: false })
             setTimeout(() => { this.setState({ invalidCredentials: false }) }, 3000)
           } else {
-            console.log(data)
             this.props.logInUser(data)
             this.props.history.push(redirectTo)
           }
@@ -178,7 +174,6 @@ class Login extends Component {
       code: response.code
     })
       .then(({ data, status }) => {
-        console.log(data)
         if (status === 200) {
           this.props.logInUser(data)
           this.props.history.push('/')

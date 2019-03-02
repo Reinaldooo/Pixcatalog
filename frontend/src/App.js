@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components';
 import axios from 'axios';
 //
-import NavBar from './stateless/NavBar';
-import UserInteraction from './stateless/UserInteraction';
+import NavBar from './statefull/NavBar';
+import UserInteraction from './statefull/UserInteraction';
+import CategoriesPage from './statefull/CategoriesPage';
+import CategoryImages from './statefull/CategoryImages';
+import MyPhotos from './statefull/MyPhotos';
+import ImageDetail from './statefull/ImageDetail';
+import LoginAndRegister from './statefull/LoginAndRegister';
+import Upload from './statefull/Upload';
 import ImagesGrid from './stateless/ImagesGrid';
-import CategoriesPage from './stateless/CategoriesPage';
-import CategoryImages from './stateless/CategoryImages';
-import MyPhotos from './stateless/MyPhotos';
-import ImageDetail from './stateless/ImageDetail';
-import LoginAndRegister from './stateless/LoginAndRegister';
-import Upload from './stateless/Upload';
-import styled from 'styled-components';
 
 const Main = styled.div`
   display: flex;
@@ -27,14 +27,12 @@ const App = (props) => {
   const [user, setUser] = useState(false);
 
   const logInUser = (user) => {
-    console.log(user)
     setUser(user)
   }
 
   const logOutUser = () => {
     axios('/logout')
       .then(res => {
-        console.log(res)
         if (res.status === 200) {
           setUser(false)
         }

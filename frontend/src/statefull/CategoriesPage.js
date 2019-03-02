@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
+import Spinner from 'react-spinkit';
 //
 import { blue, white, black } from '../utils/colors';
 
@@ -84,15 +85,17 @@ const CategoriesPage = () => {
       <p>You can create a new category while uploading an image.</p>
       <CategoriesMain>
         {
-          categories &&
+          categories ?
           categories.map(cat => (
             <StyledLink key={cat.id} to={`/categories/${cat.title}`}>
               <Category>
-                <h3>{`#${cat.title}`}</h3>
+                <h3>{`#${cat.title.substring(0,10)}`}</h3>
                 <p>{`#${cat.images_total} images`}</p>
               </Category>
             </StyledLink>
           ))
+          :
+          <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
         }
 
       </CategoriesMain>

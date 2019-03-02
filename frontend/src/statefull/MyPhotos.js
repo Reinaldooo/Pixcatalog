@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
+import Spinner from 'react-spinkit';
 //
-import { Main, H2, StyledLink } from './CategoryImages'
+import { Main, StyledLink } from './CategoryImages'
 
 const MyPhotos = (props) => {
 
   const [images, setImages] = useState(null)
-  const [user, setUser] = useState(null)
 
   const getImages = async () => {
     let userId = await axios('/api/check_credentials')
@@ -16,7 +16,6 @@ const MyPhotos = (props) => {
     axios(`/api/get_user_images/${userId}`)
       .then(({ data: { images, user } }) => {
         setImages(images)
-        setUser(user)
       })
   }
 
@@ -26,12 +25,12 @@ const MyPhotos = (props) => {
 
   return (
     <Main>
-      {user && <H2>All images by: <span>{`#${user.name}`}</span></H2>}
       <div>
         <StyledLink to='/'>Home</StyledLink>
       </div>
       {
-        images && images.map((image, index) => (
+        images ?
+         images.map((image, index) => (
           <Link
             key={image.id}
             to={{
@@ -42,6 +41,8 @@ const MyPhotos = (props) => {
             <img src={`/api/get_image_thumb/${image.address}`} alt={`category`} />
           </Link>
         ))
+        :
+        <Spinner name="cube-grid" color='#00aedf' fadeIn='half' />
       }
     </Main>
   );

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
+import Spinner from 'react-spinkit';
 //
 import { blue, white, black } from '../utils/colors';
 
@@ -111,19 +112,26 @@ class UserInteraction extends Component {
         <Header><span>PixCatalog</span> is a category based image upload website.</Header>
         <p>Choose from our top categories, or login and create one.</p>
         <Categories>
-          {
-            this.state.categories.length > 0 && this.state.categories.map((c) => (
-              <StyledLink key={c[1]} to={`/categories/${c[1]}`}>
-                <Category>
-                  <h3>{`#${c[1]}`}</h3>
-                  <p>{`${c[0]} images`}</p>
-                </Category>
-              </StyledLink>
-            ))
+          { 
+            this.state.categories.length > 0 ?
+            <>
+              {
+                this.state.categories.map((c) => (
+                  <StyledLink key={c[1]} to={`/categories/${c[1]}`}>
+                    <Category>
+                      <h3>{`#${c[1].substring(0,10)}`}</h3>
+                      <p>{`${c[0]} images`}</p>
+                    </Category>
+                  </StyledLink>
+                ))
+              }
+              <StyledButton key="#all" to="/categories/">
+                All categories
+              </StyledButton>
+            </>
+            :
+            <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
           }
-          <StyledButton key="#all" to="/categories/">
-            All categories
-          </StyledButton>
         </Categories>
       </Main>
     )

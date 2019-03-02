@@ -22,7 +22,6 @@ class User(Base):
     def verify_password(self, password):
         return pwd_context.verify(password, self.pwd_hash)
 
-
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""

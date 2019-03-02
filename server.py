@@ -1,18 +1,19 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, send_file, json, make_response, abort
+from flask import Flask, render_template, request, redirect, jsonify
+from flask import url_for, send_file, json, make_response, abort
 from flask import session as login_session
 from PIL import Image as ImageEdit
 from sqlalchemy import create_engine, asc, func, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Image, User, engine
-from operator import itemgetter
-import random
-import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from operator import itemgetter
+from werkzeug.utils import secure_filename
+import random
+import string
 import httplib2
 import json
 import os
-from werkzeug.utils import secure_filename
 import requests
 
 app = Flask(__name__, static_folder='./frontend/build/static',
@@ -48,16 +49,15 @@ def getUserIDByEmail(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except Exception:
         return None
 
 
 def getUserIDByName(user):
     try:
         user = session.query(User).filter_by(name=user).one()
-        print(user)
         return user.id
-    except:
+    except Exception:
         return None
 
 
@@ -73,7 +73,7 @@ def getCategoryID(title):
     try:
         category = session.query(Category).filter_by(title=title).one()
         return category.id
-    except:
+    except Exception:
         return None
 
 
@@ -82,7 +82,10 @@ def getCategoryID(title):
 def index(path):
     if request.method == "DELETE":
         print(request)
-    return render_template('index.html', token="hue")
+    return render_template('index.html')
+
+
+""" Credentials-related routes """
 
 
 @app.route('/api/get_token')
@@ -94,51 +97,40 @@ def get_token():
     return state
 
 
-@app.route('/api/create_user', methods = ['POST', 'GET'])
-def users():
-    if request.method == "POST":
-        username = request.json.get('username')
-        password = request.json.get('password')
-        email = request.json.get('email')
-        if username is '' or password is '' or email is '':
-            return "You must provide all fields"
-        if session.query(User).filter_by(name = username).first() is not None:
-            return "Username used"
-        if session.query(User).filter_by(email = email).first() is not None:
-            return "Email used"
-        user = User(name = username)
-        user.hash_password(password)
-        user.email = email
-        user.picture = "https://picsum.photos/500?random"
-        session.add(user)
-        session.commit()
-        return jsonify({ 'username': user.name }), 201
+@app.route('/api/check_credentials')
+def check_credentials():
+    if 'username' in login_session:
+        return jsonify(
+                      username=login_session['username'],
+                      email=login_session['email'],
+                      user_id=login_session['user_id']
+                      )
     else:
-        users = session.query(User).all()
-        return jsonify(users=[i.serialize for i in users])
+        return jsonify(error="Not logged in")
 
 
-@app.route('/api/login', methods = ['GET', 'POST'])
+@app.route('/api/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
         username = request.json.get('username')
         password = request.json.get('password')
         try:
             user = session.query(User).filter_by(name=username).one()
-        except:
-            return jsonify(status=False)   
+        except Exception:
+            return jsonify(status=False)
         ok = user.verify_password(password)
         if ok:
             login_session['username'] = user.name
             login_session['picture'] = user.picture
             login_session['email'] = user.email
             login_session['user_id'] = user.id
-            return jsonify(status="Ok", username=user.name, email=user.email, user_id=user.id)
-        return jsonify(status=False)   
-    else:
-        #remove
-        users = session.query(User).all()
-        return jsonify(status="Ok", users=[i.serialize for i in users])
+            return jsonify(
+                          status="Ok",
+                          username=user.name,
+                          email=user.email,
+                          user_id=user.id
+                          )
+        return jsonify(status=False)
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -197,8 +189,10 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+                                 json.dumps('Current user is already connected.'),
+                                 200
+                                 )
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -213,7 +207,6 @@ def gconnect():
 
     data = answer.json()
 
-
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -223,36 +216,17 @@ def gconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
-    return jsonify(status="Ok", username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
-
-
-@app.route('/api/check_username/<string:user>', methods=["POST"])
-def check_user(user):
-    user_id = getUserIDByName(user.lower())
-    if not user_id:
-        return "Ok"
-    return "Used"
-
-
-@app.route('/api/check_email/<string:user>', methods=["POST"])
-def check_email(user):
-    user_id = getUserIDByEmail(user.lower())
-    if not user_id:
-        return "Ok"
-    return "Used"
-
-
-@app.route('/api/check_credentials')
-def check_credentials():
-    if 'username' in login_session:
-        return jsonify(username=login_session['username'], email=login_session['email'], user_id=login_session['user_id'])
-    else:
-        return jsonify(error="Not logged in")
+    return jsonify(
+                  status="Ok",
+                  username=login_session['username'],
+                  email=login_session['email'],
+                  user_id=login_session['user_id']
+                  )
 
 
 @app.route('/logout')
 def logout():
-        # Only disconnect a connected user.
+    # Only disconnect a connected user.
     access_token = login_session.get('access_token')
     username = login_session.get('username')
     gplus_id = login_session.get('gplus_id')
@@ -274,12 +248,14 @@ def logout():
             del login_session['picture']
             del login_session['user_id']
 
-            response = make_response(json.dumps('Successfully disconnected from Google.'), 200)
+            response = make_response(
+                                     json.dumps('Successfully disconnected from Google.'),
+                                     200
+                                     )
             response.headers['Content-Type'] = 'application/json'
             return response
         else:
             # For whatever reason, the given token was invalid.
-            print(result)
             response = make_response(
                 json.dumps('Failed to revoke token for given user.'))
             response.headers['Content-Type'] = 'application/json'
@@ -292,6 +268,59 @@ def logout():
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
+
+
+""" User-related routes  """
+
+
+@app.route('/api/check_username/<string:user>', methods=["POST"])
+def check_username(user):
+    user_id = getUserIDByName(user.lower())
+    if not user_id:
+        return "Ok"
+    return "Used"
+
+
+@app.route('/api/create_user', methods=['POST', 'GET'])
+def create_user():
+    if request.method == "POST":
+        username = request.json.get('username')
+        password = request.json.get('password')
+        email = request.json.get('email')
+        if username is '' or password is '' or email is '':
+            return "You must provide all fields"
+        if session.query(User).filter_by(name=username).first() is not None:
+            return "Username used"
+        if session.query(User).filter_by(email=email).first() is not None:
+            return "Email used"
+        user = User(name=username)
+        user.hash_password(password)
+        user.email = email
+        user.picture = "https://picsum.photos/500?random"
+        session.add(user)
+        session.commit()
+        return jsonify({'username': user.name}), 201
+    else:
+        users = session.query(User).all()
+        return jsonify(users=[i.serialize for i in users])
+
+
+@app.route('/api/check_email/<string:user>', methods=["POST"])
+def check_email(user):
+    user_id = getUserIDByEmail(user.lower())
+    if not user_id:
+        return "Ok"
+    return "Used"
+
+
+@app.route('/api/get_user_images/<int:user_id>')
+def get_user_images(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    images = session.query(Image).filter_by(user_id=user_id).all()
+    return jsonify(images=[i.serialize for i in images], user=user.serialize)
+
+
+""" Category-related routes  """
 
 
 @app.route('/api/categories')
@@ -314,7 +343,12 @@ def top_categories():
 @app.route('/api/get_category_details/<string:category>')
 def get_category_images(category):
     category = session.query(Category).filter_by(title=category).one()
-    return jsonify(images=[i.serialize for i in category.images], category=category.serialize)
+    return jsonify(
+                  images=[i.serialize for i in category.images],
+                  category=category.serialize)
+
+
+""" Image-related routes  """
 
 
 @app.route('/api/get_image/<string:photo_address>')
@@ -330,37 +364,35 @@ def get_image_thumb(photo_address):
 
 
 @app.route('/api/get_image_details/<string:address>')
-def img_details(address):
+def get_image_details(address):
     try:
         image = session.query(Image).filter_by(address=address).one()
-    except:
+    except Exception:
         return "Image not found"
     return jsonify(image=image.serialize)
 
 
-@app.route('/api/get_user_images/<int:user_id>')
-def get_user_images(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    images = session.query(Image).filter_by(user_id=user_id).all()
-    return jsonify(images=[i.serialize for i in images], user=user.serialize)
+""" Upload-related routes  """
 
 
 @app.route("/api/upload_image", methods=["POST"])
 def upload_image():
+    if 'username' not in login_session:
+        return "You are not allowed to do this", 401
     target = os.path.join(APP_ROOT, 'images')
     targetThumb = os.path.join(APP_ROOT, 'thumb')
     if not os.path.isdir(target):
-            os.mkdir(target)
+        os.mkdir(target)
     fileId = request.headers.get('fileId')
     upload = request.files.get('filepond', '')
     filename = fileId
     destination = "/".join([target, '{}.jpeg'.format(filename)])
     destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(filename)])
-    #convert and crop image
+    # convert and crop image
     original = ImageEdit.open(upload)
-    #Get original dimensions
+    # Get original dimensions
     width, height = original.size
-    #calculate how it should be cropped
+    # calculate how it should be cropped
     if width > height:
         delta = width - height
         left = int(delta/2)
@@ -373,9 +405,9 @@ def upload_image():
         upper = int(delta/2)
         right = width
         lower = width + upper
-    #crop image
+    # crop image
     cropped_img = original.crop((left, upper, right, lower))
-    #convert to make it a jpeg
+    # convert to make it a jpeg
     new_im = cropped_img.convert('RGB')
     thumb = new_im.copy()
     new_im.save(destination)
@@ -385,30 +417,42 @@ def upload_image():
     # new_im.show()
     return "Ok"
 
+
 @app.route('/api/upload_image_details', methods=["POST"])
 def upload_image_details():
+    if 'username' not in login_session:
+        return "You are not allowed to do this", 401
     details = json.loads(request.form.get('details'))
     category_id = getCategoryID(details['category'])
     if not category_id:
         category_id = createCategory(title=details['category'])
 
-    image = Image(user_id=details['user_id'], category_id=category_id, title=details['title'],
-               description=details['description'], address=details['address'])
+    image = Image(user_id=details['user_id'],
+                  category_id=category_id, title=details['title'],
+                  description=details['description'],
+                  address=details['address'])
     session.add(image)
     session.commit()
     return 'Ok, uploaded'
 
 
+""" Edit-related routes  """
+
+
 @app.route('/api/update_image_details/<int:img_id>', methods=["POST"])
 def update_image_details(img_id):
+    if 'username' not in login_session:
+        return "You are not allowed to do this", 401
     details = json.loads(request.form.get('editedDetails'))
     category_id = getCategoryID(details['category'])
     if not category_id:
         category_id = createCategory(title=details['category'])
     editedImage = session.query(Image).filter_by(id=img_id).one()
+    if editedImage.user_id != login_session['user_id']:
+        return "You are not allowed to do this", 401
     editedImage.title = details['title']
     editedImage.description = details['description']
-    editedImage.category_id = category_id    
+    editedImage.category_id = category_id
     session.add(editedImage)
     session.commit()
     return 'Ok, edited'
@@ -416,7 +460,11 @@ def update_image_details(img_id):
 
 @app.route('/api/delete_image/<int:img_id>', methods=['POST'])
 def delete_image(img_id):
+    if 'username' not in login_session:
+        return "You are not allowed to do this", 401
     imageToDelete = session.query(Image).filter_by(id=img_id).one()
+    if imageToDelete.user_id != login_session['user_id']:
+        return "You are not allowed to do this", 401
     session.delete(imageToDelete)
     session.commit()
     return "Image deleted"

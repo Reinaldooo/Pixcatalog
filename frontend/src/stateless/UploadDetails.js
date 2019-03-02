@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 //
-import { StyledButton } from './LoginAndRegister';
+import { StyledButton } from '../statefull/LoginAndRegister';
+import { Textarea } from '../statefull/Upload';
 import { Input, Label, InputWrapper } from '../utils/customStyledComponents';
-import { Textarea } from './Upload';
 
 
 const Form = styled.form`
