@@ -8,6 +8,7 @@ import { blue, white, black } from '../utils/colors';
 
 const Main = styled.div`
   text-align: center;
+  padding-bottom: 2rem;
 
   p {
     color: ${white};
@@ -21,12 +22,19 @@ const CategoriesMain = styled.div`
   align-items: center;
   padding: 5rem;
   padding-top: 2rem;
+  @media (max-width: 764px) {
+    padding: 0;
+  }
 `
 
 const StyledLink = styled(Link)`
   width: 15%;
   text-decoration: none;
   margin: 0 1rem;
+
+  @media (max-width: 764px) {
+    width: 40%;
+  }
 `
 
 const StyledButton = styled(Link)`
@@ -52,7 +60,6 @@ const Category = styled.li`
   border: none;
   color: ${white};
   height: 5rem;
-  margin: 0 1rem;
   margin-top: 3rem;
   border-radius: .5rem;
   background-color: ${blue};

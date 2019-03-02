@@ -19,13 +19,23 @@ const Main = styled.div`
     color: ${white};
     font-size: 1.2rem;
   }
+
+  @media (max-width: 700px) {
+      padding-right: 0;
+      width: 85%;
+      margin: 0 auto;
+  }
 `
 
 const Header = styled.h3`
   color: ${white};
   font-weight: 400;
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin: 0;
+
+  @media (max-width: 700px) {
+    font-size: 1.7rem;
+  }
 
   span {
     color: ${blue};
@@ -39,6 +49,9 @@ const Categories = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  @media (max-width: 700px) {
+    width: 100%;
+  }
 `
 
 const Category = styled.li`
@@ -58,9 +71,9 @@ const Category = styled.li`
     margin: 0;
     font-size: 1.6rem;
   }
-  p{
+  p {
     margin: 0;
-    font-size: .9rem;
+    font-size: 1rem;
   }
 `
 
@@ -70,12 +83,24 @@ const StyledLink = styled(Link)`
   margin: 0 1rem;
   margin-top: 3rem;
 
+  h3 {
+  @media (max-width: 700px) {
+    font-size: 1.2rem;
+  }
+  }
+
   &:hover {
     transform: translate(1px, 2px);
   }
   @media (max-width: 1400px) {
     width: 35%;
   }
+  @media (max-width: 700px) {
+    margin: 0 .5rem;
+    margin-top: 3rem;
+    width: 40%;
+  }
+  
 `
 
 const StyledButton = styled(Link)`
@@ -91,6 +116,10 @@ const StyledButton = styled(Link)`
   margin: .5rem .2rem;
   margin-top: 3rem;
   text-align: center;
+  @media (max-width: 700px) {
+    width: 60%;
+    margin-bottom: 2rem;
+  }
 `
 
 

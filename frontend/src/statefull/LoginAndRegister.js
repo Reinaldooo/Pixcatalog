@@ -21,13 +21,16 @@ export const Main = styled.div`
   min-height: 50vh;
   /* height should be higher on upload page */
   max-height: ${props => props.upload ? '90%' : '700px'};
-  margin: 1rem auto 0;
+  margin: 1rem auto 3rem;
   padding: 1rem 2rem 1.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  @media (max-width: 764px) {
+    width: 90%;
+  }
 
   div.buttons {
     margin-top: 1rem;

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 //
 import logo from '../images/logo.svg';
 import { white, black, red } from '../utils/colors';
-import { UserSVG } from '../utils/helper';
+import { UserSVG, MenuSVG } from '../utils/helper';
 
 
 const Logo = styled.img`
@@ -18,6 +18,16 @@ const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
+
+  @media (max-width: 764px) {
+    padding: 1.5rem 2rem;
+  }
+
+  svg {
+    width: 25px;
+    height: 25px;
+  }
 `
 
 const UserLinks = styled.div`
@@ -34,6 +44,10 @@ const UserLinks = styled.div`
   svg {
     height: 30%;
     margin-left: .3rem;
+  }
+
+  @media (max-width: 764px) {
+      display: none;
   }
 `
 
@@ -77,6 +91,7 @@ const NavBar = (props) => {
   return (
     <Nav>
       <Link className="logo-link" to="/"><Logo src={logo} alt="logo" /></Link>
+      <MenuSVG/>
       <UserLinks>
         {
           username ?

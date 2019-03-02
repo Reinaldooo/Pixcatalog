@@ -62,6 +62,9 @@ export const Input = styled.input`
 export const InputWrapper = styled.div`
   width: 60%;
   position: relative;
+  @media (max-width: 764px) {
+    width: 100%;
+  }
 `
 
 export const Label = styled.label`

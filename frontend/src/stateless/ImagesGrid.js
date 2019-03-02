@@ -13,6 +13,7 @@ const Main = styled.div`
   padding-left: 3rem;
   @media (max-width: 764px) {
     padding-left: 0;
+    margin: 0 auto 100px;
   }
 `
 
