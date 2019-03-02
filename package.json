@@ -1,0 +1,20 @@
+{
+  "name": "pixcatalog",
+  "version": "1.0.0",
+  "description": "Category-based image upload website",
+  "main": "server.py",
+  "scripts": {
+    "custom-build": "cd frontend/ && npm install && npm run build",
+    "heroku-postbuild": "rm -rf pixcatalog.db && python database_setup.py && python fill_database.py && npm run custom-build &&python server.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reinaldooo/Pixcatalog.git"
+  },
+  "author": "Reinaldo Trindade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Reinaldooo/Pixcatalog/issues"
+  },
+  "homepage": "https://github.com/Reinaldooo/Pixcatalog#readme"
+}

@@ -153,7 +153,7 @@ const ImageDetail = (props) => {
                   <SuccessFlash upper>Image Edited</SuccessFlash>
                 </Condition>
                 <h1>{image.title}</h1>
-                <span className="creator"><UserSVG />{` ${image.username}`}</span>
+                <span className="creator"><UserSVG />{`${image.username}`}</span>
                 <span>{`#${image.category_name}`}</span>
                 <p>{image.description}</p>
                 <Condition test={user.user_id === image.user_id}>
@@ -193,7 +193,6 @@ const ImageDetail = (props) => {
           }
         </Details>
       </Condition>
-      }
     </Main>
   )
 }
