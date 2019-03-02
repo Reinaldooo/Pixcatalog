@@ -20,7 +20,6 @@ export const UserSVG = (props) => {
 }
 
 export const MenuSVG = (props) => {
-  console.log(props)
   return (
     <div onClick={props.handleClick}>
     <svg
@@ -29,6 +28,7 @@ export const MenuSVG = (props) => {
       focusable="false"
       data-prefix="fas"
       data-icon="bars"
+      className="menu"
       role="img"
       viewBox="0 0 448 512">
       <path

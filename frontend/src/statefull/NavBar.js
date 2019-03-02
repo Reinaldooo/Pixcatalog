@@ -28,6 +28,11 @@ const Nav = styled.div`
   }
 
   svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  svg.menu {
     width: 25px;
     height: 25px;
     @media (min-width: 764px) {
@@ -75,7 +80,7 @@ const StyledLink = styled(Link)`
   border-radius: 5px;
   padding: 5px 10px;
   background-color: ${white};
-  margin-left: ${props => props.noMarginLeft ? 0 : "1rem"};
+  margin-left: ${props => props.nomarginleft === 'yes' ? 0 : "1rem"};
   cursor: pointer;
 `
 const MobileMenu = styled.div`
@@ -104,7 +109,7 @@ const NavBar = (props) => {
     <>
       <StyledLink
       onClick={closeMenu}
-      noMarginLeft
+      nomarginleft="yes"
       to={{ pathname: "/login", state: { from: window.location.pathname } }}
       >
         Login
@@ -119,7 +124,7 @@ const NavBar = (props) => {
         <p className="welcome">{username}</p>
         <UserSVG />
       </Condition>
-      <StyledLink noMarginLeft onClick={closeMenu} to="/myphotos">My Photos</StyledLink>
+      <StyledLink nomarginleft={props.mobile} onClick={closeMenu} to="/myphotos">My Photos</StyledLink>
       <StyledLink onClick={closeMenu} to="/upload">Upload</StyledLink>
       <StyledButton onClick={handleLogOut}>{logOutText}</StyledButton>
     </>
@@ -149,7 +154,7 @@ const NavBar = (props) => {
       <MobileMenu>
         {
           username ?
-            <UserButtons mobile />
+            <UserButtons mobile="yes" />
             :
             <LoginRegisterButtons />
         }

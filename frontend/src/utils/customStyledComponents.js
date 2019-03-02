@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { white, red, green, blue, black } from './colors';
+import { Link } from 'react-router-dom';
 
 export const buble = keyframes`
 0% {
@@ -75,4 +76,46 @@ export const Label = styled.label`
     if (props.darkBackground) { return white }
     return black
   }};
+`
+
+export const BackLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-decoration: none;
+  background-color: ${blue};
+  padding: 5px 10px 10px;
+  border-top-left-radius: .9rem;
+  border-bottom-right-radius: .9rem;
+  color: ${white};
+  font-weight: 600;
+`
+
+export const Details = styled.div`
+  text-align: center;
+  position: relative;
+  color: ${white};
+  padding: 2rem;
+  min-height: 40vh;
+  flex: 1;
+  max-width: 800px;
+
+  p {
+    width: 80%;
+    word-wrap: break-word;
+    margin: 1rem auto;
+  }
+
+  h1 {
+    margin-bottom: 0;
+  }
+
+  span.creator {
+    color: ${blue};
+    display: block;
+  }
+
+  svg {
+    height: .7rem;
+  }
 `

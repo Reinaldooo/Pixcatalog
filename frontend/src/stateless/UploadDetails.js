@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { StyledButton } from '../statefull/LoginAndRegister';
 import { Textarea } from '../statefull/Upload';
 import { Input, Label, InputWrapper } from '../utils/customStyledComponents';
+import Condition from './Condition';
 
 
 const Form = styled.form`
@@ -63,13 +64,10 @@ const UploadDetails = ({
       </InputWrapper>
       <div>
         <StyledButton white onClick={handleSave}>Save</StyledButton>
-        {
-          handleDeleteConfirm &&
-          <>
+        <Condition test={handleDeleteConfirm}>
             <StyledButton white onClick={handleCancel}>Cancel</StyledButton>
             <StyledButton white danger onClick={handleDeleteConfirm}>Delete</StyledButton>
-          </>
-        }
+        </Condition>
       </div>
     </Form>
   )

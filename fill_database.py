@@ -167,8 +167,7 @@ titles = [
   "Beautiful photo taken at sunset",
   "My last vacation",
   "Look at this view",
-  "I love the sea",
-  ""
+  "I love the sea"
 ]
 
 descriptions = [

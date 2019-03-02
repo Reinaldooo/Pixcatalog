@@ -9,6 +9,7 @@ import { white, blue, black, red } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 import { ErrorFlash, SuccessFlash, UserIcon } from '../utils/customStyledComponents';
 import UserInfo from '../stateless/UserInfo';
+import Condition from '../stateless/Condition';
 
 export const Main = styled.div`
   position: relative;
@@ -167,8 +168,7 @@ class Login extends Component {
 
   getServerToken = () => {
     axios('/api/get_token')
-      .then(({ data }) => this.setState({ serverToken: data }))
-    //In production, get the window.token
+    .then(({ data }) => this.setState({ serverToken: data }))
   }
 
   responseGoogle = (response) => {
@@ -232,10 +232,8 @@ class Login extends Component {
     }
   }
 
-  componentDidMount() {
-    if (this.props.match.path === '/login') {
-      this.getServerToken()
-    }
+  componentDidMount() {    
+    this.getServerToken()
   }
 
   componentDidUpdate(prevProps) {
@@ -274,15 +272,15 @@ class Login extends Component {
             <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
             :
             <>
-              {
-                invalidCredentials && <ErrorFlash>Invalid user or password</ErrorFlash>
-              }
-              {
-                registerInputError && <ErrorFlash>{registerInputErrorText}</ErrorFlash>
-              }
-              {
-                regSuccess && <SuccessFlash>User Created, please login</SuccessFlash>
-              }
+              <Condition test={invalidCredentials}>
+                <ErrorFlash>Invalid user or password</ErrorFlash>
+              </Condition>
+              <Condition test={registerInputError}>
+                <ErrorFlash>{registerInputErrorText}</ErrorFlash>
+              </Condition>
+              <Condition test={regSuccess}>
+                <SuccessFlash>User Created, please login</SuccessFlash>
+              </Condition>
               <UserIcon>
                 <UserSVG />
               </UserIcon>
@@ -300,6 +298,7 @@ class Login extends Component {
               />
               <div className="buttons">
                 <StyledButton to='/' onClick={this.handleSave}>{register ? 'Register' : 'Login'}</StyledButton>
+                <Condition test={this.state.serverToken}>
                 <p>{`You can also ${register ? 'register' : 'login'} using Google.`}</p>
                 <GoogleLogin
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
@@ -313,6 +312,7 @@ class Login extends Component {
                   onFailure={this.responseGoogle}
                   onRequest={this.requestGoogle}
                 />
+                </Condition>
               </div>
             </>
         }

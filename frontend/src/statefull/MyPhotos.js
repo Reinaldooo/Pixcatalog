@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from 'react-spinkit';
 //
-import { Main, StyledLink } from './CategoryImages'
+import { Main, StyledLink } from './CategoryImages';
+import { white } from '../utils/colors';
+import Condition from '../stateless/Condition';
 
 const MyPhotos = (props) => {
 
@@ -27,6 +29,9 @@ const MyPhotos = (props) => {
     <Main>
       <div>
         <StyledLink to='/'>Home</StyledLink>
+        <Condition test={images && images.length === 0}>
+          <h3 style={{ color: `${white}` }}>You don't have any images yet.</h3>
+        </Condition>
       </div>
       {
         images ?

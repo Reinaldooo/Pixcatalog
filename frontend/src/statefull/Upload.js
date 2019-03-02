@@ -16,6 +16,7 @@ import { white, blue } from '../utils/colors';
 import { Main } from './LoginAndRegister'
 import UploadDetails from '../stateless/UploadDetails';
 import { ErrorFlash } from '../utils/customStyledComponents';
+import Condition from '../stateless/Condition';
 
 
 // Register filepond plugins
@@ -120,12 +121,12 @@ class Upload extends Component {
             <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
             :
             <>
-              {
-                categoryEmpty && <ErrorFlash>Please choose a category</ErrorFlash>
-              }
-              {
-                noFile && <ErrorFlash>You must choose one image</ErrorFlash>
-              }
+              <Condition test={categoryEmpty}>
+                <ErrorFlash>Please choose a category</ErrorFlash>
+              </Condition>
+              <Condition test={noFile}>
+                <ErrorFlash>You must choose one image</ErrorFlash>
+              </Condition>
               <FilePond
                 ref={ref => (this.pond = ref)}
                 files={files}
