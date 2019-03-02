@@ -5,7 +5,7 @@
   "main": "server.py",
   "scripts": {
     "custom-build": "cd frontend/ && npm install && npm run build",
-    "heroku-postbuild": "rm -rf pixcatalog.db && python database_setup.py && python fill_database.py && npm run custom-build &&python server.py"
+    "heroku-postbuild": "rm -rf pixcatalog.db && python database_setup.py && python fill_database.py && npm run custom-build"
   },
   "repository": {
     "type": "git",
