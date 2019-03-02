@@ -21,7 +21,7 @@ const Main = styled.div`
   }
 
   @media (max-width: 700px) {
-      padding-right: 0;
+      padding: 3rem 0;
       width: 85%;
       margin: 0 auto;
   }

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import logo from '../images/logo.svg';
 import { white, black, red } from '../utils/colors';
 import { UserSVG, MenuSVG } from '../utils/helper';
+import Condition from '../stateless/Condition';
 
 
 const Logo = styled.img`
@@ -12,13 +13,15 @@ const Logo = styled.img`
 `
 
 const Nav = styled.div`
-  height: 100px;
+  height: 6rem;
   padding: 1.5rem 5rem;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  position: relative;
+  background-color: ${black};
 
   @media (max-width: 764px) {
     padding: 1.5rem 2rem;
@@ -27,6 +30,9 @@ const Nav = styled.div`
   svg {
     width: 25px;
     height: 25px;
+    @media (min-width: 764px) {
+    display: none;
+    }
   }
 `
 
@@ -69,17 +75,64 @@ const StyledLink = styled(Link)`
   border-radius: 5px;
   padding: 5px 10px;
   background-color: ${white};
-  margin-left: 1rem;
+  margin-left: ${props => props.noMarginLeft ? 0 : "1rem"};
   cursor: pointer;
+`
+const MobileMenu = styled.div`
+  position: absolute;
+  top: 6rem;
+  left: 0;
+  z-index: 3;
+  background-color: ${black};
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,.4);
 `
 
 const NavBar = (props) => {
-
   const [logOutText, setLogOutText] = useState('Logout')
+  const [mobileMenu, setMobileMenu] = useState(false)
+
+  const closeMenu = () => setMobileMenu(false)
+  
+  const LoginRegisterButtons = () => (
+    <>
+      <StyledLink
+      onClick={closeMenu}
+      noMarginLeft
+      to={{ pathname: "/login", state: { from: window.location.pathname } }}
+      >
+        Login
+      </StyledLink>
+      <StyledLink onClick={closeMenu} to="/register">Register</StyledLink>
+    </>
+  )
+
+  const UserButtons = (props) => (
+    <>
+      <Condition test={!props.mobile}>
+        <p className="welcome">{username}</p>
+        <UserSVG />
+      </Condition>
+      <StyledLink noMarginLeft onClick={closeMenu} to="/myphotos">My Photos</StyledLink>
+      <StyledLink onClick={closeMenu} to="/upload">Upload</StyledLink>
+      <StyledButton onClick={handleLogOut}>{logOutText}</StyledButton>
+    </>
+  )
 
   const handleLogOut = () => {
-      setLogOutText('...')
-      props.logOutUser()   
+    setLogOutText('...')
+    setMobileMenu(false)
+    props.logOutUser()
+  }
+
+  const handleClick = () => {
+    setMobileMenu(!mobileMenu)
   }
 
   useEffect(() => {
@@ -91,22 +144,23 @@ const NavBar = (props) => {
   return (
     <Nav>
       <Link className="logo-link" to="/"><Logo src={logo} alt="logo" /></Link>
-      <MenuSVG/>
+      <MenuSVG handleClick={handleClick} />
+      <Condition test={mobileMenu}>
+      <MobileMenu>
+        {
+          username ?
+            <UserButtons mobile />
+            :
+            <LoginRegisterButtons />
+        }
+      </MobileMenu>
+      </Condition>
       <UserLinks>
         {
           username ?
-            <>
-              <p className="welcome">{username}</p>
-              <UserSVG />
-              <StyledLink to="/myphotos">My Photos</StyledLink>
-              <StyledLink to="/upload">Upload</StyledLink>
-              <StyledButton onClick={handleLogOut}>{logOutText}</StyledButton>
-            </>
+            <UserButtons />
             :
-            <>
-              <StyledLink to={{ pathname: "/login", state: { from: window.location.pathname } }}>Login</StyledLink>
-              <StyledLink to="/register">Register</StyledLink>
-            </>
+            <LoginRegisterButtons />
         }
       </UserLinks>
     </Nav>

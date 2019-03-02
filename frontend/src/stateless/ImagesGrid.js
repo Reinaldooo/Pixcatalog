@@ -5,7 +5,7 @@ const helperArray = [ 1,1,1,1,1,1,1,1,1 ]
 //TODO Transform this into a recursive function
 
 const Main = styled.div`
-  height: 100%;
+  height: calc(100vh - 8rem);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -13,7 +13,8 @@ const Main = styled.div`
   padding-left: 3rem;
   @media (max-width: 764px) {
     padding-left: 0;
-    margin: 0 auto 100px;
+    /* margin: 0 auto 100px; */
+    padding: 2rem 0;
   }
 `
 
