@@ -1,7 +1,7 @@
 ## PixCatalog
 
 <p align="center">
-  <img src="./images/logo.svg">
+  <img src="./frontend/src/images/logo.svg">
 </p>
 
 * Top 3 most viewed articles
