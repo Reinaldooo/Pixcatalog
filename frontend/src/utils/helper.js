@@ -1,6 +1,7 @@
 import React from 'react';
 import { blue } from './colors'
 
+
 export const UserSVG = (props) => {
   return (
     <svg

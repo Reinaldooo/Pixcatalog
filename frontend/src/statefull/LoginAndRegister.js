@@ -172,7 +172,7 @@ class Login extends Component {
 
   getServerToken = () => {
     axios('/api/get_token')
-    .then(({ data }) => this.setState({ serverToken: data }))
+    .then(({ data }) => {console.log(data); this.setState({ serverToken: data })})
   }
 
   responseGoogle = (response) => {

@@ -46,6 +46,7 @@ const App = (props) => {
   useEffect(() => {
     axios('/api/check_credentials')
     .then(res => {
+      console.log(res)
       setUser(res.data)
     });
   }, []);
@@ -65,6 +66,7 @@ const App = (props) => {
             } />
           <Route exact path='/categories' component={CategoriesPage} />
           <Route exact path='/login' render={(props) => <LoginAndRegister {...props} logInUser={logInUser} />} />
+          <Route exact path='/upload' render={(props) => <Upload {...props} user={user} />} />
           <Route exact path='/upload' render={(props) => <Upload {...props} user={user} />} />
           <Route exact path='/register' render={(props) => <LoginAndRegister {...props} logInUser={logInUser} />} />
           <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={user} />} />

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from flask import url_for, send_file, json, make_response, abort
 from flask import session as login_session
+# from flask_wtf.csrf import CSRFProtect
 from PIL import Image as ImageEdit
 from sqlalchemy import create_engine, asc, func, desc
 from sqlalchemy.orm import sessionmaker
@@ -17,7 +18,9 @@ import os
 import requests
 
 app = Flask(__name__, static_folder='./frontend/build/static',
-            template_folder='./frontend/build')
+            template_folder='./frontend/build') 
+# csrf = CSRFProtect()
+
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -472,3 +475,5 @@ if __name__ == '__main__':
     app.secret_key = 'you_c@n_never_be_too_c@reful'
     app.debug = True
     app.run(host='0.0.0.0', port=port)
+    # csrf.init_app(app)
+
