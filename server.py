@@ -93,7 +93,6 @@ def get_token():
     state = ''.join(
         random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['serverToken'] = state
-    # return "The current session state is %s" % login_session['state']
     return state
 
 
@@ -114,6 +113,8 @@ def login():
     if request.method == "POST":
         username = request.json.get('username')
         password = request.json.get('password')
+        if login_session.get('username') is not None:
+            return "User already connected"
         try:
             user = session.query(User).filter_by(name=username).one()
         except Exception:
@@ -157,8 +158,7 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
-           % access_token)
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
     # Submit request, parse response - Python3 compatible
     h = httplib2.Http()
     response = h.request(url, 'GET')[1]
@@ -236,7 +236,7 @@ def logout():
         response.headers['Content-Type'] = 'application/json'
         return response
     if gplus_id is not None:
-        url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+        url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(access_token)
         h = httplib2.Http()
         result = h.request(url, 'GET')[0]
         if result['status'] == '200':
@@ -248,10 +248,7 @@ def logout():
             del login_session['picture']
             del login_session['user_id']
 
-            response = make_response(
-                                     json.dumps('Successfully disconnected from Google.'),
-                                     200
-                                     )
+            response = make_response(json.dumps('Successfully disconnected from Google.'), 200)
             response.headers['Content-Type'] = 'application/json'
             return response
         else:

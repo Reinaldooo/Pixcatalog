@@ -5,26 +5,27 @@ const helperArray = [ 1,1,1,1,1,1,1,1,1 ]
 //TODO Transform this into a recursive function
 
 const Main = styled.div`
-  height: calc(100vh - 8rem);
+  height: calc(100vh - 6rem);
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-left: 3rem;
-  @media (max-width: 764px) {
-    padding-left: 0;
-    /* margin: 0 auto 100px; */
-    padding: 2rem 0;
+  @media (max-width: 1100px) and (orientation: landscape) {
+    padding: 3rem 0;
+    margin-bottom: 15rem;
+  }
+  @media (max-width: 900px) {
+    padding: 3rem 0;
   }
 `
 
 const GridContainer = styled.div`
-  width: 65%;
+  width: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  border-radius: 3rem;
   overflow: hidden;
 
   img {
@@ -33,8 +34,14 @@ const GridContainer = styled.div`
     &:first-of-type, &:last-of-type {
       visibility: hidden;
     }
+    &:nth-of-type(3) {
+      border-top-right-radius: 2rem;
+    }
+    &:nth-of-type(7) {
+      border-bottom-left-radius: 2rem;
+    }
   }
-  @media (max-width: 764px) {
+  @media (max-width: 500px) {
     width: 75%;
     border-radius: 2rem;
   }

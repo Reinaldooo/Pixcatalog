@@ -13,6 +13,9 @@ const Logo = styled.img`
 `
 
 const Nav = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 6rem;
   padding: 1.5rem 5rem;
   width: 100%;
@@ -23,7 +26,13 @@ const Nav = styled.div`
   position: relative;
   background-color: ${black};
 
-  @media (max-width: 764px) {
+  @media (max-width: 1400px) {
+    margin-bottom: 0;
+  }
+  @media (max-width: 1100px) and (orientation: landscape) {
+    margin-bottom: 15rem;
+  }
+  @media (max-width: 500px) {
     padding: 1.5rem 2rem;
   }
 
@@ -35,9 +44,11 @@ const Nav = styled.div`
   svg.menu {
     width: 25px;
     height: 25px;
-    @media (min-width: 764px) {
+    @media (min-width: 500px) {
     display: none;
     }
+    transition: transform .4s;
+    transform: ${props => props.rotate === "true" ? 'rotate(90deg)' : 'none'}
   }
 `
 
@@ -50,14 +61,20 @@ const UserLinks = styled.div`
   p {
     color: ${white};
     font-weight: 600;
+    @media (max-width: 900px) {
+      display: none;
+    }
   }
 
   svg {
     height: 30%;
     margin-left: .3rem;
+    @media (max-width: 900px) {
+      display: none;
+    }  
   }
 
-  @media (max-width: 764px) {
+  @media (max-width: 500px) {
       display: none;
   }
 `
@@ -96,14 +113,18 @@ const MobileMenu = styled.div`
   align-items: center;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
-  box-shadow: 0 15px 35px rgba(0,0,0,.4);
+  box-shadow: 0 20px 35px rgba(0,0,0,.4);
 `
 
 const NavBar = (props) => {
   const [logOutText, setLogOutText] = useState('Logout')
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [rotate, setRotate] = useState("false")
 
-  const closeMenu = () => setMobileMenu(false)
+  const closeMenu = () => {
+    setRotate("false")
+    setMobileMenu(false)
+  }
   
   const LoginRegisterButtons = () => (
     <>
@@ -138,6 +159,7 @@ const NavBar = (props) => {
 
   const handleClick = () => {
     setMobileMenu(!mobileMenu)
+    rotate === "false" ? setRotate("true") : setRotate("false")
   }
 
   useEffect(() => {
@@ -147,7 +169,7 @@ const NavBar = (props) => {
   let { username } = props.user;
 
   return (
-    <Nav>
+    <Nav rotate={rotate}>
       <Link className="logo-link" to="/"><Logo src={logo} alt="logo" /></Link>
       <MenuSVG handleClick={handleClick} />
       <Condition test={mobileMenu}>

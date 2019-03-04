@@ -11,20 +11,21 @@ import Condition from '../stateless/Condition'
 const Main = styled.div`
   position: relative;
   width: 80%;
-  margin: 1rem auto 0;
+  margin: auto;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   img {
-    width: 50%;
+    width: 45%;
     border-radius: .9rem;
     flex: 1;
-    @media (max-width: 900px) {
+    margin: 2rem 0;
+    @media (max-width: 1100px) {
       width: 100%;
     }
   }
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
       flex-direction: column;
   }
 `

@@ -15,11 +15,14 @@ import ImagesGrid from './stateless/ImagesGrid';
 
 const Main = styled.div`
   display: flex;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 6rem);
   width: 100%;
-  margin-top: -2%;
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     flex-direction: column;
+    margin-top: 4rem;
+  }
+  @media (max-width: 500px) {
+    margin-top: 2rem;
   }
 `
 
@@ -33,6 +36,7 @@ const App = (props) => {
   const logOutUser = () => {
     axios('/logout')
       .then(res => {
+        console.log(res)
         if (res.status === 200) {
           setUser(false)
         }
@@ -67,7 +71,7 @@ const App = (props) => {
           <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={user} />} />
           <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={user} />} />
           {/* 404 pages */}
-          {/* <Route render={() => <ErrorPage/>}/> */}
+          <Route render={() => <div style={{ "color": 'white', "textAlign": "center" }}>Page not found!</div>}/>
         </Switch>
       </div>
     </Router>

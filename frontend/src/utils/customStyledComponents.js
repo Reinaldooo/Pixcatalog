@@ -63,7 +63,7 @@ export const Input = styled.input`
 export const InputWrapper = styled.div`
   width: 60%;
   position: relative;
-  @media (max-width: 764px) {
+  @media (max-width: 500px) {
     width: 100%;
   }
 `
@@ -80,7 +80,7 @@ export const Label = styled.label`
 
 export const BackLink = styled(Link)`
   position: absolute;
-  top: 0;
+  top: 2rem;
   left: 0;
   text-decoration: none;
   background-color: ${blue};

@@ -9,6 +9,7 @@ import { blue, white, black } from '../utils/colors';
 const Main = styled.div`
   text-align: center;
   padding-bottom: 2rem;
+  margin-top: 2rem;
 
   p {
     color: ${white};
@@ -22,7 +23,7 @@ const CategoriesMain = styled.div`
   align-items: center;
   padding: 5rem;
   padding-top: 2rem;
-  @media (max-width: 764px) {
+  @media (max-width: 500px) {
     padding: 0;
   }
 `
@@ -32,7 +33,10 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   margin: 0 1rem;
 
-  @media (max-width: 764px) {
+  @media (max-width: 1100px) {
+    width: 40%;
+  }
+  @media (max-width: 500px) {
     width: 40%;
   }
 `
@@ -67,6 +71,10 @@ const Category = styled.li`
   h3 {
     margin: 0;
     font-size: 1.6rem;
+    @media(max-width: 500px) {
+    font-size: 1.3rem;
+
+    }
   }
   p{
     margin: 0;

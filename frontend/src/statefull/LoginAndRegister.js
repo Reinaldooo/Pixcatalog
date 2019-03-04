@@ -6,8 +6,8 @@ import axios from 'axios';
 import debounce from 'lodash.debounce'
 // Local imports
 import { white, blue, black, red } from '../utils/colors';
-import { UserSVG } from '../utils/helper';
-import { ErrorFlash, SuccessFlash, UserIcon } from '../utils/customStyledComponents';
+import googleSVG from '../images/google.svg';
+import { ErrorFlash, SuccessFlash } from '../utils/customStyledComponents';
 import UserInfo from '../stateless/UserInfo';
 import Condition from '../stateless/Condition';
 
@@ -21,15 +21,18 @@ export const Main = styled.div`
   border-radius: 1rem;
   min-height: 50vh;
   /* height should be higher on upload page */
-  max-height: ${props => props.upload ? '90%' : '700px'};
-  margin: 1rem auto 3rem;
+  max-height: ${props => props.upload ? '90%' : '500px'};
+  margin: 2rem auto;
   padding: 1rem 2rem 1.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  @media (max-width: 764px) {
+  @media (max-width: 1100px) {
+    width: 70%;
+  }
+  @media (max-width: 500px) {
     width: 90%;
   }
 
@@ -155,6 +158,7 @@ class Login extends Component {
       user.password = this.state.password
       axios.post(`/api/login`, user)
         .then(({ data }) => {
+          console.log(data)
           if (!data.status) {
             this.setState({ invalidCredentials: true, fetching: false })
             setTimeout(() => { this.setState({ invalidCredentials: false }) }, 3000)
@@ -281,9 +285,9 @@ class Login extends Component {
               <Condition test={regSuccess}>
                 <SuccessFlash>User Created, please login</SuccessFlash>
               </Condition>
-              <UserIcon>
+              {/* <UserIcon>
                 <UserSVG />
-              </UserIcon>
+              </UserIcon> */}
               <UserInfo
                 usernameUsed={usernameUsed}
                 emailUsed={emailUsed}
@@ -304,7 +308,7 @@ class Login extends Component {
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
                   render={renderProps => (
                     <StyledButton google onClick={renderProps.onClick}>
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google-logo-button" />
+                      <img src={googleSVG} alt="google-logo-button" />
                     </StyledButton>
                   )}
                   responseType="code"
