@@ -27,7 +27,13 @@ const MyPhotos = (props) => {
   }
 
   useEffect(() => {
-    getImages()
+    let userImages = JSON.parse(sessionStorage.getItem('images'))
+    if (userImages) {
+      console.log('user images')
+      setImages(userImages)
+    } else {
+      getImages()
+    }
   }, [])
 
   return (

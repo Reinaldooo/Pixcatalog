@@ -41,8 +41,8 @@ const App = (props) => {
   let localUser = getUser()
 
   const logInUser = (user) => {
-    sessionStorage.setItem('user', JSON.stringify(user))
     setUser(user)
+    sessionStorage.setItem('user', JSON.stringify(user))
   }
 
   const logOutUser = () => {    
@@ -56,19 +56,27 @@ const App = (props) => {
       })
   }
 
-  useEffect(() => {
-    let localUser = sessionStorage.getItem('user')
-    console.log(localUser)
-    if (localUser) {
-      setUser(JSON.parse(localUser))
-    } else {
-    axios('/api/check_credentials')
-    .then(({ data }) => {
-      if (!data.error) {
-        setUser(data)
-      }
-    });
+  const getUserImages = async (userId) => {
+    axios(`/api/get_user_images/${userId}`)
+      .then(({ data: { images } }) => {
+        sessionStorage.setItem("images", JSON.stringify(images))
+      })
   }
+
+  useEffect(() => {
+    let localUser = JSON.parse(sessionStorage.getItem('user'))
+    if (localUser) {
+      setUser(localUser)
+      getUserImages(localUser.user_id)
+    } else {
+      axios('/api/check_credentials')
+        .then(({ data }) => {
+          if (!data.error) {
+            setUser(data)
+            getUserImages(data.user_id)
+          }
+        });
+    }
   }, []);
 
   return (

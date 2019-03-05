@@ -164,19 +164,21 @@ users = [
 ]
 
 titles = [
-  "Beautiful photo taken at sunset",
+  "Beautiful photo taken last week",
   "My last vacation",
   "Look at this view",
-  "I love the sea"
+  "I love taking pictures",
+  "Amazing sight",
+  "I can't believe i taken this picture",
 ]
 
 descriptions = [
   "Is this real life? I can't believe i'm here",
-  "Look at that building, its amazing",
+  "Look at that, its amazing",
   "Last night we watched the stars for hours, and in\
   the morning we had this amazing view",
   "I dare you to find the error in this picture",
-  ""
+  "The 6 hours drive was worth it"
 ]
 
 

@@ -167,7 +167,7 @@ const UserInteraction = (props) => {
 
     return (
       <Main>
-        <Header><span>PixCatalog</span> is a category based image upload website.</Header>
+        <Header><span>PixCatalog</span> is a category-based photos site.</Header>
         <p>Choose from our top categories, or login and create one.</p>
         <Categories>
           { 
