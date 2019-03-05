@@ -31,14 +31,14 @@ const App = (props) => {
   const [user, setUser] = useState(false);
 
   const getUser = () => {
-    // let localUser = sessionStorage.getItem('user')
-    // console.log(localUser)
-    // console.log(user)
-    // if(localUser !== null) {
-    //   return JSON.parse(localUser)
-    // }
+    let localUser = sessionStorage.getItem('user')
+    if(localUser !== null) {
+      return JSON.parse(localUser)
+    }
     return user
   }
+
+  let localUser = getUser()
 
   const logInUser = (user) => {
     sessionStorage.setItem('user', JSON.stringify(user))
@@ -57,12 +57,18 @@ const App = (props) => {
   }
 
   useEffect(() => {
+    let localUser = sessionStorage.getItem('user')
+    console.log(localUser)
+    if (localUser) {
+      setUser(JSON.parse(localUser))
+    } else {
     axios('/api/check_credentials')
     .then(({ data }) => {
       if (!data.error) {
         setUser(data)
       }
     });
+  }
   }, []);
 
   return (
@@ -79,12 +85,12 @@ const App = (props) => {
               </Main>
             } />
           <Route exact path='/categories' component={CategoriesPage} />
-          <LoggedOutRoute exact path='/login' component={LoginAndRegister} logInUser={logInUser} />
-          <LoggedInRoute exact path='/upload' component={Upload} user={getUser()}/>
-          <LoggedOutRoute exact path='/register' component={LoginAndRegister} logInUser={logInUser} />
-          <LoggedInRoute exact path='/myphotos' component={MyPhotos} user={getUser()}/>
-          <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={getUser()} />} />
-          <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={getUser()} />} />
+          <LoggedOutRoute exact path='/login' component={LoginAndRegister} user={localUser} logInUser={logInUser} />
+          <LoggedInRoute exact path='/upload' component={Upload} user={localUser}/>
+          <LoggedOutRoute exact path='/register' component={LoginAndRegister} user={localUser} logInUser={logInUser} />
+          <LoggedInRoute exact path='/myphotos' component={MyPhotos} user={localUser}/>
+          <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={localUser} />} />
+          <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={localUser} />} />
           {/* 404 pages */}
           <Route render={() => <div style={{ "color": 'white', "textAlign": "center" }}>Page not found!</div>}/>
         </Switch>

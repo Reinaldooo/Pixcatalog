@@ -85,6 +85,13 @@ def getCategoryID(title):
 def index(path):
     if request.method == "DELETE":
         print(request)
+    top = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
+    .join(Category, Image.category_id == Category.id)\
+    .group_by(Image.category_id)\
+    .order_by(desc("quantidade"))\
+    .limit(6).all()
+    obj = {}
+    obj['top'] = top
     return render_template('index.html')
 
 
@@ -331,13 +338,12 @@ def categories():
 
 @app.route('/api/top_categories')
 def top_categories():
-    top_categories = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
+    top = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
     .join(Category, Image.category_id == Category.id)\
     .group_by(Image.category_id)\
     .order_by(desc("quantidade"))\
     .limit(6).all()
-
-    return jsonify(top_categories)
+    return jsonify(top)
 
 
 @app.route('/api/get_category_details/<string:category>')

@@ -12,9 +12,14 @@ const MyPhotos = (props) => {
   const [images, setImages] = useState(null)
 
   const getImages = async () => {
-    let userId = await axios('/api/check_credentials')
-      .then(({ data }) => data.user_id)
-
+    let localUser = sessionStorage.getItem('user')
+    let userId
+    if (localUser) {
+      userId = JSON.parse(localUser).user_id
+    } else {
+      userId = await axios('/api/check_credentials')
+        .then(({ data }) => data.user_id)
+    }
     axios(`/api/get_user_images/${userId}`)
       .then(({ data: { images, user } }) => {
         setImages(images)
