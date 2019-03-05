@@ -28,6 +28,7 @@ const MyPhotos = (props) => {
   return (
     <Main>
       <div>
+      { console.log(props) }
         <StyledLink to='/'>Home</StyledLink>
         <Condition test={images && images.length === 0}>
           <h3 style={{ color: `${white}` }}>You don't have any images yet.</h3>

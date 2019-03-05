@@ -277,6 +277,7 @@ class Login extends Component {
             :
             <>
               <Condition test={invalidCredentials}>
+              {console.log(this.props)}
                 <ErrorFlash>Invalid user or password</ErrorFlash>
               </Condition>
               <Condition test={registerInputError}>
