@@ -17,6 +17,7 @@ import { Main } from './LoginAndRegister'
 import UploadDetails from '../stateless/UploadDetails';
 import { ErrorFlash } from '../utils/customStyledComponents';
 import Condition from '../stateless/Condition';
+import { config } from '../utils/helper';
 
 
 // Register filepond plugins
@@ -50,6 +51,7 @@ class Upload extends Component {
     description: '',
     imageAddress: shortid.generate() ,
     category: '',
+    categoryEmpty: false,
     saving: false,
     noFile: false
   }
@@ -89,9 +91,9 @@ class Upload extends Component {
           'details',
           JSON.stringify(details),
         )
-        axios.post('api/upload_image_details', formData)
-          .then((res) => {
-            if (res.status === 200) {
+        axios.post('api/upload_image_details', formData, config)
+          .then(({ data, status }) => {
+            if (status === 200) {
               this.props.history.push(`/images/${this.state.imageAddress}`)
             }
           })
@@ -141,7 +143,10 @@ class Upload extends Component {
                   process: {
                     url: 'api/upload_image',
                     method: 'POST',
-                    headers: { 'fileId': `${imageAddress}` }
+                    headers: {
+                      'fileId': `${imageAddress}`,
+                      "X-CSRFToken": config.headers["X-CSRFToken"]
+                    }
                   }
                 }}
                 onprocessfile={this.handleUploadFinish}

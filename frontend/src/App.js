@@ -18,6 +18,7 @@ const Main = styled.div`
   display: flex;
   height: calc(100vh - 6rem);
   width: 100%;
+  margin-bottom: 4rem;
   @media (max-width: 1100px) {
     flex-direction: column;
     margin-top: 4rem;
@@ -58,24 +59,16 @@ const App = (props) => {
       })
   }
 
-  const getUserImages = async (userId) => {
-    axios(`/api/get_user_images/${userId}`)
-      .then(({ data: { images } }) => {
-        sessionStorage.setItem("images", JSON.stringify(images))
-      })
-  }
-
   useEffect(() => {
+    window.token && console.log(window.token)
     let localUser = JSON.parse(sessionStorage.getItem('user'))
     if (localUser) {
       setUser(localUser)
-      getUserImages(localUser.user_id)
     } else {
       axios('/api/check_credentials')
         .then(({ data }) => {
           if (!data.error) {
             setUser(data)
-            getUserImages(data.user_id)
           }
         });
     }

@@ -30,7 +30,11 @@ export const ErrorFlash = styled.span`
   top: 5%;
   left: 25%;
   animation: ${buble} 1s linear infinite;
-  z-index: 1;
+  z-index: 10;
+  @media (max-width: 500px) {
+    width: 80%;
+    left: 10%;
+  }
 `
 
 export const SuccessFlash = styled.span`
@@ -41,9 +45,15 @@ export const SuccessFlash = styled.span`
   position: absolute;
   border-radius: 5px;
   font-size: 1.1rem;
-  top: ${props => props.upper ? '-10%' : '5%'};
+  top: ${props => props.upper ? '-10%' : '0%'};
   left: 25%;
   animation: ${buble} 1s linear infinite;
+  z-index: 10;
+  @media (max-width: 500px) {
+    width: 80%;
+    left: 10%;
+    top: ${props => props.upper ? '-30%' : '0%'};
+  }
 `
 
 export const Input = styled.input`

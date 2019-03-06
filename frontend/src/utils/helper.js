@@ -55,3 +55,9 @@ export const MenuSVG = (props) => {
     </div>
   )
 }
+
+export const config = {
+  "headers": {
+    "X-CSRFToken": window.CSRFToken
+  }
+}

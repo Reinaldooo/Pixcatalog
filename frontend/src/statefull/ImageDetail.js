@@ -7,6 +7,7 @@ import { white, black } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
 import UploadDetails from '../stateless/UploadDetails'
 import Condition from '../stateless/Condition'
+import { config } from '../utils/helper';
 
 const Main = styled.div`
   position: relative;
@@ -96,7 +97,7 @@ const ImageDetail = (props) => {
 
   const handleDelete = (e) => {
     e.preventDefault()
-    axios.post(`/api/delete_image/${image.id}`)
+    axios.post(`/api/delete_image/`, { imageId: image.id }, config)
       .then((res) => {
         if (res.status === 200) {
           props.history.push("/myphotos")
@@ -129,7 +130,7 @@ const ImageDetail = (props) => {
         'editedDetails',
         JSON.stringify(details),
       )
-      axios.post(`/api/update_image_details/${image.id}`, formData)
+      axios.post(`/api/update_image_details/${image.id}`, formData, config)
         .then((res) => {
           if (res.status === 200) {
             setEditSuccess(true)

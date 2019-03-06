@@ -27,19 +27,12 @@ const MyPhotos = (props) => {
   }
 
   useEffect(() => {
-    let userImages = JSON.parse(sessionStorage.getItem('images'))
-    if (userImages) {
-      console.log('user images')
-      setImages(userImages)
-    } else {
       getImages()
-    }
   }, [])
 
   return (
     <Main>
       <div>
-      { console.log(props) }
         <StyledLink to='/'>Home</StyledLink>
         <Condition test={images && images.length === 0}>
           <h3 style={{ color: `${white}` }}>You don't have any photos yet.</h3>

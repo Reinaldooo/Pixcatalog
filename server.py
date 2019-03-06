@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from flask import url_for, send_file, json, make_response, abort
 from flask import session as login_session
-# from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect
 from PIL import Image as ImageEdit
 from sqlalchemy import create_engine, asc, func, desc
 from sqlalchemy.orm import sessionmaker
@@ -19,7 +19,7 @@ import requests
 
 app = Flask(__name__, static_folder='./frontend/build/static',
             template_folder='./frontend/build') 
-# csrf = CSRFProtect()
+csrf = CSRFProtect()
 
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -276,8 +276,9 @@ def logout():
 """ User-related routes  """
 
 
-@app.route('/api/check_username/<string:user>', methods=["POST"])
-def check_username(user):
+@app.route('/api/check_username', methods=["POST"])
+def check_username():
+    user = request.json.get('username')
     user_id = getUserIDByName(user.lower())
     if not user_id:
         return "Ok"
@@ -308,9 +309,10 @@ def create_user():
         return jsonify(users=[i.serialize for i in users])
 
 
-@app.route('/api/check_email/<string:user>', methods=["POST"])
-def check_email(user):
-    user_id = getUserIDByEmail(user.lower())
+@app.route('/api/check_email', methods=["POST"])
+def check_email():
+    email = request.json.get('email')
+    user_id = getUserIDByEmail(email.lower())
     if not user_id:
         return "Ok"
     return "Used"
@@ -385,6 +387,8 @@ def upload_image():
     targetThumb = os.path.join(APP_ROOT, 'thumb')
     if not os.path.isdir(target):
         os.mkdir(target)
+    if not os.path.isdir(targetThumb):
+        os.mkdir(targetThumb)
     fileId = request.headers.get('fileId')
     upload = request.files.get('filepond', '')
     filename = fileId
@@ -425,6 +429,9 @@ def upload_image_details():
     if 'username' not in login_session:
         return "You are not allowed to do this", 401
     details = json.loads(request.form.get('details'))
+    category = details.get('category')
+    if not category:
+        return "You must provide a category name"
     category_id = getCategoryID(details['category'])
     if not category_id:
         category_id = createCategory(title=details['category'])
@@ -435,7 +442,7 @@ def upload_image_details():
                   address=details['address'])
     session.add(image)
     session.commit()
-    return 'Ok, uploaded'
+    return jsonify(image.serialize)
 
 
 """ Edit-related routes  """
@@ -446,6 +453,9 @@ def update_image_details(img_id):
     if 'username' not in login_session:
         return "You are not allowed to do this", 401
     details = json.loads(request.form.get('editedDetails'))
+    category = details.get('category')
+    if not category:
+        return "You must provide a category name"
     category_id = getCategoryID(details['category'])
     if not category_id:
         category_id = createCategory(title=details['category'])
@@ -457,13 +467,14 @@ def update_image_details(img_id):
     editedImage.category_id = category_id
     session.add(editedImage)
     session.commit()
-    return 'Ok, edited'
+    return jsonify(editedImage.serialize)
 
 
-@app.route('/api/delete_image/<int:img_id>', methods=['POST'])
-def delete_image(img_id):
+@app.route('/api/delete_image', methods=['POST'])
+def delete_image():
     if 'username' not in login_session:
         return "You are not allowed to do this", 401
+    img_id = request.json.get('imageId')
     imageToDelete = session.query(Image).filter_by(id=img_id).one()
     if imageToDelete.user_id != login_session['user_id']:
         return "You are not allowed to do this", 401
@@ -474,8 +485,8 @@ def delete_image(img_id):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))   # Use PORT if it's there.
+    csrf.init_app(app)
     app.secret_key = 'you_c@n_never_be_too_c@reful'
     app.debug = True
     app.run(host='0.0.0.0', port=port)
-    # csrf.init_app(app)
 

@@ -6,6 +6,7 @@ import axios from 'axios';
 import debounce from 'lodash.debounce'
 // Local imports
 import { white, blue, black, red } from '../utils/colors';
+import { config } from '../utils/helper';
 import googleSVG from '../images/google.svg';
 import { ErrorFlash, SuccessFlash } from '../utils/customStyledComponents';
 import UserInfo from '../stateless/UserInfo';
@@ -77,7 +78,6 @@ export const StyledButton = styled.button`
 class Login extends Component {
 
   state = {
-    regSuccess: false,
     username: '',
     password: '',
     passwordConfirm: '',
@@ -91,12 +91,13 @@ class Login extends Component {
     invalidCredentials: false,
     validPasswordCheck: false,
     registerInputError: false,
-    registerInputErrorText: ''
+    registerInputErrorText: '',
+    regSuccess: false,
   }
 
   debounceCheck = debounce((type, data) => {
     if (type === "user") {
-      axios.post(`/api/check_username/${data}`)
+      axios.post(`/api/check_username`, { username: data }, config)
         .then(({ status, data }) => {
           if (status === 200) {
             data === 'Used' ?
@@ -106,7 +107,7 @@ class Login extends Component {
           }
         })
     } else {
-      axios.post(`/api/check_email/${data}`)
+      axios.post(`/api/check_email`, { email: data }, config)
         .then(({ status, data }) => {
           if (status === 200) {
             data === 'Used' && this.setState({ emailUsed: 'yes', emailValid: false });
@@ -141,7 +142,7 @@ class Login extends Component {
         newUser.username = this.state.username
         newUser.password = this.state.password
         newUser.email = this.state.email
-        axios.post(`/api/create_user`, newUser)
+        axios.post(`/api/create_user`, newUser, config)
           .then(({status, data}) => {
             if (status === 201) {
               this.setState({ regSuccess: true })
@@ -156,7 +157,7 @@ class Login extends Component {
       let user = {}
       user.username = this.state.username
       user.password = this.state.password
-      axios.post(`/api/login`, user)
+      axios.post(`/api/login`, user, config)
         .then(({ data }) => {
           console.log(data)
           if (!data.status) {
@@ -179,7 +180,7 @@ class Login extends Component {
     axios.post(`/gconnect`, {
       serverToken: this.state.serverToken,
       code: response.code
-    })
+    }, config)
       .then(({ data, status }) => {
         if (status === 200) {
           this.props.logInUser(data)
@@ -247,7 +248,10 @@ class Login extends Component {
         email: '',
         password: '',
         passwordConfirm: '',
-        fetching: false
+        fetching: false,
+        invalidCredentials: false,
+        registerInputError: false,
+        usernameUsed: 'no'
       })
       if (this.props.match.path === '/login') {
         this.getServerToken()
