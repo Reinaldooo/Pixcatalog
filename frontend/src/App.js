@@ -42,14 +42,12 @@ const App = (props) => {
   let localUser = getUser()
 
   const logInUser = (user) => {
-    getUserImages(user.user_id)
-    setUser(user)
     sessionStorage.setItem('user', JSON.stringify(user))
+    setUser(user)
   }
 
   const logOutUser = () => {    
     sessionStorage.removeItem('user')
-    sessionStorage.removeItem('images')
     axios('/logout')
       .then(res => {
         console.log(res)
@@ -60,7 +58,6 @@ const App = (props) => {
   }
 
   useEffect(() => {
-    window.token && console.log(window.token)
     let localUser = JSON.parse(sessionStorage.getItem('user'))
     if (localUser) {
       setUser(localUser)
@@ -68,12 +65,10 @@ const App = (props) => {
       axios('/api/check_credentials')
         .then(({ data }) => {
           if (!data.error) {
+            sessionStorage.setItem('user', JSON.stringify(data))
             setUser(data)
           }
         });
-    }
-    return () => {
-      sessionStorage.removeItem('images')
     }
   }, []);
 
