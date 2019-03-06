@@ -41,12 +41,14 @@ const App = (props) => {
   let localUser = getUser()
 
   const logInUser = (user) => {
+    getUserImages(user.user_id)
     setUser(user)
     sessionStorage.setItem('user', JSON.stringify(user))
   }
 
   const logOutUser = () => {    
     sessionStorage.removeItem('user')
+    sessionStorage.removeItem('images')
     axios('/logout')
       .then(res => {
         console.log(res)
@@ -76,6 +78,9 @@ const App = (props) => {
             getUserImages(data.user_id)
           }
         });
+    }
+    return () => {
+      sessionStorage.removeItem('images')
     }
   }, []);
 

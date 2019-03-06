@@ -83,15 +83,11 @@ def getCategoryID(title):
 @app.route('/', defaults={'path': ''}, methods=["GET", "DELETE"])
 @app.route('/<path:path>')
 def index(path):
+    # JS fileupload will send a delete request if the user 
+    # aborts the upload. this is only here to avoid nasty errors
+    # in the console
     if request.method == "DELETE":
         print(request)
-    top = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
-    .join(Category, Image.category_id == Category.id)\
-    .group_by(Image.category_id)\
-    .order_by(desc("quantidade"))\
-    .limit(6).all()
-    obj = {}
-    obj['top'] = top
     return render_template('index.html')
 
 

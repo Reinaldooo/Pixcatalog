@@ -153,6 +153,7 @@ const NavBar = (props) => {
 
   const handleLogOut = () => {
     setLogOutText('...')
+    setRotate(false)
     setMobileMenu(false)
     props.logOutUser()
   }
