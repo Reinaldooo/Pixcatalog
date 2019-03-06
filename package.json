@@ -4,7 +4,7 @@
   "description": "Category-based image upload website",
   "main": "server.py",
   "scripts": {
-    "custom-build": "cd frontend/ && npm install && npm run build && mv build/favicon/ build/static/ && mv build/service-worker.js build/pre* build/static/",
+    "custom-build": "cd frontend/ && npm install && npm run build && mv build/favicon/ build/static/",
     "heroku-postbuild": "rm -rf pixcatalog.db && python database_setup.py && python fill_database.py && npm run custom-build"
   },
   "repository": {
