@@ -1,8 +1,6 @@
 <p  align="center">
 <img  height="200px"  src="./Header.svg">
-</p>  
-
-### PixCatalog  
+</p>
 
 <p  align="center">
 PixCatalog is a category-based site for you to upload your favourite photos.
@@ -10,7 +8,9 @@ PixCatalog is a category-based site for you to upload your favourite photos.
 
 ![Example PNG](/Example.png)
 
+<p  align="center">
 The app is fully responsive, so you can use it on your phone or tablet.
+</p>
 
 ### This project was created using Javascript and Python with the help of the following tools:
 
@@ -43,3 +43,41 @@ The development focus was to create a lightweight and elegant app, thats why Rea
 * Finally, you can use the command `python server.py` to start the server.
 * You case you have any errors, try using `python3 server.py`.
 * The app will be running on ```localhost:5000```
+
+### API
+
+PixCatalog exposes two endpoints, `api/top_categories` and `api/categories`
+
+#### https://pixcatalog.herokuapp.com/api/categories
+
+* Sample response
+
+```
+{
+  "categories": [
+    {
+      "id": 1,
+      "images_total": 9,
+      "title": "car"
+    },
+    {
+      "id": 2,
+      "images_total": 7,
+      "title": "motorcicle"
+    }]
+}
+```
+
+#### https://pixcatalog.herokuapp.com/api/top_categories
+
+* Sample response
+
+```
+[
+  [
+    12, // Number of images
+    "travel", // Title
+    6 // Id
+  ]
+]
+```
