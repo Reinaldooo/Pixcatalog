@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./Header.svg">
+  <img height="200px" src="./Header.svg">
 </p>
 
 ### PixCatalog

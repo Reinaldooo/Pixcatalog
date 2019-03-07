@@ -5,7 +5,7 @@ const helperArray = [ 1,1,1,1,1,1,1,1,1 ]
 //TODO Transform this into a recursive function
 
 const Main = styled.div`
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 8rem);
   width: 100%;
   display: flex;
   justify-content: center;

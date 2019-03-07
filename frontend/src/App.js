@@ -15,12 +15,11 @@ import ImagesGrid from './stateless/ImagesGrid';
 
 const Main = styled.div`
   display: flex;
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 8rem);
   width: 100%;
-  margin-bottom: 4rem;
   @media (max-width: 1100px) {
     flex-direction: column;
-    margin-top: 4rem;
+    margin: 4rem auto 6rem;
   }
   @media (max-width: 500px) {
     margin-top: 2rem;

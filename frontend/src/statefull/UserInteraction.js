@@ -7,7 +7,7 @@ import axios from 'axios';
 import { blue, white } from '../utils/colors';
 
 const Main = styled.div`
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 8rem);
   width: 100%;
   display: flex;
   flex-direction: column;
