@@ -236,8 +236,22 @@ class Login extends Component {
     }
   }
 
-  componentDidMount() {    
-    this.getServerToken()
+
+  componentDidMount() {
+    let localUser = JSON.parse(sessionStorage.getItem('user'))
+    if (localUser) {
+      this.props.history.push('/')
+    } else {
+      axios('/api/check_credentials')
+        .then(({ data }) => {
+          if (!data.error) {
+            sessionStorage.setItem('user', JSON.stringify(data))
+            this.props.history.push('/')
+          } else {
+            this.getServerToken()
+          }
+        });
+    }
   }
 
   componentDidUpdate(prevProps) {

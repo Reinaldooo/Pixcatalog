@@ -87,7 +87,7 @@ const App = (props) => {
           <Route exact path='/categories' component={CategoriesPage} />
           <Route exact path='/login' render={(props) => <LoginAndRegister {...props} user={localUser} logInUser={logInUser} />} />
           <Route exact path='/upload' render={(props) => <Upload {...props} user={localUser} />}/>
-          <Route exact path='/register' render={(props) => <LoginAndRegister {...props} user={localUser} />} />
+          <Route exact path='/register' render={(props) => <LoginAndRegister {...props} user={localUser} logInUser={logInUser}/>} />
           <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={localUser} />}/>
           <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={localUser} />} />
           <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={localUser} />} />

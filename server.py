@@ -2,84 +2,25 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template, request, redirect, jsonify
-from flask import url_for, send_file, json, make_response, abort
+from flask import send_file, json, make_response, abort
 from flask import session as login_session
 # from flask_wtf.csrf import CSRFProtect, CSRFError
-from PIL import Image as ImageEdit
-from sqlalchemy import create_engine, asc, func, desc
-from sqlalchemy.orm import sessionmaker
-from database_setup import Category, Base, Image, User, engine
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-from werkzeug.utils import secure_filename
 import random
 import string
 import httplib2
-import json
 import os
 import requests
+import crudHelper
 
 app = Flask(__name__, static_folder='./frontend/build/static',
             template_folder='./frontend/build')
 # csrf = CSRFProtect()
 
-
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-
 CLIENT_ID = json.loads(
     open('secret.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "PixCatalog"
-
-# Connect to Database and create database session
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-
-
-def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
-
-
-def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
-
-
-def getUserIDByEmail(email):
-    try:
-        user = session.query(User).filter_by(email=email).one()
-        return user.id
-    except Exception:
-        return None
-
-
-def getUserIDByName(user):
-    try:
-        user = session.query(User).filter_by(name=user).one()
-        return user.id
-    except Exception:
-        return None
-
-
-def createCategory(title):
-    newCategory = Category(title=title)
-    session.add(newCategory)
-    session.commit()
-    category = session.query(Category).filter_by(title=title).one()
-    return category.id
-
-
-def getCategoryID(title):
-    try:
-        category = session.query(Category).filter_by(title=title).one()
-        return category.id
-    except Exception:
-        return None
 
 
 # @app.errorhandler(CSRFError)
@@ -104,7 +45,8 @@ def index(path):
 @app.route('/api/get_token')
 def get_token():
     state = ''.join(
-        random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+        random.choice(
+            string.ascii_uppercase + string.digits) for x in range(32))
     login_session['serverToken'] = state
     return state
 
@@ -115,7 +57,8 @@ def check_credentials():
         return jsonify(
                       username=login_session['username'],
                       email=login_session['email'],
-                      user_id=login_session['user_id']
+                      user_id=login_session['user_id'],
+                      picture=login_session['picture']
                       )
     else:
         return jsonify(error="Not logged in")
@@ -129,7 +72,7 @@ def login():
         if login_session.get('username') is not None:
             return "User already connected"
         try:
-            user = session.query(User).filter_by(name=username).one()
+            user = crudHelper.getUser(username)
         except Exception:
             return jsonify(status=False)
         ok = user.verify_password(password)
@@ -142,7 +85,8 @@ def login():
                           status="Ok",
                           username=user.name,
                           email=user.email,
-                          user_id=user.id
+                          user_id=user.id,
+                          picture=user.picture
                           )
         return jsonify(status=False)
 
@@ -171,7 +115,10 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
+    url = (
+        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
+        .format(
+            access_token))
     # Submit request, parse response - Python3 compatible
     h = httplib2.Http()
     response = h.request(url, 'GET')[1]
@@ -203,9 +150,9 @@ def gconnect():
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
         response = make_response(
-                                 json.dumps('Current user is already connected.'),
-                                 200
-                                 )
+            json.dumps('Current user is already connected.'),
+            200
+        )
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -224,16 +171,17 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-    user_id = getUserIDByEmail(login_session['email'])
+    user_id = crudHelper.getUserIDByEmail(login_session['email'])
     if not user_id:
-        user_id = createUser(login_session)
+        user_id = crudHelper.createUserWithLoginSession(login_session)
     login_session['user_id'] = user_id
 
     return jsonify(
                   status="Ok",
                   username=login_session['username'],
                   email=login_session['email'],
-                  user_id=login_session['user_id']
+                  user_id=login_session['user_id'],
+                  picture=login_session['picture']
                   )
 
 
@@ -249,7 +197,8 @@ def logout():
         response.headers['Content-Type'] = 'application/json'
         return response
     if gplus_id is not None:
-        url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(access_token)
+        url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(
+            access_token)
         h = httplib2.Http()
         result = h.request(url, 'GET')[0]
         if result['status'] == '200':
@@ -261,7 +210,8 @@ def logout():
             del login_session['picture']
             del login_session['user_id']
 
-            response = make_response(json.dumps('Successfully disconnected from Google.'), 200)
+            response = make_response(json.dumps(
+                'Successfully disconnected from Google.'), 200)
             response.headers['Content-Type'] = 'application/json'
             return response
         else:
@@ -286,40 +236,21 @@ def logout():
 @app.route('/api/check_username', methods=["POST"])
 def check_username():
     user = request.json.get('username')
-    user_id = getUserIDByName(user.lower())
+    user_id = crudHelper.getUserIDByName(user.lower())
     if not user_id:
         return "Ok"
     return "Used"
 
 
-@app.route('/api/create_user', methods=['POST', 'GET'])
+@app.route('/api/create_user', methods=['POST'])
 def create_user():
-    if request.method == "POST":
-        username = request.json.get('username')
-        password = request.json.get('password')
-        email = request.json.get('email')
-        if username is '' or password is '' or email is '':
-            return "You must provide all fields"
-        if session.query(User).filter_by(name=username).first() is not None:
-            return "Username used"
-        if session.query(User).filter_by(email=email).first() is not None:
-            return "Email used"
-        user = User(name=username)
-        user.hash_password(password)
-        user.email = email
-        user.picture = "https://picsum.photos/500?random"
-        session.add(user)
-        session.commit()
-        return jsonify({'username': user.name}), 201
-    else:
-        users = session.query(User).all()
-        return jsonify(users=[i.serialize for i in users])
+    return crudHelper.createUser(request.json)
 
 
 @app.route('/api/check_email', methods=["POST"])
 def check_email():
     email = request.json.get('email')
-    user_id = getUserIDByEmail(email.lower())
+    user_id = crudHelper.getUserIDByEmail(email.lower())
     if not user_id:
         return "Ok"
     return "Used"
@@ -327,9 +258,7 @@ def check_email():
 
 @app.route('/api/get_user_images/<int:user_id>')
 def get_user_images(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    images = session.query(Image).filter_by(user_id=user_id).all()
-    return jsonify(images=[i.serialize for i in images], user=user.serialize)
+    return crudHelper.getUserImages(user_id)
 
 
 """ Category-related routes  """
@@ -337,26 +266,17 @@ def get_user_images(user_id):
 
 @app.route('/api/categories')
 def categories():
-    categories = session.query(Category).all()
-    return jsonify(categories=[i.serialize for i in categories])
+    return crudHelper.getCategories()
 
 
 @app.route('/api/top_categories')
 def top_categories():
-    top = session.query(func.count(Image.category_id).label("quantidade"), Category.title, Category.id)\
-    .join(Category, Image.category_id == Category.id)\
-    .group_by(Image.category_id)\
-    .order_by(desc("quantidade"))\
-    .limit(6).all()
-    return jsonify(top)
+    return crudHelper.topCategories()
 
 
 @app.route('/api/get_category_details/<string:category>')
-def get_category_images(category):
-    category = session.query(Category).filter_by(title=category).one()
-    return jsonify(
-                  images=[i.serialize for i in category.images],
-                  category=category.serialize)
+def get_category_details(category):
+    return crudHelper.getCategoryDetails(category)
 
 
 """ Image-related routes  """
@@ -376,90 +296,20 @@ def get_image_thumb(photo_address):
 
 @app.route('/api/get_image_details/<string:address>')
 def get_image_details(address):
-    try:
-        image = session.query(Image).filter_by(address=address).one()
-    except Exception:
-        return "Image not found"
-    return jsonify(image=image.serialize)
+    return crudHelper.getImageDetails(address)
 
 
 """ Upload-related routes  """
 
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route("/api/upload_image", methods=["POST"])
 def upload_image():
-    if 'username' not in login_session:
-        return "You are not allowed to do this", 401
-    if 'filepond' not in request.files:
-            return "You must send a image", 400
-    target = os.path.join(APP_ROOT, 'images')
-    targetThumb = os.path.join(APP_ROOT, 'thumb')
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    if not os.path.isdir(targetThumb):
-        os.mkdir(targetThumb)
-    fileId = request.headers.get('fileId')
-    upload = request.files.get('filepond', '')
-    # Protect server from receiving files other than images
-    if upload and allowed_file(upload.filename):
-        filename = fileId
-        destination = "/".join([target, '{}.jpeg'.format(filename)])
-        destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(filename)])
-        # convert and crop image
-        original = ImageEdit.open(upload)
-        # Get original dimensions
-        width, height = original.size
-        # calculate how it should be cropped
-        if width > height:
-            delta = width - height
-            left = int(delta/2)
-            upper = 0
-            right = height + left
-            lower = height
-        else:
-            delta = height - width
-            left = 0
-            upper = int(delta/2)
-            right = width
-            lower = width + upper
-        # crop image
-        cropped_img = original.crop((left, upper, right, lower))
-        # convert to make it a jpeg
-        new_im = cropped_img.convert('RGB')
-        thumb = new_im.copy()
-        new_im.save(destination)
-        size = 300, 300
-        thumb.thumbnail(size)
-        thumb.save(destinationThumb)
-        # new_im.show()
-        return "Ok"
+    return crudHelper.upload(login_session, request)
 
 
 @app.route('/api/upload_image_details', methods=["POST"])
 def upload_image_details():
-    if 'username' not in login_session:
-        return "You are not allowed to do this", 401
-    details = json.loads(request.form.get('details'))
-    category = details.get('category')
-    if not category:
-        return "You must provide a category name"
-    category_id = getCategoryID(details['category'])
-    if not category_id:
-        category_id = createCategory(title=details['category'])
-
-    image = Image(user_id=details['user_id'],
-                  category_id=category_id, title=details['title'],
-                  description=details['description'],
-                  address=details['address'])
-    session.add(image)
-    session.commit()
-    return jsonify(image.serialize)
+    return crudHelper.uploadImageDetails(login_session, request)
 
 
 """ Edit-related routes  """
@@ -467,42 +317,17 @@ def upload_image_details():
 
 @app.route('/api/update_image_details/<int:img_id>', methods=["POST"])
 def update_image_details(img_id):
-    if 'username' not in login_session:
-        return "You are not allowed to do this", 401
-    details = json.loads(request.form.get('editedDetails'))
-    category = details.get('category')
-    if not category:
-        return "You must provide a category name"
-    category_id = getCategoryID(details['category'])
-    if not category_id:
-        category_id = createCategory(title=details['category'])
-    editedImage = session.query(Image).filter_by(id=img_id).one()
-    if editedImage.user_id != login_session['user_id']:
-        return "You are not allowed to do this", 401
-    editedImage.title = details['title']
-    editedImage.description = details['description']
-    editedImage.category_id = category_id
-    session.add(editedImage)
-    session.commit()
-    return jsonify(editedImage.serialize)
+    return crudHelper.updateImageDetails(login_session, request, img_id)
 
 
 @app.route('/api/delete_image', methods=['POST'])
 def delete_image():
-    if 'username' not in login_session:
-        return "You are not allowed to do this", 401
-    img_id = request.json.get('imageId')
-    imageToDelete = session.query(Image).filter_by(id=img_id).one()
-    if imageToDelete.user_id != login_session['user_id']:
-        return "You are not allowed to do this", 401
-    session.delete(imageToDelete)
-    session.commit()
-    return "Image deleted"
+    return crudHelper.deleteImage(login_session, request)
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))   # Use PORT if it's there.
+    # Use PORT if it's there.
+    port = int(os.environ.get('PORT', 5000))
     # csrf.init_app(app)
     app.secret_key = 'you_c@n_never_be_too_c@reful'
-    app.debug = True
     app.run(host='0.0.0.0', port=port)

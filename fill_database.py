@@ -33,19 +33,19 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Create dummy user
 User1 = User(name="reinaldooo", email="rewifetri@gmail.com",
-             picture='https://picsum.photos/500?random')
+             picture='https://picsum.photos/100?random')
 session.add(User1)
 session.commit()
 User2 = User(name="john", email="john@gmail.com",
-             picture='https://picsum.photos/500?random')
+             picture='https://picsum.photos/100?random')
 session.add(User2)
 session.commit()
 User3 = User(name="travis", email="travis@gmail.com",
-             picture='https://picsum.photos/500?random')
+             picture='https://picsum.photos/100?random')
 session.add(User3)
 session.commit()
 User4 = User(name="unsplash.com", email="example@unsplash.com",
-             picture='https://picsum.photos/500?random')
+             picture='https://picsum.photos/100?random')
 session.add(User4)
 session.commit()
 

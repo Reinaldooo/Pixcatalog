@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 //
 import logo from '../images/logo.svg';
 import { white, black, red } from '../utils/colors';
-import { UserSVG, MenuSVG } from '../utils/helper';
+import { MenuSVG } from '../utils/helper';
 import Condition from '../stateless/Condition';
 
 
@@ -66,9 +66,10 @@ const UserLinks = styled.div`
     }
   }
 
-  svg {
-    height: 30%;
-    margin-left: .3rem;
+  img {
+    height: 65%;
+    margin-left: .6rem;
+    border-radius: 50%;
     @media (max-width: 900px) {
       display: none;
     }  
@@ -143,7 +144,7 @@ const NavBar = (props) => {
     <>
       <Condition test={!props.mobile}>
         <p className="welcome">{username}</p>
-        <UserSVG />
+        <img src={picture} alt="user-avatar"/>
       </Condition>
       <StyledLink nomarginleft={props.mobile} onClick={closeMenu} to="/myphotos">My Photos</StyledLink>
       <StyledLink onClick={closeMenu} to="/upload">Upload</StyledLink>
@@ -167,7 +168,7 @@ const NavBar = (props) => {
     setLogOutText('Logout')
   }, [props.user])
 
-  let { username } = props.user;
+  let { username, picture } = props.user;
 
   return (
     <Nav rotate={rotate}>
