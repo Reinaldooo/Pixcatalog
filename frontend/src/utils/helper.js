@@ -1,22 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
 import { blue } from './colors'
-
-export const LoggedInRoute = ({ component: Component, user, ...rest }) => (
-  <Route {...rest} render={(props) => (
-      user !== false
-      ? <Component {...props} {...rest} user={user}/>
-      : <Redirect to="/login"/>
-  )} />
-);
-
-export const LoggedOutRoute = ({ component: Component, user, ...rest }) => (
-  <Route {...rest} render={(props) => (
-      user === false
-      ? <Component {...props} {...rest} user={user}/>
-      : <Redirect to="/"/>
-  )} />
-);
 
 export const UserSVG = (props) => {
   return (

@@ -18,7 +18,9 @@ const UserInfo = ({
       <InputWrapper>
         <Label danger={usernameUsed} htmlFor="username">{usernameUsed === 'yes' ? "Username already used!" : "Username"}</Label>
         <Input
+          spellcheck="false"
           id="username"
+          type="text"
           placeholder="Username"
           name="username"
           value={username}
@@ -31,7 +33,9 @@ const UserInfo = ({
         <InputWrapper>
           <Label danger={emailUsed} htmlFor="email">{emailUsed === 'yes' ? "Email already used!" : "Email"}</Label>
           <Input
+            spellcheck="false"
             id="email"
+            type="text"
             placeholder="Email"
             name="email"
             value={email}

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from flask import Flask, render_template, request, redirect, jsonify
 from flask import url_for, send_file, json, make_response, abort
 from flask import session as login_session
@@ -8,7 +11,6 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Image, User, engine
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-from operator import itemgetter
 from werkzeug.utils import secure_filename
 import random
 import string
@@ -384,10 +386,18 @@ def get_image_details(address):
 """ Upload-related routes  """
 
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route("/api/upload_image", methods=["POST"])
 def upload_image():
     if 'username' not in login_session:
         return "You are not allowed to do this", 401
+    if 'filepond' not in request.files:
+            return "You must send a image", 400
     target = os.path.join(APP_ROOT, 'images')
     targetThumb = os.path.join(APP_ROOT, 'thumb')
     if not os.path.isdir(target):
@@ -396,37 +406,39 @@ def upload_image():
         os.mkdir(targetThumb)
     fileId = request.headers.get('fileId')
     upload = request.files.get('filepond', '')
-    filename = fileId
-    destination = "/".join([target, '{}.jpeg'.format(filename)])
-    destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(filename)])
-    # convert and crop image
-    original = ImageEdit.open(upload)
-    # Get original dimensions
-    width, height = original.size
-    # calculate how it should be cropped
-    if width > height:
-        delta = width - height
-        left = int(delta/2)
-        upper = 0
-        right = height + left
-        lower = height
-    else:
-        delta = height - width
-        left = 0
-        upper = int(delta/2)
-        right = width
-        lower = width + upper
-    # crop image
-    cropped_img = original.crop((left, upper, right, lower))
-    # convert to make it a jpeg
-    new_im = cropped_img.convert('RGB')
-    thumb = new_im.copy()
-    new_im.save(destination)
-    size = 300, 300
-    thumb.thumbnail(size)
-    thumb.save(destinationThumb)
-    # new_im.show()
-    return "Ok"
+    # Protect server from receiving files other than images
+    if upload and allowed_file(upload.filename):
+        filename = fileId
+        destination = "/".join([target, '{}.jpeg'.format(filename)])
+        destinationThumb = "/".join([targetThumb, '{}.jpeg'.format(filename)])
+        # convert and crop image
+        original = ImageEdit.open(upload)
+        # Get original dimensions
+        width, height = original.size
+        # calculate how it should be cropped
+        if width > height:
+            delta = width - height
+            left = int(delta/2)
+            upper = 0
+            right = height + left
+            lower = height
+        else:
+            delta = height - width
+            left = 0
+            upper = int(delta/2)
+            right = width
+            lower = width + upper
+        # crop image
+        cropped_img = original.crop((left, upper, right, lower))
+        # convert to make it a jpeg
+        new_im = cropped_img.convert('RGB')
+        thumb = new_im.copy()
+        new_im.save(destination)
+        size = 300, 300
+        thumb.thumbnail(size)
+        thumb.save(destinationThumb)
+        # new_im.show()
+        return "Ok"
 
 
 @app.route('/api/upload_image_details', methods=["POST"])

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Link } from 'react-router-dom'
-import { ErrorFlash, SuccessFlash, BackLink, Details } from '../utils/customStyledComponents';
+import { ErrorFlash, SuccessFlash, BackLink, Details, OtherImages } from '../utils/customStyledComponents';
 // //
 import { white, black } from '../utils/colors';
 import { UserSVG } from '../utils/helper';
@@ -56,33 +56,6 @@ const StyledButton = styled.button`
   margin: .5rem .2rem;
   text-align: center;
   cursor: pointer;
-`
-
-const OtherImages = styled.div`
-  width: 80%;
-  display: flex;
-  margin: 0 auto;
-  flex-direction: column;
-  p {
-    margin: 5rem auto 0;
-    @media (max-width: 600px) {
-      margin: 5rem auto 1rem;
-    }
-  }
-  div {
-    display: flex;
-    align-items: center;
-    margin: 0 auto;
-    @media (max-width: 600px) {
-      display: block;
-    }
-  }
-  @media (max-width: 1100px) {
-      width: 100%;
-  }
-  @media (max-width: 600px) {
-      width: 80vw;
-  }
 `
 
 const ImageDetail = (props) => {

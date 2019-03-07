@@ -129,3 +129,30 @@ export const Details = styled.div`
     height: .7rem;
   }
 `
+
+export const OtherImages = styled.div`
+  width: 80%;
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  p {
+    margin: 5rem auto 0;
+    @media (max-width: 600px) {
+      margin: 5rem auto 1rem;
+    }
+  }
+  div {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    @media (max-width: 600px) {
+      display: block;
+    }
+  }
+  @media (max-width: 1100px) {
+      width: 100%;
+  }
+  @media (max-width: 600px) {
+      width: 80vw;
+  }
+`

@@ -159,7 +159,6 @@ class Login extends Component {
       user.password = this.state.password
       axios.post(`/api/login`, user, config)
         .then(({ data }) => {
-          console.log(data)
           if (!data.status) {
             this.setState({ invalidCredentials: true, fetching: false })
             setTimeout(() => { this.setState({ invalidCredentials: false }) }, 3000)

@@ -12,7 +12,6 @@ import ImageDetail from './statefull/ImageDetail';
 import LoginAndRegister from './statefull/LoginAndRegister';
 import Upload from './statefull/Upload';
 import ImagesGrid from './stateless/ImagesGrid';
-import { LoggedInRoute, LoggedOutRoute } from './utils/helper';
 
 const Main = styled.div`
   display: flex;
@@ -86,10 +85,10 @@ const App = (props) => {
               </Main>
             } />
           <Route exact path='/categories' component={CategoriesPage} />
-          <LoggedOutRoute exact path='/login' component={LoginAndRegister} user={localUser} logInUser={logInUser} />
-          <LoggedInRoute exact path='/upload' component={Upload} user={localUser}/>
-          <LoggedOutRoute exact path='/register' component={LoginAndRegister} user={localUser} logInUser={logInUser} />
-          <LoggedInRoute exact path='/myphotos' component={MyPhotos} user={localUser}/>
+          <Route exact path='/login' render={(props) => <LoginAndRegister {...props} user={localUser} logInUser={logInUser} />} />
+          <Route exact path='/upload' render={(props) => <Upload {...props} user={localUser} />}/>
+          <Route exact path='/register' render={(props) => <LoginAndRegister {...props} user={localUser} />} />
+          <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={localUser} />}/>
           <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={localUser} />} />
           <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={localUser} />} />
           {/* 404 pages */}
