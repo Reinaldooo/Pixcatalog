@@ -4,22 +4,23 @@
 
 ### PixCatalog  
 
+<p  align="center">
 PixCatalog is a category-based site for you to upload your favourite photos.
+</p> 
 
 ![Example PNG](/Example.png)
 
 The app is fully responsive, so you can use it on your phone or tablet.
 
-<dl>
-<dt>This project was created using Javascript and Python with the help of the following tools:</dt>
-<dd>ReactJS</dd>
-<dd>React Router</dd>
-<dd>Styled Components</dd>
-<dd>Google Oauth API</dd>
-<dd>Flask</dd>
-<dd>SQLAlchemy</dd>
-<dd>Pillow</dd>
-</dl>
+### This project was created using Javascript and Python with the help of the following tools:
+
+* ReactJS
+* React Router
+* Styled Components
+* Google Oauth API
+* Flask
+* SQLAlchemy
+* Pillow
 
 ### App Design
 
@@ -41,4 +42,4 @@ The development focus was to create a lightweight and elegant app, thats why Rea
 * To setup the database, execute `npm run database-setup`.
 * Finally, you can use the command `python server.py` to start the server.
 * You case you have any errors, try using `python3 server.py`.
-* The app will be running on ``localhost:5000``
+* The app will be running on ```localhost:5000```
