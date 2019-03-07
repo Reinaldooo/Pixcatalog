@@ -5,6 +5,7 @@
   "main": "server.py",
   "scripts": {
     "custom-build": "cd frontend/ && npm install && npm run build && mv build/favicon/ build/static/",
+    "database-setup": "rm -rf pixcatalog.db && python database_setup.py && python fill_database.py",
     "heroku-postbuild": "rm -rf pixcatalog.db && python database_setup.py && python fill_database.py && npm run custom-build"
   },
   "repository": {
