@@ -108,7 +108,7 @@ export const Details = styled.div`
   padding: 2rem;
   min-height: 40vh;
   flex: 1;
-  max-width: 800px;
+  max-width: 100vw;
 
   p {
     width: 80%;

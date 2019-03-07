@@ -11,7 +11,7 @@ const Main = styled.div`
   justify-content: center;
   align-items: center;
   padding-left: 3rem;
-  @media (max-width: 1100px) and (orientation: landscape) {
+  @media (max-width: 1000px) and (orientation: landscape) {
     padding: 3rem 0;
     margin-bottom: 15rem;
   }

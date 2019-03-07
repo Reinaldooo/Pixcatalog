@@ -29,7 +29,7 @@ const Nav = styled.div`
   @media (max-width: 1400px) {
     margin-bottom: 0;
   }
-  @media (max-width: 1100px) and (orientation: landscape) {
+  @media (max-width: 1000px) and (orientation: landscape) {
     margin-bottom: 15rem;
   }
   @media (max-width: 500px) {
@@ -153,7 +153,7 @@ const NavBar = (props) => {
 
   const handleLogOut = () => {
     setLogOutText('...')
-    setRotate(false)
+    setRotate("false")
     setMobileMenu(false)
     props.logOutUser()
   }

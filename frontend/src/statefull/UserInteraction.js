@@ -41,7 +41,7 @@ const Header = styled.h3`
   @media (max-width: 1400px) {
     font-size: 1.6rem;
   }
-  @media (max-width: 1100px) and (orientation: landscape) {
+  @media (max-width: 1000px) and (orientation: landscape) {
     font-size: 2.4rem;
   }
   @media (max-width: 900px) {

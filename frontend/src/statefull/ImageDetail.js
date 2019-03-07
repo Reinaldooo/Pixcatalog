@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Link } from 'react-router-dom'
 import { ErrorFlash, SuccessFlash, BackLink, Details } from '../utils/customStyledComponents';
 // //
 import { white, black } from '../utils/colors';
@@ -26,6 +27,17 @@ const Main = styled.div`
       width: 100%;
     }
   }
+  img.thumb {
+    width: 8rem;
+    margin-right: .5rem;
+    @media (max-width: 1500px) {
+      width: 6rem;
+    }
+    @media (max-width: 600px) {
+      width: 35%;
+      margin: .25rem;
+    }
+  }
   @media (max-width: 1100px) {
       flex-direction: column;
   }
@@ -46,9 +58,37 @@ const StyledButton = styled.button`
   cursor: pointer;
 `
 
+const OtherImages = styled.div`
+  width: 80%;
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  p {
+    margin: 5rem auto 0;
+    @media (max-width: 600px) {
+      margin: 5rem auto 1rem;
+    }
+  }
+  div {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    @media (max-width: 600px) {
+      display: block;
+    }
+  }
+  @media (max-width: 1100px) {
+      width: 100%;
+  }
+  @media (max-width: 600px) {
+      width: 80vw;
+  }
+`
+
 const ImageDetail = (props) => {
 
   const [image, setImage] = useState(false)
+  const [userImages, setUserImages] = useState(false)
   const [edit, setEdit] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -57,12 +97,22 @@ const ImageDetail = (props) => {
   const [categoryEmpty, setCategoryEmpty] = useState(false)
   const [editSuccess, setEditSuccess] = useState(false)
 
-  useEffect(() => {
-    axios(`/api/get_image_details/${props.match.params.image}`)
-      .then(({ data }) => {
-        setImage(data.image)
+  const getData = async () => {
+    setUserImages(false)
+    await axios(`/api/get_image_details/${props.match.params.image}`)
+      .then(({ data: {image} }) => {
+        setImage(image)
+        axios(`/api/get_user_images/${image.user_id}`)
+          .then(({ data: { images, user } }) => {
+            let slicedImages = images.filter((img) => img.id !== image.id).slice(0, 4)
+            setUserImages(slicedImages)
+          })
       })
-  }, [])
+  }
+
+  useEffect(() => {
+    getData()
+  }, [props.match.params.image])
 
   const handleImageText = (e) => {
     switch (e.target.name) {
@@ -97,7 +147,7 @@ const ImageDetail = (props) => {
 
   const handleDelete = (e) => {
     e.preventDefault()
-    axios.post(`/api/delete_image/`, { imageId: image.id }, config)
+    axios.post(`/api/delete_image`, { imageId: image.id }, config)
       .then((res) => {
         if (res.status === 200) {
           props.history.push("/myphotos")
@@ -159,8 +209,25 @@ const ImageDetail = (props) => {
                 <span>{`#${image.category_name}`}</span>
                 <p>{image.description}</p>
                 <Condition test={user.user_id === image.user_id}>
-                    <StyledButton onClick={() => handleEdit()}>Edit</StyledButton>
+                  <StyledButton onClick={() => handleEdit()}>Edit</StyledButton>
                 </Condition>
+                <OtherImages>
+                  {
+                    (userImages && userImages.length > 0) &&
+                    <>
+                    <p>{`Other images by ${image.username}`}</p>
+                    <div>
+                      {
+                        userImages.map((img) => (
+                          <Link to={`/images/${img.address}`} key={img.address}>
+                            <img className="thumb" src={`/api/get_image_thumb/${img.address}`} alt={img.title} />
+                          </Link>
+                        ))
+                      }
+                    </div>
+                    </>
+                  }
+                </OtherImages>
               </>
               :
               <>
