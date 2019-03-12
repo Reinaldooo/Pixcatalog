@@ -13,7 +13,7 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // //
 import { white, blue } from '../utils/colors';
-import { Main } from './LoginAndRegister'
+import { MainWhiteBox } from '../basicStyles'
 import UploadDetails from '../stateless/UploadDetails';
 import { ErrorFlash } from '../utils/customStyledComponents';
 import Condition from '../stateless/Condition';
@@ -117,7 +117,7 @@ class Upload extends Component {
   render() {
     const { files, saving, title, description, imageAddress,  categoryEmpty, noFile } = this.state
     return (
-      <Main white upload>
+      <MainWhiteBox white upload>
         {
           saving ?
             <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
@@ -166,7 +166,7 @@ class Upload extends Component {
               />
             </>
         }
-      </Main>
+      </MainWhiteBox>
     );
   }
 }

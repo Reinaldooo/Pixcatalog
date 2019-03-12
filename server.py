@@ -4,7 +4,7 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from flask import send_file, json, make_response, abort
 from flask import session as login_session
-from flask_wtf.csrf import CSRFProtect, CSRFError
+# from flask_wtf.csrf import CSRFProtect, CSRFError
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import random
@@ -16,16 +16,16 @@ import crudHelper
 
 app = Flask(__name__, static_folder='./frontend/build/static',
             template_folder='./frontend/build')
-csrf = CSRFProtect()
+# csrf = CSRFProtect()
 
 CLIENT_ID = json.loads(
     open('secret.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "PixCatalog"
 
 
-@app.errorhandler(CSRFError)
-def handle_csrf_error(e):
-    return "Sorry, requests are only accepted from within the website.", 400
+# @app.errorhandler(CSRFError)
+# def handle_csrf_error(e):
+#     return "Sorry, requests are only accepted from within the website.", 400
 
 
 @app.route('/', defaults={'path': ''}, methods=["GET", "DELETE"])
@@ -328,6 +328,7 @@ def delete_image():
 if __name__ == '__main__':
     # Use PORT if it's there.
     port = int(os.environ.get('PORT', 5000))
-    csrf.init_app(app)
+    app.debug = True
+    # csrf.init_app(app)
     app.secret_key = 'you_c@n_never_be_too_c@reful'
     app.run(host='0.0.0.0', port=port)

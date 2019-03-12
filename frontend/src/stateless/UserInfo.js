@@ -25,7 +25,7 @@ const UserInfo = ({
           name="username"
           value={username}
           danger={usernameUsed}
-          onChange={checkUser}
+          onChange={register ? checkUser : handleTextInput}
         />
       </InputWrapper>
       {

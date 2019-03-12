@@ -9,7 +9,8 @@ import CategoriesPage from './statefull/CategoriesPage';
 import CategoryImages from './statefull/CategoryImages';
 import MyPhotos from './statefull/MyPhotos';
 import ImageDetail from './statefull/ImageDetail';
-import LoginAndRegister from './statefull/LoginAndRegister';
+import Login from './statefull/Login/Login';
+import Register from './statefull/Register/Register';
 import Upload from './statefull/Upload';
 import ImagesGrid from './stateless/ImagesGrid';
 
@@ -84,9 +85,9 @@ const App = (props) => {
               </Main>
             } />
           <Route exact path='/categories' component={CategoriesPage} />
-          <Route exact path='/login' render={(props) => <LoginAndRegister {...props} user={localUser} logInUser={logInUser} />} />
+          <Route exact path='/login' render={(props) => <Login {...props} logInUser={logInUser} />} />
           <Route exact path='/upload' render={(props) => <Upload {...props} user={localUser} />}/>
-          <Route exact path='/register' render={(props) => <LoginAndRegister {...props} user={localUser} logInUser={logInUser}/>} />
+          <Route exact path='/register' render={(props) => <Register {...props}/>} />
           <Route exact path='/myphotos' render={(props) => <MyPhotos {...props} user={localUser} />}/>
           <Route exact path='/categories/:category' render={(props) => <CategoryImages {...props} user={localUser} />} />
           <Route exact path='/images/:image' render={(props) => <ImageDetail {...props} user={localUser} />} />

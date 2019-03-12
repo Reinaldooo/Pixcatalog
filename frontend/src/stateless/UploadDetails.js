@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 //
-import { StyledButton } from '../statefull/LoginAndRegister';
+import { StyledButton } from '../basicStyles';
 import { Textarea } from '../statefull/Upload';
 import { Input, Label, InputWrapper } from '../utils/customStyledComponents';
 import Condition from './Condition';

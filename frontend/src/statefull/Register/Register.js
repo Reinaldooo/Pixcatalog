@@ -4,13 +4,13 @@ import { GoogleLogin } from 'react-google-login';// Import React FilePond
 import axios from 'axios';
 import debounce from 'lodash.debounce'
 // Local imports
-import { blue } from '../utils/colors';
-import { MainWhiteBox, StyledButton } from '../basicStyles';
-import { config } from '../utils/helper';
-import googleSVG from '../images/google.svg';
-import { ErrorFlash, SuccessFlash } from '../utils/customStyledComponents';
-import UserInfo from '../stateless/UserInfo';
-import Condition from '../stateless/Condition';
+import { blue } from '../../utils/colors';
+import { MainWhiteBox, StyledButton } from '../../basicStyles';
+import { config } from '../../utils/helper';
+import googleSVG from '../../images/google.svg';
+import { ErrorFlash, SuccessFlash } from '../../utils/customStyledComponents';
+import UserInfo from '../../stateless/UserInfo';
+import Condition from '../../stateless/Condition';
 
 
 class Login extends Component {
@@ -26,7 +26,6 @@ class Login extends Component {
     emailUsed: "no",
     emailValid: false,
     userValid: false,
-    invalidCredentials: false,
     validPasswordCheck: false,
     registerInputError: false,
     registerInputErrorText: '',
@@ -55,59 +54,40 @@ class Login extends Component {
   }, 1500);
 
   handleSave = () => {
-    let register = this.props.match.path === '/register'
     let redirectTo = this.props.location.state ? this.props.location.state.from : '/'
     if (redirectTo === '/login' || redirectTo === '/register') redirectTo = '/'
 
-    if (register) { //REGISTER VALIDATION
+    if (!this.state.emailValid || !this.state.userValid) {
+      this.setState({ registerInputError: true, registerInputErrorText: "Please fill all fields." })
+      setTimeout(() => {
+        this.setState({ registerInputError: false, registerInputErrorText: "" })
+      }, 2000);
 
-      if (!this.state.emailValid || !this.state.userValid) {
-        this.setState({ registerInputError: true, registerInputErrorText: "Please fill all fields." })
-        setTimeout(() => {
-          this.setState({ registerInputError: false, registerInputErrorText: "" })
-        }, 2000);
+    } else if (!this.state.validPasswordCheck) {
 
-      } else if (!this.state.validPasswordCheck) {
+      this.setState({ registerInputError: true, registerInputErrorText: "Passwords don't match" })
+      setTimeout(() => {
+        this.setState({ registerInputError: false, registerInputErrorText: "" })
+      }, 2000);
 
-        this.setState({ registerInputError: true, registerInputErrorText: "Passwords don't match" })
-        setTimeout(() => {
-          this.setState({ registerInputError: false, registerInputErrorText: "" })
-        }, 2000);
+    } else { //REGISTER USER  
 
-      } else { //REGISTER USER  
-
-        let newUser = {}
-        newUser.username = this.state.username
-        newUser.password = this.state.password
-        newUser.email = this.state.email
-        axios.post(`/api/create_user`, newUser, config)
-          .then(({status, data}) => {
-            if (status === 201) {
-              this.setState({ regSuccess: true })
-              setTimeout(() => {
-                this.setState({ regSuccess: false })
-                this.props.history.push('/login')
-              }, 2000)
-            }
-          })
-      }
-
-    } else { // LOGIN
-      this.setState({ fetching: true })
-      let user = {}
-      user.username = this.state.username
-      user.password = this.state.password
-      axios.post(`/api/login`, user, config)
-        .then(({ data }) => {
-          if (!data.status) {
-            this.setState({ invalidCredentials: true, fetching: false })
-            setTimeout(() => { this.setState({ invalidCredentials: false }) }, 3000)
-          } else {
-            this.props.logInUser(data)
-            this.props.history.push(redirectTo)
+      let newUser = {}
+      newUser.username = this.state.username
+      newUser.password = this.state.password
+      newUser.email = this.state.email
+      axios.post(`/api/create_user`, newUser, config)
+        .then(({ status, data }) => {
+          if (status === 201) {
+            this.setState({ regSuccess: true })
+            setTimeout(() => {
+              this.setState({ regSuccess: false })
+              this.props.history.push('/login')
+            }, 2000)
           }
         })
     }
+
   }
 
   getServerToken = () => {
@@ -180,40 +160,24 @@ class Login extends Component {
   componentDidMount() {
     let localUser = JSON.parse(sessionStorage.getItem('user'))
     if (localUser) {
+      // Check if user is already on the session
       this.props.history.push('/')
     } else {
+      // Check if user is already logged in the server
       axios('/api/check_credentials')
         .then(({ data }) => {
           if (!data.error) {
             sessionStorage.setItem('user', JSON.stringify(data))
             this.props.history.push('/')
           } else {
+            // By getting here, the user is in fact not connected
             this.getServerToken()
           }
         });
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.path !== this.props.match.path) {
-      this.setState({
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        fetching: false,
-        invalidCredentials: false,
-        registerInputError: false,
-        usernameUsed: 'no'
-      })
-      if (this.props.match.path === '/login') {
-        this.getServerToken()
-      }
-    }
-  }
-
   render() {
-    let register = this.props.match.path === '/register'
     let {
       usernameUsed,
       emailUsed,
@@ -221,7 +185,6 @@ class Login extends Component {
       password,
       passwordConfirm,
       email,
-      invalidCredentials,
       registerInputError,
       registerInputErrorText,
       regSuccess } = this.state
@@ -229,22 +192,16 @@ class Login extends Component {
     return (
       <MainWhiteBox>
         {
-          (this.state.loading || this.state.fetching) ?
+          (this.state.fetching) ?
             <Spinner name="ball-grid-pulse" color={blue} fadeIn='half' />
             :
             <>
-              <Condition test={invalidCredentials}>
-                <ErrorFlash>Invalid user or password</ErrorFlash>
-              </Condition>
               <Condition test={registerInputError}>
                 <ErrorFlash>{registerInputErrorText}</ErrorFlash>
               </Condition>
               <Condition test={regSuccess}>
                 <SuccessFlash>User Created, please login</SuccessFlash>
               </Condition>
-              {/* <UserIcon>
-                <UserSVG />
-              </UserIcon> */}
               <UserInfo
                 usernameUsed={usernameUsed}
                 emailUsed={emailUsed}
@@ -255,12 +212,12 @@ class Login extends Component {
                 handleTextInput={this.handleTextInput}
                 checkUser={this.checkUser}
                 checkEmail={this.checkEmail}
-                register={register}
+                register={true}
               />
               <div className="buttons">
-                <StyledButton to='/' onClick={this.handleSave}>{register ? 'Register' : 'Login'}</StyledButton>
+                <StyledButton to='/' onClick={this.handleSave}>Register</StyledButton>
                 <Condition test={this.state.serverToken}>
-                <p>{`You can also ${register ? 'register' : 'login'} using Google.`}</p>
+                <p>You can also register using Google.</p>
                 <GoogleLogin
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
                   render={renderProps => (
