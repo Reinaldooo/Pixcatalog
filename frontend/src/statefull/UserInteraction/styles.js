@@ -84,6 +84,7 @@ export const Category = styled.li`
   height: 5rem;
   border-radius: .5rem;
   background-color: ${blue};
+  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
   cursor: pointer;
   h3 {
     margin: 0;
@@ -118,7 +119,7 @@ export const StyledLink = styled(Link)`
   }
 
   &:hover {
-    opacity: .7;
+    opacity: .9;
   }
   @media (max-width: 1400px) {
     width: 20%;
