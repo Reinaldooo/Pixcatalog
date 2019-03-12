@@ -1,10 +1,7 @@
-import React from 'react';
-import styled from 'styled-components'
-// import { blue } from '../utils/colors';
-const helperArray = [ 1,1,1,1,1,1,1,1,1 ]
-//TODO Transform this into a recursive function
+import styled from 'styled-components';
 
-const Main = styled.div`
+
+export const Main = styled.div`
   height: calc(100vh - 8rem);
   width: 100%;
   display: flex;
@@ -20,7 +17,7 @@ const Main = styled.div`
   }
 `
 
-const GridContainer = styled.div`
+export const GridContainer = styled.div`
   width: 70%;
   display: flex;
   justify-content: center;
@@ -46,19 +43,3 @@ const GridContainer = styled.div`
     border-radius: 2rem;
   }
 `
-
-const ImagesGrid = (props) => {
-  return ( 
-    <Main>
-      <GridContainer>
-        {
-          helperArray.map((i, index) => (
-            <img key={index} src={[`/api/get_image_thumb/img${index}`]} alt={`main-${index+1}`}/>
-          ))
-        }
-      </GridContainer>
-    </Main>
-   );
-}
- 
-export default ImagesGrid;

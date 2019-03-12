@@ -7,9 +7,9 @@ import { blue } from '../../utils/colors';
 import { config } from '../../utils/helper';
 import googleSVG from '../../images/google.svg';
 import { ErrorFlash } from '../../utils/customStyledComponents';
-import UserInfo from '../../stateless/UserInfo';
-import Condition from '../../stateless/Condition';
-import { MainWhiteBox, StyledButton } from '../../basicStyles';
+import UserInfo from '../../stateless/UserInfo/UserInfo';
+import Condition from '../../stateless/Condition/Condition';
+import { MainWhiteBox, StyledButtonOne } from '../../basicStyles';
 
 
 class Login extends Component {
@@ -122,15 +122,15 @@ class Login extends Component {
                 handleTextInput={this.handleTextInput}
               />
               <div className="buttons">
-                <StyledButton to='/' onClick={this.handleSave}>Login</StyledButton>
+                <StyledButtonOne to='/' onClick={this.handleSave}>Login</StyledButtonOne>
                 <Condition test={this.state.serverToken}>
                 <p>You can also loginusing Google.</p>
                 <GoogleLogin
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
                   render={renderProps => (
-                    <StyledButton google onClick={renderProps.onClick}>
+                    <StyledButtonOne google onClick={renderProps.onClick}>
                       <img src={googleSVG} alt="google-logo-button" />
-                    </StyledButton>
+                    </StyledButtonOne>
                   )}
                   responseType="code"
                   onSuccess={this.responseGoogle}

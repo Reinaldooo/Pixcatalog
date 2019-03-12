@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
 import Spinner from 'react-spinkit';
 import { FilePond, registerPlugin } from "react-filepond";
 import shortid from 'shortid';
@@ -12,36 +11,16 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // //
-import { white, blue } from '../utils/colors';
-import { MainWhiteBox } from '../basicStyles'
-import UploadDetails from '../stateless/UploadDetails';
-import { ErrorFlash } from '../utils/customStyledComponents';
-import Condition from '../stateless/Condition';
-import { config } from '../utils/helper';
+import { blue } from '../../utils/colors';
+import { MainWhiteBox } from '../../basicStyles'
+import UploadDetails from '../../stateless/UploadDetails/UploadDetails';
+import { ErrorFlash } from '../../utils/customStyledComponents';
+import Condition from '../../stateless/Condition/Condition';
+import { config } from '../../utils/helper';
 
 
 // Register filepond plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileValidateType);
-
-export const Textarea = styled.textarea`
-  display: block;
-  height: 6rem;
-  width: 100%;
-  margin-top: .5rem;
-  border: 2px solid ${blue};
-  /* show real white */
-  background-color: ${props => props.white ? '#f1f0ef' : white};
-  border-radius: 5px;
-  padding: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
-`
-
-export const Select = styled.select`
-  width: 60%;
-  border: 2px solid ${blue};
-  height: 1.5rem;
-  background-color: ${props => props.white ? 'white' : white};
-`
 
 class Upload extends Component {
 

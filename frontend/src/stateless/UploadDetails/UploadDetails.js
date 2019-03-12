@@ -1,19 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 //
-import { StyledButton } from '../basicStyles';
-import { Textarea } from '../statefull/Upload';
-import { Input, Label, InputWrapper } from '../utils/customStyledComponents';
-import Condition from './Condition';
+import { StyledButtonOne } from '../../basicStyles';
+import { Textarea, Form } from './styles';
+import { Input, Label, InputWrapper } from '../../utils/customStyledComponents';
+import Condition from '../Condition/Condition';
 
 
-const Form = styled.form`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
 
 const UploadDetails = ({
   handleSave,
@@ -63,10 +55,10 @@ const UploadDetails = ({
         />
       </InputWrapper>
       <div>
-        <StyledButton white onClick={handleSave}>Save</StyledButton>
+        <StyledButtonOne white onClick={handleSave}>Save</StyledButtonOne>
         <Condition test={handleDeleteConfirm}>
-            <StyledButton white onClick={handleCancel}>Cancel</StyledButton>
-            <StyledButton white danger onClick={handleDeleteConfirm}>Delete</StyledButton>
+            <StyledButtonOne white onClick={handleCancel}>Cancel</StyledButtonOne>
+            <StyledButtonOne white danger onClick={handleDeleteConfirm}>Delete</StyledButtonOne>
         </Condition>
       </div>
     </Form>

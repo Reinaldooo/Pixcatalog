@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, InputWrapper, Label } from '../utils/customStyledComponents';
+import { Input, InputWrapper, Label } from '../../utils/customStyledComponents';
 
 
 const UserInfo = ({

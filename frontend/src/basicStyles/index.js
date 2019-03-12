@@ -41,7 +41,7 @@ export const MainWhiteBox = styled.div`
     }
   }
 `
-export const StyledButton = styled.button`
+export const StyledButtonOne = styled.button`
   margin-top: 1.4rem;
   text-decoration: none;
   color: ${props => props.danger ? red : blue};

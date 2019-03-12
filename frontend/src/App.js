@@ -3,16 +3,16 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 //
-import NavBar from './statefull/NavBar';
-import UserInteraction from './statefull/UserInteraction';
-import CategoriesPage from './statefull/CategoriesPage';
-import CategoryImages from './statefull/CategoryImages';
-import MyPhotos from './statefull/MyPhotos';
-import ImageDetail from './statefull/ImageDetail';
+import NavBar from './statefull/NavBar/NavBar';
+import UserInteraction from './statefull/UserInteraction/UserInteraction';
+import CategoriesPage from './statefull/CategoriesPage/CategoriesPage';
+import CategoryImages from './statefull/CategoryImages/CategoryImages';
+import MyPhotos from './statefull/MyPhotos/MyPhotos';
+import ImageDetail from './statefull/ImageDetail/ImageDetail';
 import Login from './statefull/Login/Login';
 import Register from './statefull/Register/Register';
-import Upload from './statefull/Upload';
-import ImagesGrid from './stateless/ImagesGrid';
+import Upload from './statefull/Upload/Upload';
+import ImagesGrid from './stateless/ImagesGrid/ImagesGrid';
 
 const Main = styled.div`
   display: flex;

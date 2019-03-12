@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from 'react-spinkit';
 //
-import { Main, StyledLink } from './CategoryImages';
-import { white } from '../utils/colors';
-import Condition from '../stateless/Condition';
+import { Main, StyledLink } from './styles';
+import { white } from '../../utils/colors';
+import Condition from '../../stateless/Condition/Condition';
 
 const MyPhotos = (props) => {
 
