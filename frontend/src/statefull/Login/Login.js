@@ -19,26 +19,28 @@ class Login extends Component {
     password: '',
     fetching: false,
     serverToken: null,
-    invalidCredentials: false
+    invalidCredentials: false,
+    googleLoginError: false
   }
 
-  handleSave = () => {
+  handleLogin = () => {
     let redirectTo = this.props.location.state ? this.props.location.state.from : '/'
     if (redirectTo === '/login' || redirectTo === '/register') { redirectTo = '/' }
 
     this.setState({ fetching: true })
+
     let user = {}
     user.username = this.state.username
     user.password = this.state.password
-    this.setState({ fetching: true })
+
     axios.post(`/api/login`, user, config)
       .then(({ data }) => {
-        if (!data.status) {
-          this.setState({ invalidCredentials: true, fetching: false })
-          setTimeout(() => { this.setState({ invalidCredentials: false }) }, 2500)
-        } else {
+        if (data.username) {
           this.props.logInUser(data)
           this.props.history.push(redirectTo)
+        } else {
+          this.setState({ invalidCredentials: true, fetching: false })
+          setTimeout(() => { this.setState({ invalidCredentials: false }) }, 2500)
         }
       })
   }
@@ -49,16 +51,23 @@ class Login extends Component {
   }
 
   responseGoogle = (response) => {
-    axios.post(`/gconnect`, {
+    let payload = {
       serverToken: this.state.serverToken,
       code: response.code
-    }, config)
-      .then(({ data, status }) => {
+    }
+    axios.post(`/gconnect`, payload, config)
+      .then(({ status, data }) => {
         if (status === 200) {
           this.props.logInUser(data)
           this.props.history.push('/')
         }
       })
+      .catch(() => {
+        this.setState({ googleLoginError: true, fetching: false })
+        setTimeout(() => {
+          this.setState({ googleLoginError: false })
+        }, 2000);
+      }) 
   }
 
   requestGoogle = () => {
@@ -103,7 +112,8 @@ class Login extends Component {
     let {
       username,
       password,
-      invalidCredentials
+      invalidCredentials,
+      googleLoginError
     } = this.state
 
     return (
@@ -116,15 +126,18 @@ class Login extends Component {
               <Condition test={invalidCredentials}>
                 <ErrorFlash>Invalid user or password</ErrorFlash>
               </Condition>
+              <Condition test={googleLoginError}>
+                <ErrorFlash>Ops, Google login failed. Please try again.</ErrorFlash>
+              </Condition>
               <UserInfo
                 username={username}
                 password={password}
                 handleTextInput={this.handleTextInput}
               />
               <div className="buttons">
-                <StyledButtonOne to='/' onClick={this.handleSave}>Login</StyledButtonOne>
+                <StyledButtonOne to='/' onClick={this.handleLogin}>Login</StyledButtonOne>
                 <Condition test={this.state.serverToken}>
-                <p>You can also loginusing Google.</p>
+                <p>You can also login using Google.</p>
                 <GoogleLogin
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
                   render={renderProps => (

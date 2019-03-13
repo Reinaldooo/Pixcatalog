@@ -27,6 +27,7 @@ const ImageDetail = (props) => {
 
   const getData = async () => {
     setLoading(true)
+    setUserImages(false)
     await axios(`/api/get_image_details/${props.match.params.image}`)
       .then(({ data: { image } }) => {
         setImage(image)
