@@ -16,6 +16,7 @@ export const Main = styled.div`
     border-radius: .9rem;
     flex: 1;
     margin: 2rem 0;
+    box-shadow: 10px 15px 30px rgba(0,0,0,.25);
     @media (max-width: 1100px) {
       width: 100%;
     }

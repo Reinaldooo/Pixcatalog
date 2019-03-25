@@ -327,8 +327,9 @@ def delete_image():
 
 if __name__ == '__main__':
     # Use PORT if it's there.
-    port = int(os.environ.get('PORT', 5000))
-    app.debug = False
+    # port = int(os.environ.get('PORT', 5000))
+    app.debug = True
     csrf.init_app(app)
     app.secret_key = 'you_c@n_never_be_too_c@reful'
-    app.run(host='0.0.0.0', port=port)
+    # app.run(host='0.0.0.0', port=port)
+    app.run()
