@@ -13,7 +13,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
 
 
 def createUserWithLoginSession(login_session):

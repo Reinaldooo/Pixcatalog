@@ -9,7 +9,7 @@ import googleSVG from '../../images/google.svg';
 import { ErrorFlash } from '../../utils/customStyledComponents';
 import UserInfo from '../../stateless/UserInfo/UserInfo';
 import Condition from '../../stateless/Condition/Condition';
-import { MainWhiteBox, StyledButtonOne } from '../../basicStyles';
+import { MainWhiteBox, StyledButtonWhite } from '../../basicStyles';
 
 
 class Login extends Component {
@@ -135,15 +135,15 @@ class Login extends Component {
                 handleTextInput={this.handleTextInput}
               />
               <div className="buttons">
-                <StyledButtonOne to='/' onClick={this.handleLogin}>Login</StyledButtonOne>
+                <StyledButtonWhite onClick={this.handleLogin}>Login</StyledButtonWhite>
                 <Condition test={this.state.serverToken}>
                 <p>You can also login using Google.</p>
                 <GoogleLogin
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
                   render={renderProps => (
-                    <StyledButtonOne google onClick={renderProps.onClick}>
+                    <StyledButtonWhite google onClick={renderProps.onClick}>
                       <img src={googleSVG} alt="google-logo-button" />
-                    </StyledButtonOne>
+                    </StyledButtonWhite>
                   )}
                   responseType="code"
                   onSuccess={this.responseGoogle}

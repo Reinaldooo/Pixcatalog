@@ -111,8 +111,8 @@ class Upload extends Component {
               <FilePond
                 ref={ref => (this.pond = ref)}
                 files={files}
-                allowMultiple={false}
                 allowRevert={false}
+                allowMultiple={true}
                 instantUpload={false}
                 allowFileTypeValidation={true}
                 acceptedFileTypes={['image/*']}

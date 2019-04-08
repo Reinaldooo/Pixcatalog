@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 //
 import logo from '../../images/logo.svg';
 import { MenuSVG } from '../../utils/helper';
-import { Logo, Nav, MobileMenu, StyledButton, StyledLink, UserLinks } from './styles';
+import { Logo, Nav, MobileMenu, UserLinks } from './styles';
+import { StyledButtonBlue, StyledLinkBlue, } from '../../basicStyles/index';
 import Condition from '../../stateless/Condition/Condition';
 
 
@@ -19,14 +20,14 @@ const NavBar = (props) => {
   
   const LoginRegisterButtons = () => (
     <>
-      <StyledLink
+      <StyledLinkBlue
       onClick={closeMenu}
       nomarginleft="yes"
       to={{ pathname: "/login", state: { from: window.location.pathname } }}
       >
         Login
-      </StyledLink>
-      <StyledLink onClick={closeMenu} to="/register">Register</StyledLink>
+      </StyledLinkBlue>
+      <StyledLinkBlue onClick={closeMenu} to="/register">Register</StyledLinkBlue>
     </>
   )
 
@@ -36,9 +37,9 @@ const NavBar = (props) => {
         <p className="welcome">{username}</p>
         <img src={picture} alt="user-avatar"/>
       </Condition>
-      <StyledLink nomarginleft={props.mobile} onClick={closeMenu} to="/myphotos">My Photos</StyledLink>
-      <StyledLink onClick={closeMenu} to="/upload">Upload</StyledLink>
-      <StyledButton onClick={handleLogOut}>{logOutText}</StyledButton>
+      <StyledLinkBlue nomarginleft={props.mobile} onClick={closeMenu} to="/myphotos">My Photos</StyledLinkBlue>
+      <StyledLinkBlue onClick={closeMenu} to="/upload">Upload</StyledLinkBlue>
+      <StyledButtonBlue onClick={handleLogOut}>{logOutText}</StyledButtonBlue>
     </>
   )
 

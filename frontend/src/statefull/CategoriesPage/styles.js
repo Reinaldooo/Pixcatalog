@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
 //
-import { blue, white, black } from '../../utils/colors';
+import { blue, white } from '../../utils/colors';
 
 export const Main = styled.div`
   text-align: center;
@@ -37,19 +37,6 @@ export const StyledLink = styled(Link)`
   @media (max-width: 500px) {
     width: 40%;
   }
-`
-
-export const StyledButton = styled(Link)`
-  text-decoration: none;
-  color: ${black};
-  display: block;
-  font-weight: 600;
-  border-radius: 5px;
-  padding: 5px 10px;
-  background-color: ${white};
-  margin: .2rem auto;
-  width: 5rem;
-  text-align: center;
 `
 
 export const Category = styled.li`

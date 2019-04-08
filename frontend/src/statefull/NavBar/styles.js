@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 //
-import { white, black, red } from '../../utils/colors';
+import { white, black } from '../../utils/colors';
 
 export const Logo = styled.img`
 height: 100%;
@@ -73,28 +72,6 @@ img {
 @media (max-width: 500px) {
     display: none;
 }
-`
-
-export const StyledButton = styled.li`
-color: ${props => props.danger ? white : black};
-list-style: none;
-font-weight: 600;
-border-radius: 5px;
-padding: 5px 10px;
-background-color: ${props => props.danger ? red : white};
-margin-left: 1rem;
-cursor: pointer;
-`
-
-export const StyledLink = styled(Link)`
-color: ${black};
-text-decoration: none;
-font-weight: 600;
-border-radius: 5px;
-padding: 5px 10px;
-background-color: ${white};
-margin-left: ${props => props.nomarginleft === 'yes' ? 0 : "1rem"};
-cursor: pointer;
 `
 export const MobileMenu = styled.div`
 position: absolute;

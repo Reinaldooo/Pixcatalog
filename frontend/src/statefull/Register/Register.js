@@ -5,7 +5,7 @@ import axios from 'axios';
 import debounce from 'lodash.debounce'
 // Local imports
 import { blue } from '../../utils/colors';
-import { MainWhiteBox, StyledButtonOne } from '../../basicStyles';
+import { MainWhiteBox, StyledButtonWhite } from '../../basicStyles';
 import { config } from '../../utils/helper';
 import googleSVG from '../../images/google.svg';
 import { ErrorFlash, SuccessFlash } from '../../utils/customStyledComponents';
@@ -215,15 +215,15 @@ class Login extends Component {
                 register={true}
               />
               <div className="buttons">
-                <StyledButtonOne to='/' onClick={this.handleSave}>Register</StyledButtonOne>
+                <StyledButtonWhite to='/' onClick={this.handleSave}>Register</StyledButtonWhite>
                 <Condition test={this.state.serverToken}>
                 <p>You can also register using Google.</p>
                 <GoogleLogin
                   clientId="498183963431-66mllp1fei6i56a90d6kcnqqrugesjui.apps.googleusercontent.com"
                   render={renderProps => (
-                    <StyledButtonOne google onClick={renderProps.onClick}>
+                    <StyledButtonWhite google onClick={renderProps.onClick}>
                       <img src={googleSVG} alt="google-logo-button" />
-                    </StyledButtonOne>
+                    </StyledButtonWhite>
                   )}
                   responseType="code"
                   onSuccess={this.responseGoogle}

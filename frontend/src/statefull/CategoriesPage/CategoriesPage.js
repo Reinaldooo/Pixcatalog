@@ -3,7 +3,8 @@ import axios from 'axios';
 import Spinner from 'react-spinkit';
 //
 import { blue } from '../../utils/colors';
-import { Main, StyledButton, CategoriesMain, StyledLink, Category } from './styles'
+import { Main, CategoriesMain, StyledLink, Category } from './styles'
+import { StyledLinkBlue } from '../../basicStyles/index';
 
 const CategoriesPage = () => {
 
@@ -19,7 +20,7 @@ const CategoriesPage = () => {
 
   return (
     <Main>
-      <StyledButton to='/'>Home</StyledButton>
+      <StyledLinkBlue to='/'>Home</StyledLinkBlue>
       <p>You can create a new category while uploading an image.</p>
       <CategoriesMain>
         {

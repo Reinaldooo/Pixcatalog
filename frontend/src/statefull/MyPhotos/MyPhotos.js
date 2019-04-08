@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from 'react-spinkit';
 //
-import { Main, StyledLink } from './styles';
+import { Main } from './styles';
+import { StyledLinkBlue } from '../../basicStyles/index';
 import { white } from '../../utils/colors';
 import Condition from '../../stateless/Condition/Condition';
 
@@ -33,7 +34,7 @@ const MyPhotos = (props) => {
   return (
     <Main>
       <div>
-        <StyledLink to='/'>Home</StyledLink>
+        <StyledLinkBlue to='/'>Home</StyledLinkBlue>
         <Condition test={images && images.length === 0}>
           <h3 style={{ color: `${white}` }}>You don't have any photos yet.</h3>
         </Condition>

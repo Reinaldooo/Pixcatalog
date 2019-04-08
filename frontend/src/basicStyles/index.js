@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { white, black, red, blue } from '../utils/colors'
+import { Link } from 'react-router-dom';
 
 export const MainWhiteBox = styled.div`
   position: relative;
@@ -41,7 +42,7 @@ export const MainWhiteBox = styled.div`
     }
   }
 `
-export const StyledButtonOne = styled.button`
+export const StyledButtonWhite = styled.button`
   margin-top: 1.4rem;
   text-decoration: none;
   color: ${props => props.danger ? red : blue};
@@ -61,4 +62,27 @@ export const StyledButtonOne = styled.button`
   img {
     height: 40px;
   }
+`
+
+export const StyledButtonBlue = styled.li`
+color: ${white};
+display: inline-block;
+list-style: none;
+font-weight: 600;
+border-radius: 5px;
+padding: 5px 10px;
+background-color: ${props => props.danger ? red : blue};
+margin-left: 1rem;
+cursor: pointer;
+`
+
+export const StyledLinkBlue = styled(Link)`
+color: ${white};
+text-decoration: none;
+font-weight: 600;
+border-radius: 5px;
+padding: 5px 10px;
+background-color: ${blue};
+margin-left: ${props => props.nomarginleft === 'yes' ? 0 : "1rem"};
+cursor: pointer;
 `

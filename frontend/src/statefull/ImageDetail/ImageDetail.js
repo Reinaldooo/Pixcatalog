@@ -9,7 +9,8 @@ import UploadDetails from '../../stateless/UploadDetails/UploadDetails'
 import Condition from '../../stateless/Condition/Condition'
 import { config } from '../../utils/helper';
 import { blue } from '../../utils/colors';
-import { Main, StyledButton } from './styles';
+import { Main } from './styles';
+import { StyledButtonBlue } from '../../basicStyles/index';
 
 
 const ImageDetail = (props) => {
@@ -142,7 +143,7 @@ const ImageDetail = (props) => {
                     <span>{`#${image.category_name}`}</span>
                     <p>{image.description}</p>
                     <Condition test={user.user_id === image.user_id}>
-                      <StyledButton onClick={() => handleEdit()}>Edit</StyledButton>
+                      <StyledButtonBlue onClick={() => handleEdit()}>Edit</StyledButtonBlue>
                     </Condition>
                     <OtherImages>
                       {
@@ -168,8 +169,8 @@ const ImageDetail = (props) => {
                       // Otherwise show edit options
                       confirmDelete ?
                         <>
-                          <StyledButton danger onClick={handleDelete}>Confirm</StyledButton>
-                          <StyledButton onClick={() => setConfirmDelete(false)}>Cancel</StyledButton>
+                          <StyledButtonBlue danger onClick={handleDelete}>Confirm</StyledButtonBlue>
+                          <StyledButtonBlue onClick={() => setConfirmDelete(false)}>Cancel</StyledButtonBlue>
                         </>
                         :
                         <>

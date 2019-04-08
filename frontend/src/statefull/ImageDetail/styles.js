@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-//
-import { white, black } from '../../utils/colors';
-
 
 export const Main = styled.div`
   position: relative;
@@ -35,19 +32,4 @@ export const Main = styled.div`
   @media (max-width: 1100px) {
       flex-direction: column;
   }
-`
-
-export const StyledButton = styled.button`
-  text-decoration: none;
-  color: ${black};
-  display: inline-block;
-  font-weight: 600;
-  font-size: .9rem;
-  border-radius: 5px;
-  border: none;
-  padding: 5px 10px;
-  background-color: ${white};
-  margin: .5rem .2rem;
-  text-align: center;
-  cursor: pointer;
 `

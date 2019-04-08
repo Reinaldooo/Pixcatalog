@@ -1,6 +1,6 @@
 import React from 'react';
 //
-import { StyledButtonOne } from '../../basicStyles';
+import { StyledButtonWhite } from '../../basicStyles';
 import { Textarea, Form } from './styles';
 import { Input, Label, InputWrapper } from '../../utils/customStyledComponents';
 import Condition from '../Condition/Condition';
@@ -55,10 +55,10 @@ const UploadDetails = ({
         />
       </InputWrapper>
       <div>
-        <StyledButtonOne white onClick={handleSave}>Save</StyledButtonOne>
+        <StyledButtonWhite white onClick={handleSave}>Save</StyledButtonWhite>
         <Condition test={handleDeleteConfirm}>
-            <StyledButtonOne white onClick={handleCancel}>Cancel</StyledButtonOne>
-            <StyledButtonOne white danger onClick={handleDeleteConfirm}>Delete</StyledButtonOne>
+            <StyledButtonWhite white onClick={handleCancel}>Cancel</StyledButtonWhite>
+            <StyledButtonWhite white danger onClick={handleDeleteConfirm}>Delete</StyledButtonWhite>
         </Condition>
       </div>
     </Form>

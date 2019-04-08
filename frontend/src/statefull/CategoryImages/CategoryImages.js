@@ -4,7 +4,8 @@ import Spinner from 'react-spinkit';
 import axios from 'axios';
 //
 import { blue } from '../../utils/colors';
-import { Main, H2, StyledLink, StyledImg } from './styles';
+import { Main, H2, StyledImg } from './styles';
+import { StyledLinkBlue } from '../../basicStyles/index';
 
 
 const CategoryImages = (props) => {
@@ -32,8 +33,8 @@ const CategoryImages = (props) => {
           <>
             <H2>All <span>{`#${state.categoryTitle}`}</span> images</H2>
             <div>
-              <StyledLink to='/categories'>Categories</StyledLink>
-              <StyledLink to='/'>Home</StyledLink>
+              <StyledLinkBlue to='/categories'>Categories</StyledLinkBlue>
+              <StyledLinkBlue to='/'>Home</StyledLinkBlue>
             </div>
             {
               state.images.map(image => (
