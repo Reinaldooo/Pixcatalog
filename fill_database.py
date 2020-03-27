@@ -31,7 +31,7 @@ session = DBSession()
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# Create dummy user
+# Create example users
 User1 = User(name="reinaldooo", email="rewifetri@gmail.com",
              picture='https://picsum.photos/100?random')
 session.add(User1)
@@ -172,7 +172,7 @@ titles = [
   "Look at this view",
   "I love taking pictures",
   "Amazing sight",
-  "I can't believe i taken this picture",
+  "I can't believe this view",
 ]
 
 descriptions = [
