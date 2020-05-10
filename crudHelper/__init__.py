@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, asc, func, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Image, User, engine
 from PIL import Image as ImageEdit
-import os
+import os, threading
 
 # Connect to Database and create database session
 Base.metadata.bind = engine
@@ -29,7 +29,7 @@ def createUser(request):
     username = request.get('username')
     password = request.get('password')
     email = request.get('email')
-    if username is '' or password is '' or email is '':
+    if username == '' or password == '' or email == '':
         return "You must provide all fields", 400
     if session.query(User).filter_by(name=username).first() is not None:
         return "Username used", 400
@@ -132,6 +132,15 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def erase_guest_upload(address):
+    # Delete images from other users after 30 seconds
+    imageToDelete = session.query(Image).filter_by(address=address).one()
+    if imageToDelete.user_id != 1:
+        session.delete(imageToDelete)
+        session.commit()
+        return "Image deleted"
+
+
 def upload(login_session, request):
     if 'username' not in login_session:
         return "You are not allowed to do this", 401
@@ -176,7 +185,10 @@ def upload(login_session, request):
         size = 300, 300
         thumb.thumbnail(size)
         thumb.save(destinationThumb)
-        # new_im.show()
+        # new_im.show() <- Opens image on OS
+        # Delete images after 30 seconds to avoid server usage
+        timer = threading.Timer(30.0, erase_guest_upload, [fileId])
+        timer.start()
         return "Ok"
 
 
