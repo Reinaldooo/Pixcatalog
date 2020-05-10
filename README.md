@@ -29,6 +29,7 @@ The development focus was to create a lightweight and elegant app, thats why Rea
 ### Run this project
 
 * To load it via Heroku, click [here](https://pixcatalog.herokuapp.com/).
+* Guest uploads will be erased after 30 seconds.
 
 ##### To load it in your local machine:
 
